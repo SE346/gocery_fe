@@ -70,7 +70,7 @@ class _TextFieldInputState extends State<TextFieldInput> {
       ),
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return 'Enter your ${widget.hintText}';
+          return 'Enter your ${widget.hintText.toLowerCase()}';
         }
 
         return null;

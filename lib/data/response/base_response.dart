@@ -5,6 +5,8 @@ class BaseResponse {
   dynamic error;
   bool? unAuthorizedRequest;
   bool? bAbp;
+  int? status;
+  String? message;
 
   BaseResponse({
     this.result,
@@ -13,6 +15,8 @@ class BaseResponse {
     this.error,
     this.unAuthorizedRequest,
     this.bAbp,
+    this.status,
+    this.message,
   });
 
   BaseResponse.fromJson(Map<String, dynamic> json) {
@@ -22,5 +26,7 @@ class BaseResponse {
     error = json['error'];
     unAuthorizedRequest = json['unAuthorizedRequest'];
     bAbp = json['__abp'];
+    status = json['status'];
+    message = json['message'];
   }
 }

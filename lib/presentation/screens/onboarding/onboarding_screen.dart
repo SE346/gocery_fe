@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/screens/authentication/login_screen.dart';
 import 'package:grocery/presentation/screens/authentication/sign_up_screen.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
+import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
+import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
+import 'package:grocery/presentation/services/authentication_bloc/authentication_state.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -14,8 +18,16 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: SafeArea(
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is RegistrationInitial) {
+          navigateToSignUpScreen(context);
+        } else if (state is LoginInitial) {
+          navigateToLoginScreen(context);
+        }
+      },
+      child: Scaffold(
+          body: SafeArea(
         bottom: false,
         child: ListView(
           children: [
@@ -27,7 +39,7 @@ class OnBoardingScreen extends StatelessWidget {
             methodLogin(context),
           ],
         ),
-      ),
+      )),
     );
   }
 
@@ -94,12 +106,13 @@ class OnBoardingScreen extends StatelessWidget {
         // sign up
         CustomButton(
           content: 'Sign Up',
-          onTap: () => navigateToSignUpScreen(context),
+          onTap: () =>
+              context.read<AuthenticationBloc>().add(InitRegistration()),
         ),
         const SizedBox(height: 10),
         // login
         GestureDetector(
-          onTap: () => navigateToLoginScreen(context),
+          onTap: () => context.read<AuthenticationBloc>().add(InitLogin()),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

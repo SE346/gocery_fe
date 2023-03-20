@@ -14,6 +14,8 @@ class AppAssets {
   static const String icCart = '$iconPath/cart.png';
   static const String icOrder = '$iconPath/order.png';
   static const String icProfile = '$iconPath/users.png';
+  static const String icSort = '$iconPath/sort.png';
+  static const String icFilter = '$iconPath/filter.png';
 
   // list image category
   static const String icVegetables = '$iconPath/vegetables.png';
@@ -34,4 +36,15 @@ class AppAssets {
   static const String promo1 = '$imagePath/promo1.png';
   static const String promo2 = '$imagePath/promo2.png';
   static const String promo3 = '$imagePath/promo3.png';
+
+  // list image products
+  static const String cabbage = '$imagePath/cabbage.png';
+  static const String carrot = '$imagePath/carrot.png';
+  static const String garlic = '$imagePath/garlic.png';
+  static const String greenPaprica = '$imagePath/green-paprica.png';
+  static const String pakChoi = '$imagePath/pak-choi.png';
+  static const String springOnion = '$imagePath/spring-onion.png';
+  static const String orange = '$imagePath/orange.png';
+  static const String meat = '$imagePath/meat.png';
+  static const String brocoli = '$imagePath/brocoli.png';
 }

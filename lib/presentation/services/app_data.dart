@@ -6,33 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppData extends ChangeNotifier {
   late final Future<SharedPreferences> sharedPreferences;
 
-  // Tenant
-  int? _tenant;
-  int? get tenant => _tenant;
-  set tenant(int? id) {
-    if (id == null) return;
-
-    sharedPreferences.then((shared) {
-      shared.setInt('tenant', id);
-    });
-    _tenant = id;
-    notifyListeners();
-  }
-
-  // tenant name
-  String? _tenantName;
-  String? get tenantName => _tenantName;
-  set tenantName(String? name) {
-    if (name == null) return;
-
-    sharedPreferences.then((shared) {
-      shared.setString('tenantName', name);
-    });
-    _tenantName = name;
-    initHeaders();
-    notifyListeners();
-  }
-
   // Access Token
   String? _accessToken;
   String? get accessToken => _accessToken;
@@ -83,26 +56,12 @@ class AppData extends ChangeNotifier {
   AppData(this.sharedPreferences) {
     getTypeLanguage();
     getToken();
-    getTenant();
-    getTenantName();
+
     initHeaders();
   }
 
   initHeaders() {
-    if (_tenant != null && _accessToken != null) {
-      _headers = {
-        'Content-Type': 'application/json',
-        'Abp.TenantId': '$_tenant',
-        'Authorization': 'Bearer $_accessToken'
-      };
-      notifyListeners();
-    } else if (_tenant != null) {
-      _headers = {
-        'Content-Type': 'application/json',
-        'Abp.TenantId': '$_tenant',
-      };
-      notifyListeners();
-    } else if (_accessToken != null) {
+    if (_accessToken != null) {
       _headers = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $_accessToken'
@@ -119,36 +78,12 @@ class AppData extends ChangeNotifier {
     notifyListeners();
   }
 
-  getTenant() async {
-    final shared = await sharedPreferences;
-    _tenant = shared.getInt("tenant");
-    log("init tenant: $_tenant");
-    notifyListeners();
-    initHeaders();
-  }
-
-  getTenantName() async {
-    final shared = await sharedPreferences;
-    _tenantName = shared.getString("tenantName");
-    log("init tenantName: $_tenantName");
-    notifyListeners();
-  }
-
   getToken() async {
     final shared = await sharedPreferences;
     _accessToken = shared.getString("accessToken");
     log("init token: $_accessToken");
     notifyListeners();
     initHeaders();
-  }
-
-  Future removeTenant() async {
-    final shared = await sharedPreferences;
-    shared.remove("tenant");
-    shared.remove("tenantName");
-    tenant = null;
-    tenantName = null;
-    notifyListeners();
   }
 
   Future removeToken() async {

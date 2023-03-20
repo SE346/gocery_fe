@@ -29,13 +29,17 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  another_flushbar: ^1.12.29
+  carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
   equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
+  flutter_rating_bar: ^4.0.1
   font_awesome_flutter: ^10.4.0
   http: ^0.13.5
+  provider: ^6.0.5
   shared_preferences: ^2.0.18
 
 dev_dependencies:
