@@ -49,7 +49,7 @@ class _AppState extends State<App> {
               ),
             ],
             child: MaterialApp(
-              title: 'Grocery',
+              title: 'Gocery',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primaryColor: AppColors.primary,
