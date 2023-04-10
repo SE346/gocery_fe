@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen_controller.dart';
 
+import '../../res/colors.dart';
+
 class LoadingScreen {
   factory LoadingScreen() => _shared;
   static final LoadingScreen _shared = LoadingScreen._sharedInstance();
@@ -21,6 +23,14 @@ class LoadingScreen {
         context: context,
       );
     }
+  }
+
+  Widget showLoadingWidget() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: AppColors.primary,
+      ),
+    );
   }
 
   void hide() {

@@ -5,7 +5,7 @@ import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/screens/bottom_navigation_bar_page.dart/bottom_navigation_bar_screen.dart';
+import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_state.dart';

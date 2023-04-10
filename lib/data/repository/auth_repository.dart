@@ -22,7 +22,7 @@ class AuthRepository extends IServiceAPI {
 
   @override
   User convertToObject(value) {
-    throw User.fromMap(value);
+    return User.fromMap(value);
   }
 
   Future<BaseResponse?> register(User user) async {

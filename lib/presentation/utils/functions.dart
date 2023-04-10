@@ -21,9 +21,9 @@ showSnackBar(BuildContext context, String content, Icon icon) {
   Flushbar(
     maxWidth: size.width * .8,
     borderRadius: BorderRadius.circular(10),
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.primary,
     flushbarPosition: FlushbarPosition.BOTTOM,
-    messageColor: const Color(0xFF1D1E2C),
+    messageColor: Colors.white,
     messageSize: 16,
     message: content,
     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),

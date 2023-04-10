@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
+import 'package:grocery/data/repository/category_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
-import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
+import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
+import 'package:grocery/presentation/services/category_bloc/category_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,6 +49,11 @@ class _AppState extends State<App> {
                   appData,
                 ),
               ),
+              BlocProvider<CategoryBloc>(
+                create: (context) => CategoryBloc(
+                  CategoryRepository(appData),
+                ),
+              ),
             ],
             child: MaterialApp(
               title: 'Gocery',
@@ -54,7 +61,7 @@ class _AppState extends State<App> {
               theme: ThemeData(
                 primaryColor: AppColors.primary,
               ),
-              home: const SplashScreen(),
+              home: const BottomNavigationBarScreen(),
             ),
           );
         },
