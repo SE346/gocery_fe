@@ -14,9 +14,13 @@ class SelectACategory extends CategoryEvent {
 }
 
 class AddANewCategory extends CategoryEvent {
-  final Category category;
+  final String nameCategory;
+  final File imageFile;
 
-  AddANewCategory({required this.category});
+  AddANewCategory({
+    required this.nameCategory,
+    required this.imageFile,
+  });
 }
 
 class DeleteACategory extends CategoryEvent {

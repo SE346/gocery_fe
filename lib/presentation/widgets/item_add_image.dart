@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ItemAddImage extends StatelessWidget {
-  final Function(Uint8List) callback;
+  final Function(File) callback;
 
   const ItemAddImage({
     super.key,
@@ -13,9 +16,17 @@ class ItemAddImage extends StatelessWidget {
   });
 
   void pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    XFile? file = await picker.pickImage(source: ImageSource.gallery);
-    callback(await file!.readAsBytes());
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      callback(file);
+    } else {
+      // User canceled the picker
+    }
   }
 
   @override

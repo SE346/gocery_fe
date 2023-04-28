@@ -29,7 +29,7 @@ class ItemCategory extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 image: DecorationImage(
-                  image: AssetImage(category.image),
+                  image: NetworkImage(category.image),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(6),
