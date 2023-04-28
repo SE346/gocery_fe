@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:grocery/presentation/res/style.dart';
@@ -6,6 +7,7 @@ import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/item_add_image.dart';
 import 'package:grocery/presentation/widgets/item_image.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -21,7 +23,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController unitController = TextEditingController();
-  Uint8List? image;
+  File? imageFile;
   final _addProductFormKey = GlobalKey<FormState>();
 
   @override
@@ -101,13 +103,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   style: AppStyles.medium.copyWith(),
                 ),
                 const SizedBox(height: 10),
-                image == null
-                    ? ItemAddImage(callback: (imageSelected) {
-                        setState(() {
-                          image = imageSelected;
-                        });
-                      })
-                    : ItemImage(image: image!),
+                imageFile == null
+                    ? ItemAddImage(
+                        callback: (imageSelected) {
+                          setState(() {
+                            imageFile = imageSelected;
+                          });
+                        },
+                      )
+                    : ItemImage(fileImage: imageFile!),
                 const SizedBox(height: 20),
                 Center(
                   child: CustomButton(

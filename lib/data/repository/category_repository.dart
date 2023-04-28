@@ -1,13 +1,18 @@
+import 'dart:developer';
+
+import 'package:grocery/data/environment.dart';
 import 'package:grocery/data/interfaces/i_service_api.dart';
 import 'package:grocery/data/models/category.dart';
 import 'package:grocery/data/network/base_api_service.dart';
 import 'package:grocery/data/network/network_api_service.dart';
+import 'package:grocery/data/response/base_response.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 
 class CategoryRepository extends IServiceAPI {
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;
-
+  final String urlAddCategory = "${localURL}category/add";
+  final String urlGetCategories = "${localURL}category/get-all";
   CategoryRepository(this._appData);
 
   @override
@@ -15,5 +20,46 @@ class CategoryRepository extends IServiceAPI {
     return Category.fromMap(value);
   }
 
-  List<Category> getCategories() => [];
+  Future<List<Category>?> getCategories() async {
+    List<Category> categories = [];
+
+    var response;
+    try {
+      response = await apiServices.get(
+        urlGetCategories,
+        _appData.headers,
+      );
+    } catch (e) {
+      log("error add category: $e");
+    }
+
+    BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+    if (baseResponse.data == null) return null;
+
+    for (var json in baseResponse.data) {
+      Category category = Category.fromMap(json);
+      categories.add(category);
+    }
+
+    return categories;
+  }
+
+  Future<Category> addCategory(Category category) async {
+    var response;
+
+    try {
+      response = await apiServices.post(
+        urlAddCategory,
+        category.toMap(),
+        _appData.headers,
+      );
+    } catch (e) {
+      log("error add category: $e");
+    }
+
+    BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+    return convertToObject(baseResponse.data);
+  }
 }

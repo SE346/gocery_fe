@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/category.dart';
+import 'package:grocery/data/services/cloudinary_service.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
@@ -13,6 +15,7 @@ import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/item_add_image.dart';
 import 'package:grocery/presentation/widgets/item_image.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddCategoryScreen extends StatefulWidget {
   const AddCategoryScreen({super.key});
@@ -23,7 +26,7 @@ class AddCategoryScreen extends StatefulWidget {
 
 class _AddCategoryScreenState extends State<AddCategoryScreen> {
   final TextEditingController nameController = TextEditingController();
-  Uint8List? image;
+  File? imageFile;
   final _addCategoryFormKey = GlobalKey<FormState>();
   @override
   void dispose() {
@@ -73,13 +76,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                     style: AppStyles.medium.copyWith(),
                   ),
                   const SizedBox(height: 10),
-                  image == null
+                  imageFile == null
                       ? ItemAddImage(callback: (imageSelected) {
                           setState(() {
-                            image = imageSelected;
+                            imageFile = imageSelected;
                           });
                         })
-                      : ItemImage(image: image!),
+                      : ItemImage(fileImage: imageFile!),
                   const SizedBox(height: 20),
                   Center(
                     child: CustomButton(
@@ -97,13 +100,14 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     );
   }
 
-  void addCategory() {
+  void addCategory() async {
     if (_addCategoryFormKey.currentState!.validate()) {
-      Category category = Category(
-        name: nameController.text,
-        image: AppAssets.icVegetables,
-      );
-      context.read<CategoryBloc>().add(AddANewCategory(category: category));
+      context.read<CategoryBloc>().add(
+            AddANewCategory(
+              nameCategory: nameController.text,
+              imageFile: imageFile!,
+            ),
+          );
     }
   }
 }

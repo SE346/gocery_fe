@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ItemImage extends StatelessWidget {
-  final Uint8List image;
-  const ItemImage({super.key, required this.image});
+  final File fileImage;
+  const ItemImage({super.key, required this.fileImage});
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +15,8 @@ class ItemImage extends StatelessWidget {
       child: SizedBox(
         height: 80,
         width: 80,
-        child: Image.memory(
-          image,
+        child: Image.file(
+          fileImage,
           fit: BoxFit.cover,
         ),
       ),

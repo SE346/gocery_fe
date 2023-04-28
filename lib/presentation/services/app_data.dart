@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:grocery/data/environment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppData extends ChangeNotifier {
@@ -63,12 +64,20 @@ class AppData extends ChangeNotifier {
   initHeaders() {
     if (_accessToken != null) {
       _headers = {
+        'Accept': '*/*',
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $_accessToken'
       };
       notifyListeners();
+    } else {
+      _headers = {
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessTokenTest'
+      };
+      notifyListeners();
     }
-    // log("init headers: $_headers");
+    log("init headers: $_headers");
   }
 
   getTypeLanguage() async {

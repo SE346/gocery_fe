@@ -1,9 +1,12 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:grocery/data/models/category.dart';
 import 'package:grocery/data/repository/category_repository.dart';
+import 'package:grocery/data/services/cloudinary_service.dart';
 
 part 'category_event.dart';
 part 'category_state.dart';
@@ -25,9 +28,11 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   void _getCategories(GetCategories event, Emitter<CategoryState> emit) async {
     emit(CategoryLoading());
 
-    await Future.delayed(const Duration(seconds: 2));
-    List<Category> categoryList = categoryRepository.getCategories();
+    List<Category> categoryList =
+        await categoryRepository.getCategories() ?? [];
+
     categories = categoryList;
+
     emit(CategoryLoaded(categories: categories));
   }
 
@@ -35,9 +40,19 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       AddANewCategory event, Emitter<CategoryState> emit) async {
     emit(CategoryLoaded(categories: categories, isLoading: true));
 
-    await Future.delayed(const Duration(seconds: 2));
-    categories.add(event.category);
+    String urlImage = await uploadImage(event.imageFile);
+    Category category = Category(name: event.nameCategory, image: urlImage);
 
-    emit(CategoryLoaded(categories: categories));
+    await categoryRepository.addCategory(category);
+
+    categories.add(category);
+
+    emit(CategoryLoaded(categories: categories, isAdd: true));
+  }
+
+  Future<String> uploadImage(File imageFile) async {
+    String? urlImage =
+        await CloudinaryService().uploadImage(imageFile.path, 'categories');
+    return urlImage ?? '';
   }
 }

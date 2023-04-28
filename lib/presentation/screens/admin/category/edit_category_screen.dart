@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -30,7 +31,7 @@ class EditCategoryScreen extends StatefulWidget {
 
 class _EditCategoryScreenState extends State<EditCategoryScreen> {
   final TextEditingController nameController = TextEditingController();
-  Uint8List? image;
+  File? fileImage;
   late String img;
   final _addCategoryFormKey = GlobalKey<FormState>();
 
@@ -91,11 +92,15 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                   ),
                   const SizedBox(height: 10),
                   img.isEmpty
-                      ? ItemAddImage(callback: (imageSelected) {
-                          setState(() {
-                            image = imageSelected;
-                          });
-                        })
+                      ? ItemAddImage(
+                          callback: (imageSelected) {
+                            setState(
+                              () {
+                                fileImage = imageSelected;
+                              },
+                            );
+                          },
+                        )
                       : imageAdded(),
                   const SizedBox(height: 20),
                   Center(

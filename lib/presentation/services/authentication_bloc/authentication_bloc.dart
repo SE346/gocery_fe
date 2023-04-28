@@ -23,7 +23,7 @@ class AuthenticationBloc
       try {
         final result = await _authRepository.register(event.user);
 
-        if (result!.status == 201) {
+        if (result!.statusCode == 201) {
           emit(RegistrationSuccess());
         } else {
           emit(RegistrationFailure(error: result.message!));
@@ -39,7 +39,7 @@ class AuthenticationBloc
       try {
         final result = await _authRepository.login(event.email, event.password);
 
-        if (result!.status == 201) {
+        if (result!.statusCode == 201) {
           emit(LoginSuccess());
         } else {
           emit(LoginFailure(error: result.message!));
