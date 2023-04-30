@@ -21,20 +21,24 @@ class CategoriesOverviewBloc
       : super(CategoriesOverviewInitial()) {
     on<CategoriesOverviewFetched>(_onFetched);
     on<NewCategoryAdded>(_onNewAdded);
-    // on<SelectACategory>(_selectHoliday);
-    // on<DeleteACategory>(_deleteHoliday);
+    on<NewCategoryDeleted>(_onNewDeleted);
+    on<NewCategoryEditted>(_onNewEditted);
   }
 
   void _onFetched(CategoriesOverviewFetched event,
       Emitter<CategoriesOverviewState> emit) async {
     emit(CategoriesOverviewLoading());
 
-    List<Category> categoryList =
-        await categoryRepository.getCategories() ?? [];
+    try {
+      List<Category> categoryList =
+          await categoryRepository.getCategories() ?? [];
 
-    categories = categoryList;
+      categories = categoryList;
 
-    emit(CategoriesOverviewSuccess(categories: categories));
+      emit(CategoriesOverviewSuccess(categories: categories));
+    } catch (e) {
+      emit(CategoriesOverviewFailure(errorMessage: e.toString()));
+    }
   }
 
   Future<String> uploadImage(File imageFile) async {
@@ -46,6 +50,20 @@ class CategoriesOverviewBloc
   void _onNewAdded(
       NewCategoryAdded event, Emitter<CategoriesOverviewState> emit) {
     categories.add(event.category);
+    emit(CategoriesOverviewSuccess(categories: categories));
+  }
+
+  void _onNewDeleted(
+      NewCategoryDeleted event, Emitter<CategoriesOverviewState> emit) {
+    categories.removeWhere((category) => category.id == event.idDeleted);
+
+    emit(CategoriesOverviewSuccess(categories: categories));
+  }
+
+  void _onNewEditted(
+      NewCategoryEditted event, Emitter<CategoriesOverviewState> emit) {
+    categories.removeWhere((category) => category.id == event.newCategory.id);
+    categories.add(event.newCategory);
     emit(CategoriesOverviewSuccess(categories: categories));
   }
 }

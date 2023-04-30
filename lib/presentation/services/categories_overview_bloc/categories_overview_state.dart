@@ -7,7 +7,13 @@ abstract class CategoriesOverviewState {
 
 class CategoriesOverviewLoading extends CategoriesOverviewState {}
 
-class CategoriesOverviewFailure extends CategoriesOverviewState {}
+class CategoriesOverviewFailure extends CategoriesOverviewState {
+  final String errorMessage;
+
+  const CategoriesOverviewFailure({
+    required this.errorMessage,
+  });
+}
 
 class CategoriesOverviewInitial extends CategoriesOverviewState {}
 

@@ -8,10 +8,14 @@ import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
 import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
+import 'package:grocery/presentation/services/edit_category_bloc/edit_category_bloc.dart';
+import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/item_add_image.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
+
+import '../../../../data/services/cloudinary_service.dart';
 
 class EditCategoryScreen extends StatefulWidget {
   final Category category;
@@ -35,7 +39,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   void initState() {
     super.initState();
     nameController.text = widget.category.name;
-    img = AppAssets.icVegetables;
+    img = widget.category.image;
   }
 
   @override
@@ -58,16 +62,31 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
           ),
         ),
       ),
-      body: BlocListener<CategoriesOverviewBloc, CategoriesOverviewState>(
+      body: BlocListener<EditCategoryBloc, EditCategoryState>(
         listener: (context, state) {
-          // if (state is CategoriesSuccess) {
-          //   if (state.isLoading) {
-          //     return LoadingScreen().show(context: context);
-          //   } else {
-          //     LoadingScreen().hide();
-          //     Navigator.of(context).pop();
-          //   }
-          // }
+          if (state is EditCategoryLoading) {
+            LoadingScreen().show(context: context);
+          } else if (state is EditCategoryFailure) {
+            LoadingScreen().hide();
+            showSnackBar(
+              context,
+              state.errorMessage,
+              const Icon(
+                Icons.error_outline,
+              ),
+            );
+          } else if (state is EditCategorySuccess) {
+            LoadingScreen().hide();
+            Navigator.of(context).pop(state.newCategory);
+            showSnackBar(
+              context,
+              'Edit successfully',
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            );
+          }
         },
         child: Form(
           key: _addCategoryFormKey,
@@ -89,7 +108,9 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                   const SizedBox(height: 10),
                   img.isEmpty
                       ? ItemAddImage(
-                          callback: (imageSelected) {
+                          callback: (imageSelected) async {
+                            img = await uploadImage(imageSelected);
+
                             setState(
                               () {
                                 fileImage = imageSelected;
@@ -118,22 +139,20 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
   Widget imageAdded() {
     return Stack(
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Image.asset(
-            AppAssets.brocoli,
-            fit: BoxFit.cover,
-            cacheWidth: 342,
-            cacheHeight: 342,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: SizedBox(
+            height: 80,
+            width: 80,
+            child: Image.network(
+              img,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         Positioned(
-          right: 0,
-          top: 0,
+          right: 3,
+          top: 3,
           child: GestureDetector(
             onTap: removeImage,
             child: Container(
@@ -163,18 +182,22 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
     });
   }
 
-  void updateCategory() {
+  void updateCategory() async {
     if (_addCategoryFormKey.currentState!.validate()) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const BottomNavigationBarScreen(),
-        ),
+      Category category = Category(
+        name: nameController.text,
+        image: img,
+        id: widget.category.id,
       );
-      // Category category = Category(
-      //   name: nameController.text,
-      //   image: AppAssets.icVegetables,
-      // );
-      // context.read<CategoryBloc>().add(AddANewCategory(category: category));
+      context
+          .read<EditCategoryBloc>()
+          .add(EditCategorySubmitted(newCategory: category));
     }
+  }
+
+  Future<String> uploadImage(File imageFile) async {
+    String? urlImage =
+        await CloudinaryService().uploadImage(imageFile.path, 'categories');
+    return urlImage ?? '';
   }
 }

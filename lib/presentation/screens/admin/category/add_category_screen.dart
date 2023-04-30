@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/services/add_category_bloc/add_category_bloc.dart';
+import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/item_add_image.dart';
@@ -47,6 +48,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
           } else if (state is AddCategorySuccess) {
             LoadingScreen().hide();
             Navigator.of(context).pop(state.newCategory);
+          } else if (state is AddCategoryFailure) {
+            LoadingScreen().hide();
+            showSnackBar(
+              context,
+              state.errorMessage,
+              const Icon(Icons.error_outline),
+            );
           }
         },
         child: Form(

@@ -1,10 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery/data/models/category.dart';
 import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/models/user.dart';
+import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
@@ -12,8 +13,9 @@ import 'package:grocery/presentation/screens/admin/category/components/detele_ca
 import 'package:grocery/presentation/screens/admin/category/edit_category_screen.dart';
 import 'package:grocery/presentation/screens/admin/product/product_screen.dart';
 import 'package:grocery/presentation/screens/category/components/item_product.dart';
+import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
+import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
-import 'package:grocery/presentation/widgets/item_image.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
 
 class DetailCategoryScreen extends StatefulWidget {
@@ -30,6 +32,8 @@ class DetailCategoryScreen extends StatefulWidget {
 
 class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
   final TextEditingController nameController = TextEditingController();
+  late String urlImage;
+  late String name;
 
   final List<Product> products = [
     Product(
@@ -257,134 +261,179 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
   @override
   void initState() {
     super.initState();
+
     nameController.text = widget.category.name;
+    urlImage = widget.category.image;
+    name = widget.category.name;
+
+    context
+        .read<DetailCategoryBloc>()
+        .add(DetailCategoryStarted(category: widget.category));
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        isCenterTitle: true,
-        title: Text(
-          widget.category.name,
-          style: AppStyles.bold.copyWith(
-            fontSize: 19,
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: navigateToEditCategoryScreen,
-            child: const Padding(
-              padding: EdgeInsets.only(right: 8.0),
-              child: Icon(
-                FontAwesomeIcons.penToSquare,
-                size: 20,
-                color: AppColors.text,
+    return BlocConsumer<DetailCategoryBloc, DetailCategoryState>(
+      listener: (context, state) {
+        if (state is DetailCategoryLoading) {
+          LoadingScreen().show(context: context);
+        } else if (state is DeleteCategorySuccess) {
+          LoadingScreen().hide();
+          Navigator.of(context).pop(state.idDeleted);
+          showSnackBar(
+            context,
+            'Delete successfully',
+            const Icon(
+              Icons.check,
+            ),
+          );
+        } else if (state is DetailCategoryFailure) {
+          LoadingScreen().hide();
+          showSnackBar(
+            context,
+            state.errorMessage,
+            const Icon(
+              Icons.error_outline,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        Category? newCategory;
+        if (state is EditCategorySuccess) {
+          nameController.text = state.category.name;
+          urlImage = state.category.image;
+          name = state.category.name;
+          newCategory = state.category;
+        }
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            leading: GestureDetector(
+              onTap: () => Navigator.of(context).pop(newCategory),
+              child: Image.asset(AppAssets.icBack),
+            ),
+            elevation: 0.3,
+            centerTitle: true,
+            title: Text(
+              name,
+              style: AppStyles.bold.copyWith(
+                fontSize: 19,
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () => deleteCategory(context),
-            child: const Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: Icon(
-                FontAwesomeIcons.trashCan,
-                size: 20,
-                color: AppColors.text,
+            actions: [
+              GestureDetector(
+                onTap: navigateToEditCategoryScreen,
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 8.0),
+                  child: Icon(
+                    FontAwesomeIcons.penToSquare,
+                    size: 20,
+                    color: AppColors.text,
+                  ),
+                ),
               ),
-            ),
+              GestureDetector(
+                onTap: () => deleteCategory(context),
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: Icon(
+                    FontAwesomeIcons.trashCan,
+                    size: 20,
+                    color: AppColors.text,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: size.height,
-            width: size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                TextFieldInput(
-                  hintText: 'Name Category',
-                  controller: nameController,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Display Image',
-                  style: AppStyles.medium.copyWith(),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox(
-                    height: 80,
-                    width: 80,
-                    child: Image.asset(
-                      AppAssets.icVegetables,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: size.height,
+                width: size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 10),
+                    TextFieldInput(
+                      hintText: 'Name Category',
+                      controller: nameController,
+                    ),
+                    const SizedBox(height: 10),
                     Text(
-                      'Products',
+                      'Display Image',
                       style: AppStyles.medium.copyWith(),
                     ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => ProductScreen(products: products),
-                          ),
-                        );
-                      },
-                      child: Image.asset(AppAssets.icArrowRight),
-                    )
+                    const SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: Image.network(
+                          urlImage,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          'Products',
+                          style: AppStyles.medium.copyWith(),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductScreen(products: products),
+                              ),
+                            );
+                          },
+                          child: Image.asset(AppAssets.icArrowRight),
+                        )
+                      ],
+                    ),
+                    Expanded(
+                      child: GridView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1 / 1.3,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                        ),
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          Product product = products[index];
+                          return GestureDetector(
+                            onTap: () => {},
+                            child: ItemProduct(
+                              product: product,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
-                Expanded(
-                  child: GridView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1 / 1.3,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                    ),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      Product product = products[index];
-                      return GestureDetector(
-                        onTap: () => {},
-                        child: ItemProduct(
-                          product: product,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   deleteCategory(BuildContext context) async {
-    final bool? result = await showDialog(
+    showDialog(
       context: context,
       builder: (_) {
         return DeleteCategoryDialog(
@@ -392,13 +441,10 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
         );
       },
     );
-    if (result != null) {
-      Navigator.pop(context);
-    }
   }
 
-  void navigateToEditCategoryScreen() {
-    Navigator.push(
+  void navigateToEditCategoryScreen() async {
+    Category? category = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => EditCategoryScreen(
@@ -406,5 +452,11 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
         ),
       ),
     );
+
+    if (category != null) {
+      context
+          .read<DetailCategoryBloc>()
+          .add(NewCategoryEditted(category: category));
+    }
   }
 }

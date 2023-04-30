@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grocery/data/models/category.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
+import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
 import 'package:provider/provider.dart';
 
 class DeleteCategoryDialog extends StatelessWidget {
@@ -14,6 +15,9 @@ class DeleteCategoryDialog extends StatelessWidget {
 
   void deleteDiary(BuildContext context) {
     Navigator.pop(context, true);
+    context
+        .read<DetailCategoryBloc>()
+        .add(DeleteCategorySubmitted(id: category.id!));
   }
 
   @override

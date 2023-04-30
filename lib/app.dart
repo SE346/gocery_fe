@@ -9,6 +9,8 @@ import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
 import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
+import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
+import 'package:grocery/presentation/services/edit_category_bloc/edit_category_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +59,16 @@ class _AppState extends State<App> {
               ),
               BlocProvider<AddCategoryBloc>(
                 create: (context) => AddCategoryBloc(
+                  CategoryRepository(appData),
+                ),
+              ),
+              BlocProvider<DetailCategoryBloc>(
+                create: (context) => DetailCategoryBloc(
+                  CategoryRepository(appData),
+                ),
+              ),
+              BlocProvider<EditCategoryBloc>(
+                create: (context) => EditCategoryBloc(
                   CategoryRepository(appData),
                 ),
               ),
