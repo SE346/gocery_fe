@@ -1,21 +1,14 @@
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grocery/data/models/category.dart';
-import 'package:grocery/data/services/cloudinary_service.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
-import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/services/category_bloc/category_bloc.dart';
+import 'package:grocery/presentation/services/add_category_bloc/add_category_bloc.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/item_add_image.dart';
 import 'package:grocery/presentation/widgets/item_image.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddCategoryScreen extends StatefulWidget {
   const AddCategoryScreen({super.key});
@@ -47,15 +40,13 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
           ),
         ),
       ),
-      body: BlocListener<CategoryBloc, CategoryState>(
+      body: BlocListener<AddCategoryBloc, AddCategoryState>(
         listener: (context, state) {
-          if (state is CategoryLoaded) {
-            if (state.isLoading) {
-              return LoadingScreen().show(context: context);
-            } else {
-              LoadingScreen().hide();
-              Navigator.of(context).pop();
-            }
+          if (state is AddCategoryLoading) {
+            return LoadingScreen().show(context: context);
+          } else if (state is AddCategorySuccess) {
+            LoadingScreen().hide();
+            Navigator.of(context).pop(state.newCategory);
           }
         },
         child: Form(
@@ -102,8 +93,8 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
 
   void addCategory() async {
     if (_addCategoryFormKey.currentState!.validate()) {
-      context.read<CategoryBloc>().add(
-            AddANewCategory(
+      context.read<AddCategoryBloc>().add(
+            CategoryAdded(
               nameCategory: nameController.text,
               imageFile: imageFile!,
             ),

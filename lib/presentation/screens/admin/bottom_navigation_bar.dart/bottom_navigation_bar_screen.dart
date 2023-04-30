@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/enum/enum.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
-import 'package:grocery/presentation/screens/admin/category/category_screen.dart';
+import 'package:grocery/presentation/screens/admin/category/categories_screen.dart';
 import 'package:grocery/presentation/screens/admin/statistic/statistic_screen.dart';
 import 'package:grocery/presentation/screens/admin/transactions/transaction_screen.dart';
 import 'package:grocery/presentation/screens/cart/cart_screen.dart';
@@ -37,7 +37,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
       body: BlocBuilder<NavigationCubit, NavigationState>(
           builder: (context, state) {
         if (state.navBarItem == NavBarItem.shop) {
-          return const CategoryScreen();
+          return const CategoriesScreen();
         } else if (state.navBarItem == NavBarItem.cart) {
           return const TransactionScreen();
         } else if (state.navBarItem == NavBarItem.order) {

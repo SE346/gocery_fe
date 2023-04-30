@@ -1,7 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/category.dart';
@@ -10,11 +7,10 @@ import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
-import 'package:grocery/presentation/services/category_bloc/category_bloc.dart';
+import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/item_add_image.dart';
-import 'package:grocery/presentation/widgets/item_image.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
 
 class EditCategoryScreen extends StatefulWidget {
@@ -62,16 +58,16 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
           ),
         ),
       ),
-      body: BlocListener<CategoryBloc, CategoryState>(
+      body: BlocListener<CategoriesOverviewBloc, CategoriesOverviewState>(
         listener: (context, state) {
-          if (state is CategoryLoaded) {
-            if (state.isLoading) {
-              return LoadingScreen().show(context: context);
-            } else {
-              LoadingScreen().hide();
-              Navigator.of(context).pop();
-            }
-          }
+          // if (state is CategoriesSuccess) {
+          //   if (state.isLoading) {
+          //     return LoadingScreen().show(context: context);
+          //   } else {
+          //     LoadingScreen().hide();
+          //     Navigator.of(context).pop();
+          //   }
+          // }
         },
         child: Form(
           key: _addCategoryFormKey,
