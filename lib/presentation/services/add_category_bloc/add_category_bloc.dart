@@ -17,19 +17,19 @@ class AddCategoryBloc extends Bloc<AddCategoryEvent, AddCategoryState> {
     on<CategoryAdded>((event, emit) async {
       emit(AddCategoryLoading());
 
-      String urlImage = await uploadImage(event.imageFile);
+      try {
+        String? urlImage = await CloudinaryService()
+            .uploadImage(event.imageFile.path, 'categories');
 
-      Category category = Category(name: event.nameCategory, image: urlImage);
+        Category category =
+            Category(name: event.nameCategory, image: urlImage!);
 
-      category = await categoryRepository.addCategory(category);
+        category = await categoryRepository.addCategory(category);
 
-      emit(AddCategorySuccess(newCategory: category));
+        emit(AddCategorySuccess(newCategory: category));
+      } catch (e) {
+        emit(AddCategoryFailure(errorMessage: e.toString()));
+      }
     });
-  }
-
-  Future<String> uploadImage(File imageFile) async {
-    String? urlImage =
-        await CloudinaryService().uploadImage(imageFile.path, 'categories');
-    return urlImage ?? '';
   }
 }

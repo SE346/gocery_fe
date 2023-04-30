@@ -80,12 +80,24 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 
-  navigateToDetailCategoryScreen(Category category) {
-    Navigator.of(context).push(
+  navigateToDetailCategoryScreen(Category category) async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => DetailCategoryScreen(category: category),
       ),
     );
+
+    if (result != null) {
+      if (result is int)
+        context.read<CategoriesOverviewBloc>().add(
+              NewCategoryDeleted(idDeleted: result),
+            );
+      else {
+        context.read<CategoriesOverviewBloc>().add(
+              NewCategoryEditted(newCategory: result),
+            );
+      }
+    }
   }
 
   _categories(Size size) {
@@ -93,6 +105,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       builder: (context, state) {
         if (state is CategoriesOverviewLoading) {
           return LoadingScreen().showLoadingWidget();
+        } else if (state is CategoriesOverviewFailure) {
+          return Text(state.errorMessage);
         } else if (state is CategoriesOverviewSuccess) {
           List<Category> categories = state.categories;
           return Padding(
@@ -112,17 +126,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               itemBuilder: (context, index) {
                 if (index == categories.length) {
                   return GestureDetector(
-                    onTap: () async {
-                      final Category newCategory =
-                          await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const AddCategoryScreen(),
-                        ),
-                      );
-                      context.read<CategoriesOverviewBloc>().add(
-                            NewCategoryAdded(category: newCategory),
-                          );
-                    },
+                    onTap: handleAddCategory,
                     child: ItemAddCategory(index: index),
                   );
                 }
@@ -140,5 +144,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         return LoadingScreen().showLoadingWidget();
       },
     );
+  }
+
+  handleAddCategory() async {
+    final Category? newCategory = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const AddCategoryScreen(),
+      ),
+    );
+
+    if (newCategory != null)
+      context.read<CategoriesOverviewBloc>().add(
+            NewCategoryAdded(category: newCategory),
+          );
   }
 }

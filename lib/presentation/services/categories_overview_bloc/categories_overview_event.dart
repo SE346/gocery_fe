@@ -17,3 +17,21 @@ class NewCategoryAdded extends CategoriesOverviewEvent {
   @override
   List<Object> get props => [category];
 }
+
+class NewCategoryDeleted extends CategoriesOverviewEvent {
+  final int idDeleted;
+
+  const NewCategoryDeleted({required this.idDeleted});
+
+  @override
+  List<Object> get props => [idDeleted];
+}
+
+class NewCategoryEditted extends CategoriesOverviewEvent {
+  final Category newCategory;
+
+  const NewCategoryEditted({required this.newCategory});
+
+  @override
+  List<Object> get props => [newCategory];
+}

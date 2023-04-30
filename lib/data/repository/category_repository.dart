@@ -13,6 +13,9 @@ class CategoryRepository extends IServiceAPI {
   final AppData _appData;
   final String urlAddCategory = "${localURL}category/add";
   final String urlGetCategories = "${localURL}category/get-all";
+  final String urlDeleteCategory = "${localURL}category";
+  final String urlEditCategory = "${localURL}category";
+
   CategoryRepository(this._appData);
 
   @override
@@ -61,5 +64,41 @@ class CategoryRepository extends IServiceAPI {
     BaseResponse baseResponse = BaseResponse.fromJson(response);
 
     return convertToObject(baseResponse.data);
+  }
+
+  Future<BaseResponse> deleteCategory(int idCategory) async {
+    var response;
+
+    try {
+      response = await apiServices.delete(
+        '$urlDeleteCategory/$idCategory',
+        {},
+        _appData.headers,
+      );
+    } catch (e) {
+      log("error delete category: $e");
+    }
+
+    BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+    return baseResponse;
+  }
+
+  Future<Category> editCategory(Category category) async {
+    var response;
+
+    try {
+      response = await apiServices.post(
+        '$urlEditCategory/${category.id}',
+        category.toMap(),
+        _appData.headers,
+      );
+    } catch (e) {
+      log("error edit category: $e");
+    }
+
+    BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+    return convertToObject(baseResponse.data[0]);
   }
 }

@@ -18,6 +18,13 @@ class AddCategorySuccess extends AddCategoryState {
   List<Object> get props => [newCategory];
 }
 
-class AddCategoryFailure extends AddCategoryState {}
+class AddCategoryFailure extends AddCategoryState {
+  final String errorMessage;
+
+  const AddCategoryFailure({required this.errorMessage});
+
+  @override
+  List<Object> get props => [errorMessage];
+}
 
 class AddCategoryLoading extends AddCategoryState {}
