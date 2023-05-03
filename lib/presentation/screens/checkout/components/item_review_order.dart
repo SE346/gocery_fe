@@ -17,7 +17,7 @@ class ItemReviewOrder extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            product.images[0],
+            product.productImgList![0].imgUrl,
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -25,7 +25,7 @@ class ItemReviewOrder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.name,
+                  product.productName,
                   style: AppStyles.regular.copyWith(
                     fontSize: 16,
                   ),

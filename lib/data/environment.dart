@@ -4,7 +4,7 @@ import 'package:cloudinary/cloudinary.dart';
 String localURL = 'http://localhost:8080/';
 String addressURL = "https://provinces.open-api.vn/api";
 String accessTokenTest =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im1haWwiOiIyMDUyMjEyMkBnbS51aXQuZWR1LnZuIiwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4MjgxOTM3OCwiZXhwIjoxNjgyOTA1Nzc4fQ.6dDn6tMmwNeizWtDT0z1RQ6JLpN_o-2l1-AIPROabds";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im1haWwiOiIyMDUyMjEyMkBnbS51aXQuZWR1LnZuIiwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4MzA5MzY5MCwiZXhwIjoxNjgzMTgwMDkwfQ.mGmgvk4zvwEMxep1tmvEH5j2SM7nEqDU3Ou2LWztgWc";
 
 class Environment {
   //static final String appServices = '${publicURL}api/services/app/';

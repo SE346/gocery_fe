@@ -22,11 +22,13 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   final TextEditingController searchController = TextEditingController();
+  CategoriesOverviewBloc get _bloc =>
+      BlocProvider.of<CategoriesOverviewBloc>(context);
 
   @override
   void initState() {
     super.initState();
-    context.read<CategoriesOverviewBloc>().add(CategoriesOverviewFetched());
+    _bloc.add(CategoriesOverviewFetched());
   }
 
   @override
@@ -88,14 +90,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
 
     if (result != null) {
-      if (result is int)
-        context.read<CategoriesOverviewBloc>().add(
-              NewCategoryDeleted(idDeleted: result),
-            );
-      else {
-        context.read<CategoriesOverviewBloc>().add(
-              NewCategoryEditted(newCategory: result),
-            );
+      if (result is int) {
+        _bloc.add(
+          NewCategoryDeleted(idDeleted: result),
+        );
+      } else {
+        _bloc.add(
+          NewCategoryEditted(newCategory: result),
+        );
       }
     }
   }
@@ -153,9 +155,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
     );
 
-    if (newCategory != null)
-      context.read<CategoriesOverviewBloc>().add(
-            NewCategoryAdded(category: newCategory),
-          );
+    if (newCategory != null) {
+      _bloc.add(
+        NewCategoryAdded(category: newCategory),
+      );
+    }
   }
 }

@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
+import 'package:grocery/data/repository/product_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
 import 'package:grocery/presentation/services/add_category_bloc/add_category_bloc.dart';
+import 'package:grocery/presentation/services/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
 import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
 import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
 import 'package:grocery/presentation/services/edit_category_bloc/edit_category_bloc.dart';
+import 'package:grocery/presentation/services/products_overview_bloc/products_overview_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,12 +67,19 @@ class _AppState extends State<App> {
               ),
               BlocProvider<DetailCategoryBloc>(
                 create: (context) => DetailCategoryBloc(
-                  CategoryRepository(appData),
-                ),
+                    CategoryRepository(appData), ProductRepository(appData)),
               ),
               BlocProvider<EditCategoryBloc>(
                 create: (context) => EditCategoryBloc(
                   CategoryRepository(appData),
+                ),
+              ),
+              BlocProvider<ProductsOverviewBloc>(
+                create: (context) => ProductsOverviewBloc(),
+              ),
+              BlocProvider<AddEditProductBloc>(
+                create: (context) => AddEditProductBloc(
+                  ProductRepository(appData),
                 ),
               ),
             ],

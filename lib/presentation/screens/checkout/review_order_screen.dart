@@ -22,41 +22,7 @@ class ReviewOrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Product> carts = [
-      Product(
-        name: 'Orange',
-        images: [AppAssets.orange],
-        unit: '500g',
-        price: 5,
-        hasDiscount: false,
-        discount: 0,
-        description: '',
-        comments: [],
-        rating: 3,
-      ),
-      Product(
-        name: 'Meat',
-        images: [AppAssets.meat],
-        unit: 'kg',
-        price: 15,
-        hasDiscount: false,
-        discount: 0,
-        description: '',
-        comments: [],
-        rating: 3,
-      ),
-      Product(
-        name: 'Brocoli',
-        images: [AppAssets.brocoli],
-        unit: '50g',
-        price: 2,
-        hasDiscount: false,
-        discount: 0,
-        description: '',
-        comments: [],
-        rating: 3,
-      ),
-    ];
+    final List<Product> carts = [];
     return Scaffold(
       appBar: CustomAppBar(
         title: Text(

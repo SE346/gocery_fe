@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/models/transaction.dart';
 import 'package:grocery/presentation/res/colors.dart';
-import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/transactions/components/item_tag.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
-import 'package:grocery/presentation/widgets/item_review_order.dart';
 
 class TransactionDetailScreen extends StatelessWidget {
   final Transaction transaction;
@@ -18,18 +15,6 @@ class TransactionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Product product = Product(
-      name: 'Orange',
-      images: [AppAssets.orange],
-      unit: '500g',
-      price: 5,
-      hasDiscount: false,
-      discount: 0,
-      description: '',
-      comments: [],
-      rating: 3,
-    );
-
     return Scaffold(
       appBar: CustomAppBar(
         title: Text(
@@ -99,8 +84,8 @@ class TransactionDetailScreen extends StatelessWidget {
                   Text('Quận Bình Thạnh, Hồ Chí Minh', style: AppStyles.medium),
                   Text('0399720685', style: AppStyles.medium),
                   const SizedBox(height: 10),
-                  ItemReviewOrder(product: product),
-                  ItemReviewOrder(product: product),
+                  // ItemReviewOrder(product: product),
+                  // ItemReviewOrder(product: product),
                   const Divider(color: AppColors.text),
                   Row(
                     children: [

@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/models/user.dart';
@@ -31,228 +30,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final CarouselController controller = CarouselController();
   int currentIndex = 0;
 
-  final List<Product> productSuggestions = [
-    Product(
-      name: 'Pak Choi',
-      images: [
-        AppAssets.pakChoi,
-        AppAssets.springOnion,
-        AppAssets.carrot,
-        AppAssets.pakChoi,
-        AppAssets.greenPaprica,
-        AppAssets.garlic,
-        AppAssets.cabbage,
-      ],
-      unit: '50g',
-      price: 2.20,
-      hasDiscount: true,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-    Product(
-      name: 'Spring Onion',
-      images: [AppAssets.springOnion],
-      unit: '30g',
-      price: 0.8,
-      hasDiscount: false,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-    Product(
-      name: 'Carrot',
-      images: [AppAssets.carrot],
-      unit: '250g',
-      price: 2.5,
-      hasDiscount: false,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-    Product(
-      name: 'Pak Choi',
-      images: [AppAssets.pakChoi],
-      unit: '50g',
-      price: 1.10,
-      hasDiscount: true,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-    Product(
-      name: 'Green Paprica',
-      images: [AppAssets.greenPaprica],
-      unit: '300g',
-      price: 2.20,
-      hasDiscount: true,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-    Product(
-      name: 'Garlic',
-      images: [AppAssets.garlic],
-      unit: '50g',
-      price: 1.10,
-      hasDiscount: false,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-    Product(
-      name: 'Cabbage Savoy',
-      images: [AppAssets.cabbage],
-      unit: '1kg',
-      price: 5.30,
-      hasDiscount: true,
-      discount: 0.5,
-      description:
-          'Savoy cabbage is a type of Brassica oleracea plant. Savoy cabbage is a winter vegetable and one of several cabbage varieties. Estimated to be expected from England and the Netherlands. In the 18th century, he was introduced to Germany as "Savoyer Kohl". The name is taken from the Savoy Region in France.',
-      rating: 5,
-      comments: [
-        Comment(
-          user: User(
-            firstName: 'Tommy',
-            lastName: 'Hung',
-            avatar:
-                'https://images.unsplash.com/photo-1678227999424-d20d2ea7726e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=60',
-            mail: 'maiphamquochung@gmail.com',
-            password: 'teoem2411',
-          ),
-          content: 'Nice',
-        ),
-      ],
-    ),
-  ];
+  final List<Product> productSuggestions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +65,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               top: 15,
             ),
             child: Text(
-              widget.product.name,
+              widget.product.productName,
               style: AppStyles.bold.copyWith(
                 fontSize: 18,
               ),
@@ -346,7 +124,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               horizontal: kPaddingHorizontal,
             ),
             child: Text(
-              widget.product.description,
+              widget.product.productDescription,
               style: AppStyles.regular,
             ),
           ),
@@ -423,13 +201,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void navigateToReviewScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ReviewScreen(
-          comments: widget.product.comments,
-        ),
-      ),
-    );
+    // Navigator.of(context).push(
+    //   MaterialPageRoute(
+    //     builder: (_) => ReviewScreen(
+    //       comments: widget.product.comments,
+    //     ),
+    //   ),
+    // );
   }
 
   Widget listRecommendation(Size size) {
@@ -444,7 +222,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           return Padding(
             padding: const EdgeInsets.only(left: 20.0),
             child: Image.asset(
-              product.images[0],
+              product.productImgList![0].imgUrl,
               fit: BoxFit.fitWidth,
               width: 113,
               height: 113,
@@ -474,7 +252,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ),
               RatingBar.builder(
-                initialRating: widget.product.rating,
+                initialRating: 2,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
@@ -509,10 +287,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: Stack(
         children: [
           CarouselSlider(
-            items: widget.product.images
+            items: widget.product.productImgList!
                 .map(
                   (item) => Image.asset(
-                    item,
+                    item.imgUrl,
                     fit: BoxFit.fitHeight,
                     width: double.infinity,
                   ),
@@ -537,7 +315,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             right: 0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: widget.product.images.asMap().entries.map((entry) {
+              children:
+                  widget.product.productImgList!.asMap().entries.map((entry) {
                 return GestureDetector(
                   onTap: () => controller.animateToPage(entry.key),
                   child: Container(

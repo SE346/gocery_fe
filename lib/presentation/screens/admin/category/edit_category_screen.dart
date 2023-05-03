@@ -108,15 +108,16 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                   const SizedBox(height: 10),
                   img.isEmpty
                       ? ItemAddImage(
-                          callback: (imageSelected) async {
-                            img = await uploadImage(imageSelected);
+                          callback: (files) async {
+                            img = await uploadImage(files[0]);
 
                             setState(
                               () {
-                                fileImage = imageSelected;
+                                fileImage = files[0];
                               },
                             );
                           },
+                          index: 0,
                         )
                       : imageAdded(),
                   const SizedBox(height: 20),

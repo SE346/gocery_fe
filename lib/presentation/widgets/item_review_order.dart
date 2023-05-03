@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/widgets/edit_product_cart.dart';
 
 class ItemReviewOrder extends StatelessWidget {
   final Product product;
@@ -17,7 +16,7 @@ class ItemReviewOrder extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            product.images[0],
+            product.productImgList![0].imgUrl,
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -25,7 +24,7 @@ class ItemReviewOrder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.name,
+                  product.productName,
                   style: AppStyles.regular.copyWith(
                     fontSize: 16,
                   ),

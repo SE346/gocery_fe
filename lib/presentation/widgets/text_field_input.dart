@@ -10,6 +10,7 @@ class TextFieldInput extends StatefulWidget {
   final bool isPass;
   final TextInputType type;
   final Widget? prefixIcon;
+  final bool? isEnabled;
 
   const TextFieldInput({
     super.key,
@@ -18,6 +19,7 @@ class TextFieldInput extends StatefulWidget {
     this.isPass = false,
     this.type = TextInputType.text,
     this.prefixIcon,
+    this.isEnabled = true,
   });
 
   @override
@@ -36,6 +38,7 @@ class _TextFieldInputState extends State<TextFieldInput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.isEnabled,
       controller: widget.controller,
       obscureText: isObscure,
       decoration: InputDecoration(

@@ -1,3 +1,0 @@
-class CloudinaryService {
-  void uploadImage() {}
-}
