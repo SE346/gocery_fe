@@ -117,7 +117,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFieldInput(
-                      hintText: 'Name Category',
+                      hintText: 'Name Product',
                       controller: nameController,
                     ),
                     const SizedBox(height: 10),
