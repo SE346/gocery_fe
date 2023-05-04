@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:grocery/data/models/product.dart';
@@ -10,13 +11,16 @@ class ProductsOverviewBloc
   List<Product> products = [];
 
   ProductsOverviewBloc() : super(ProductsOverviewInitial()) {
-    on<ProductsOverviewStarted>((event, emit) {
-      products = event.products;
-      emit(ProductsOverviewSuccess(products: products));
-    });
-    on<NewProductAdded>((event, emit) {
-      products.add(event.product);
-      emit(ProductsOverviewSuccess(products: products));
-    });
+    on<ProductsOverviewStarted>(_onStarted);
+    on<NewProductAdded>(_onNewAdded);
+  }
+
+  FutureOr<void> _onNewAdded(event, emit) {
+    emit(ProductsOverviewSuccess(products: [...products, event.product]));
+  }
+
+  FutureOr<void> _onStarted(event, emit) {
+    products = event.products;
+    emit(ProductsOverviewSuccess(products: products));
   }
 }

@@ -13,4 +13,7 @@ class ProductsOverviewSuccess extends ProductsOverviewState {
   final List<Product> products;
 
   const ProductsOverviewSuccess({required this.products});
+
+  @override
+  List<Object> get props => [products];
 }

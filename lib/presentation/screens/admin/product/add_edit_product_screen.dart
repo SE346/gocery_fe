@@ -85,15 +85,16 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
             );
           } else if (state is AddEditProductSuccess) {
             LoadingScreen().hide();
+
             Navigator.of(context).pop(state.product);
-            showSnackBar(
-              context,
-              'Add product successfully',
-              const Icon(
-                Icons.check,
-                color: Colors.white,
-              ),
-            );
+            // showSnackBar(
+            //   context,
+            //   'Add product successfully',
+            //   const Icon(
+            //     Icons.check,
+            //     color: Colors.white,
+            //   ),
+            // );
           }
         },
         builder: (context, state) {
