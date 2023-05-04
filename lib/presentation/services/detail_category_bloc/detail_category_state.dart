@@ -21,6 +21,9 @@ class FetchProductsSuccess extends DetailCategoryState {
   final List<Product> products;
 
   const FetchProductsSuccess({required this.products});
+
+  @override
+  List<Object> get props => [products];
 }
 
 class FetchProductsFailure extends DetailCategoryState {

@@ -193,7 +193,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
       String nameProduct = nameController.text.trim();
       String description = descriptionController.text.trim();
       int categoryId = int.parse(categoryController.text.trim());
-      int price = int.parse(categoryController.text.trim());
+      int price = int.parse(priceController.text.trim());
       String unit = unitController.text.trim();
       int discount = int.parse(discountController.text.trim());
       //int quantity = int.parse(quantityController.text.trim());

@@ -184,8 +184,8 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
+              onTap: () async {
+                final result = await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => ProductsScreen(
                       products: products,
@@ -193,6 +193,9 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
                     ),
                   ),
                 );
+                if (result != null) {
+                  _bloc.add(NewProductAdded(product: result));
+                }
               },
               child: Image.asset(AppAssets.icArrowRight),
             )

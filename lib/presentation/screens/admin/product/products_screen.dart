@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
+import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/product/add_edit_product_screen.dart';
 import 'package:grocery/presentation/screens/category/components/item_product.dart';
@@ -28,6 +29,7 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   ProductsOverviewBloc get _bloc =>
       BlocProvider.of<ProductsOverviewBloc>(context);
+  late Product? newProductAdded;
 
   @override
   void initState() {
@@ -38,7 +40,20 @@ class _ProductsScreenState extends State<ProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.3,
+        leading: GestureDetector(
+          onTap: () {
+            if (newProductAdded == null) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pop(newProductAdded);
+            }
+          },
+          child: Image.asset(AppAssets.icBack),
+        ),
+        centerTitle: false,
         title: Text(
           'Products',
           style: AppStyles.bold.copyWith(
@@ -126,7 +141,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
         ),
       ),
     );
+
     if (result != null) {
+      newProductAdded = result;
       _bloc.add(NewProductAdded(product: result));
     }
   }

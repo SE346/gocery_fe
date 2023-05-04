@@ -23,3 +23,8 @@ class NewCategoryEditted extends DetailCategoryEvent {
   final Category category;
   const NewCategoryEditted({required this.category});
 }
+
+class NewProductAdded extends DetailCategoryEvent {
+  final Product product;
+  const NewProductAdded({required this.product});
+}

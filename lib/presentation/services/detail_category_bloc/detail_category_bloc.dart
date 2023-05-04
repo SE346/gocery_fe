@@ -16,12 +16,15 @@ class DetailCategoryBloc
   final CategoryRepository categoryRepository;
   final ProductRepository productRepository;
 
+  List<Product> products = [];
+
   DetailCategoryBloc(this.categoryRepository, this.productRepository)
       : super(const DetailCategoryInitial()) {
     on<DeleteCategorySubmitted>(_onSubmitted);
-    on<NewCategoryEditted>(_onNewEditted);
+    on<NewCategoryEditted>(_onNewCategoryEditted);
     on<DetailCategoryStarted>(_onStarted);
     on<ProductsFetched>(_onProductsFetched);
+    on<NewProductAdded>(_onNewProductAdded);
   }
 
   void _onSubmitted(
@@ -43,7 +46,7 @@ class DetailCategoryBloc
     }
   }
 
-  void _onNewEditted(
+  void _onNewCategoryEditted(
       NewCategoryEditted event, Emitter<DetailCategoryState> emit) {
     emit(EditCategorySuccess(category: event.category));
   }
@@ -58,11 +61,21 @@ class DetailCategoryBloc
     emit(FetchProductsLoading());
 
     try {
-      List<Product>? products =
+      List<Product>? listProduct =
           await productRepository.getProductsByIDCategory(event.idCategory);
-      emit(FetchProductsSuccess(products: products ?? []));
+
+      if (listProduct != null) {
+        products = listProduct;
+      }
+
+      emit(FetchProductsSuccess(products: products));
     } catch (e) {
       emit(FetchProductsFailure(errorMessage: e.toString()));
     }
+  }
+
+  FutureOr<void> _onNewProductAdded(
+      NewProductAdded event, Emitter<DetailCategoryState> emit) {
+    emit(FetchProductsSuccess(products: [...products, event.product]));
   }
 }
