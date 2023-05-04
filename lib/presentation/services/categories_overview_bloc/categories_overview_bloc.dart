@@ -65,5 +65,11 @@ class CategoriesOverviewBloc
     categories.removeWhere((category) => category.id == event.newCategory.id);
     categories.add(event.newCategory);
     emit(CategoriesOverviewSuccess(categories: categories));
+    // categories = categories.map((e) {
+    //   if(e.id == event.newCategory.id){
+    //     return event.newCategory
+    //   }
+    //   return e
+    // })
   }
 }

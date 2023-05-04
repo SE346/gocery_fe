@@ -15,6 +15,23 @@ class DetailCategoryInitial extends DetailCategoryState {
 
 class DetailCategoryLoading extends DetailCategoryState {}
 
+class FetchProductsLoading extends DetailCategoryState {}
+
+class FetchProductsSuccess extends DetailCategoryState {
+  final List<Product> products;
+
+  const FetchProductsSuccess({required this.products});
+
+  @override
+  List<Object> get props => [products];
+}
+
+class FetchProductsFailure extends DetailCategoryState {
+  final String errorMessage;
+
+  const FetchProductsFailure({required this.errorMessage});
+}
+
 class DetailCategoryFailure extends DetailCategoryState {
   final String errorMessage;
 

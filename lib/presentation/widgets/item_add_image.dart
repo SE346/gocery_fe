@@ -2,28 +2,33 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:grocery/presentation/res/colors.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ItemAddImage extends StatelessWidget {
-  final Function(File) callback;
+  final int index;
+  final Function(List<File>) callback;
 
   const ItemAddImage({
     super.key,
     required this.callback,
+    required this.index,
   });
 
   void pickImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.image,
-      allowMultiple: false,
+      allowMultiple: true,
     );
 
+    List<File> files = [];
+
     if (result != null) {
-      File file = File(result.files.single.path!);
-      callback(file);
+      for (var path in result.paths) {
+        File file = File(path!);
+        files.add(file);
+      }
+      callback(files);
     } else {
       // User canceled the picker
     }

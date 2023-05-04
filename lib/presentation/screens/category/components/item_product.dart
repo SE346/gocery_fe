@@ -20,37 +20,42 @@ class ItemProduct extends StatelessWidget {
       children: [
         // // image
         Expanded(
-          child: Image.asset(
-            product.images[0],
+          child: Image.network(
+            product.productImgList![0].imgUrl,
             alignment: Alignment.center,
-            fit: BoxFit.fitHeight,
+            fit: BoxFit.cover,
           ),
         ),
         const SizedBox(height: 10),
         // name
         Text(
-          product.name,
+          product.productName,
           style: AppStyles.medium,
         ),
         // unit
         Text(
-          '${product.unit}/pack',
+          product.unit,
           style: AppStyles.regular.copyWith(color: AppColors.gray),
         ),
         const SizedBox(height: 5),
         // original price
         Text(
           '\$${product.price}',
-          style: AppStyles.regular.copyWith(
-            fontSize: 15,
-            decoration: product.hasDiscount ? TextDecoration.lineThrough : null,
-            color: product.hasDiscount ? AppColors.text : AppColors.secondary,
-          ),
+          style: product.discount != 0
+              ? AppStyles.regular.copyWith(
+                  fontSize: 15,
+                  decoration: TextDecoration.lineThrough,
+                  color: AppColors.text,
+                )
+              : AppStyles.medium.copyWith(
+                  color: AppColors.secondary,
+                  fontSize: 17,
+                ),
         ),
         const SizedBox(height: 5),
-        if (product.hasDiscount)
+        if (product.discount != 0)
           Text(
-            '\$${product.price * product.discount}',
+            '\$${product.price * (product.discount / 100)}',
             style: AppStyles.medium.copyWith(
               color: AppColors.secondary,
               fontSize: 17,

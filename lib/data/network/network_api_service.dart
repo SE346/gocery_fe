@@ -92,7 +92,6 @@ class NetworkApiService extends BaseApiServices {
         final responseJson = jsonDecode(response.body);
         return responseJson;
       case 400:
-
       case 404:
       case 500:
       default:
