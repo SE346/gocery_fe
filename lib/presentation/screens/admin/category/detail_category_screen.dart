@@ -9,6 +9,7 @@ import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/category/components/detele_category_dialog.dart';
 import 'package:grocery/presentation/screens/admin/category/edit_category_screen.dart';
+import 'package:grocery/presentation/screens/admin/product/add_edit_product_screen.dart';
 import 'package:grocery/presentation/screens/admin/product/products_screen.dart';
 import 'package:grocery/presentation/screens/category/components/item_product.dart';
 import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
@@ -137,6 +138,7 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
                   children: [
                     const SizedBox(height: 10),
                     TextFieldInput(
+                      isEnabled: false,
                       hintText: 'Name Category',
                       controller: nameController,
                     ),
@@ -214,7 +216,16 @@ class _DetailCategoryScreenState extends State<DetailCategoryScreen> {
             itemBuilder: (context, index) {
               Product product = products[index];
               return GestureDetector(
-                onTap: () => {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => AddEditProductScreen(
+                        product: product,
+                        idCategory: widget.category.id!,
+                      ),
+                    ),
+                  );
+                },
                 child: ItemProduct(
                   product: product,
                 ),

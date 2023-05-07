@@ -21,3 +21,12 @@ class NewProductAdded extends ProductsOverviewEvent {
   @override
   List<Object> get props => [product];
 }
+
+class NewProductEditted extends ProductsOverviewEvent {
+  final Product newProduct;
+
+  const NewProductEditted({required this.newProduct});
+
+  @override
+  List<Object> get props => [newProduct];
+}

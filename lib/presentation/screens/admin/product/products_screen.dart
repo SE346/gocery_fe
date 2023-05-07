@@ -29,7 +29,7 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   ProductsOverviewBloc get _bloc =>
       BlocProvider.of<ProductsOverviewBloc>(context);
-  late Product? newProductAdded;
+  Product? newProductAdded;
 
   @override
   void initState() {

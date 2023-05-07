@@ -9,11 +9,9 @@ import 'package:grocery/presentation/utils/functions.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthRepository _authRepository;
-  final AppData _appData;
 
   AuthenticationBloc(
     this._authRepository,
-    this._appData,
   ) : super(AuthenticationInitial()) {
     on<AuthenticationEvent>((event, emit) {});
 

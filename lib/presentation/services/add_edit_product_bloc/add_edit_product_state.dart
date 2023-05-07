@@ -10,22 +10,33 @@ abstract class AddEditProductState extends Equatable {
 
 class AddEditProductInitial extends AddEditProductState {
   final Product? product;
+  final String headerText;
 
   const AddEditProductInitial({
     this.product,
+    required this.headerText,
   });
+
+  @override
+  List<Object> get props => [headerText];
 }
 
 class AddEditProductLoading extends AddEditProductState {}
 
-class AddEditProductSuccess extends AddEditProductState {
+class AddProductSuccess extends AddEditProductState {
   final Product product;
 
-  const AddEditProductSuccess({required this.product});
+  const AddProductSuccess({required this.product});
 }
 
 class AddEditProductFailure extends AddEditProductState {
   final String errorMessage;
 
   const AddEditProductFailure({required this.errorMessage});
+}
+
+class EditProductSuccess extends AddEditProductState {
+  final Product product;
+
+  const EditProductSuccess({required this.product});
 }
