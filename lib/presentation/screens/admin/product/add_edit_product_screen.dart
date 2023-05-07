@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/product.dart';
-import 'package:grocery/data/models/product_image.dart';
-import 'package:grocery/data/services/cloudinary_service.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/services/add_edit_product_bloc/add_edit_product_bloc.dart';
@@ -37,13 +35,16 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
   final TextEditingController categoryController = TextEditingController();
 
   List<File> imageFiles = [];
-  final _addProductFormKey = GlobalKey<FormState>();
+  List<String> urlImages = [];
+
+  final _addEditProductFormKey = GlobalKey<FormState>();
   AddEditProductBloc get _bloc => BlocProvider.of<AddEditProductBloc>(context);
 
   @override
   void initState() {
     super.initState();
     categoryController.text = widget.idCategory.toString();
+    _bloc.add(const AddEditProductCleared());
     _bloc.add(AddEditProductStarted(product: widget.product));
   }
 
@@ -83,22 +84,39 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                 color: Colors.red,
               ),
             );
-          } else if (state is AddEditProductSuccess) {
+          } else if (state is AddProductSuccess) {
             LoadingScreen().hide();
 
-            Navigator.of(context).pop(state.product);
-            // showSnackBar(
-            //   context,
-            //   'Add product successfully',
-            //   const Icon(
-            //     Icons.check,
-            //     color: Colors.white,
-            //   ),
-            // );
+            Navigator.of(context).pop([state.product, "add"]);
+            showSnackBar(
+              context,
+              'Add product successfully',
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            );
+          } else if (state is EditProductSuccess) {
+            LoadingScreen().hide();
+
+            Navigator.of(context).pop([state.product, "edit"]);
+
+            showSnackBar(
+              context,
+              'Edit product successfully',
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            );
           }
         },
         builder: (context, state) {
+          String headerText = "";
+
           if (state is AddEditProductInitial) {
+            headerText = state.headerText;
+
             if (state.product != null) {
               Product product = state.product!;
               nameController.text = product.productName;
@@ -106,10 +124,15 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
               discountController.text = product.discount.toString();
               quantityController.text = "20";
               priceController.text = product.price.toString();
+              unitController.text = product.unit.toString();
+
+              for (var image in state.product!.productImgList!) {
+                urlImages.add(image.imgUrl);
+              }
             }
           }
           return Form(
-            key: _addProductFormKey,
+            key: _addEditProductFormKey,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: SingleChildScrollView(
@@ -136,6 +159,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                       children: [
                         Expanded(
                           child: TextFieldInput(
+                            type: TextInputType.number,
                             hintText: 'Price',
                             controller: priceController,
                           ),
@@ -174,8 +198,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                     Center(
                       child: CustomButton(
                         margin: 0,
-                        content: 'Add Product',
-                        onTap: () => addProduct(),
+                        content: headerText,
+                        onTap: () => handleButtonPressed(headerText),
                       ),
                     )
                   ],
@@ -188,8 +212,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     );
   }
 
-  void addProduct() async {
-    if (_addProductFormKey.currentState!.validate()) {
+  void handleButtonPressed(String headerText) {
+    if (_addEditProductFormKey.currentState!.validate()) {
       String nameProduct = nameController.text.trim();
       String description = descriptionController.text.trim();
       int categoryId = int.parse(categoryController.text.trim());
@@ -197,7 +221,6 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
       String unit = unitController.text.trim();
       int discount = int.parse(discountController.text.trim());
       //int quantity = int.parse(quantityController.text.trim());
-
       Product product = Product(
         categoryId: categoryId,
         productName: nameProduct,
@@ -207,9 +230,24 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
         productDescription: description,
       );
 
-      _bloc.add(
-        ProductAdded(product: product, imageFiles: imageFiles),
-      );
+      if (headerText == "Add Product") {
+        // add product
+        addProduct(product);
+      } else {
+        editProduct(product);
+      }
     }
+  }
+
+  void addProduct(Product product) {
+    _bloc.add(
+      ProductAdded(product: product, imageFiles: imageFiles),
+    );
+  }
+
+  void editProduct(Product product) {
+    _bloc.add(
+      ProductEditted(product: product, imageFiles: imageFiles),
+    );
   }
 }

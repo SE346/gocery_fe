@@ -38,6 +38,8 @@ class _TextFieldInputState extends State<TextFieldInput> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: widget.type,
+      maxLines: null,
       enabled: widget.isEnabled,
       controller: widget.controller,
       obscureText: isObscure,

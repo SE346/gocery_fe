@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/models/product_image.dart';
 import 'package:grocery/data/repository/product_repository.dart';
@@ -15,9 +15,12 @@ class AddEditProductBloc
     extends Bloc<AddEditProductEvent, AddEditProductState> {
   final ProductRepository productRepository;
 
-  AddEditProductBloc(this.productRepository) : super(AddEditProductInitial()) {
+  AddEditProductBloc(this.productRepository)
+      : super(const AddEditProductInitial(headerText: 'Add Product')) {
     on<AddEditProductStarted>(_onStarted);
     on<ProductAdded>(_onAdded);
+    on<ProductEditted>(_onEditted);
+    on<AddEditProductCleared>(_onCleared);
   }
 
   void _onStarted(
@@ -26,6 +29,14 @@ class AddEditProductBloc
       emit(
         AddEditProductInitial(
           product: event.product,
+          headerText: 'Edit Product',
+        ),
+      );
+    } else {
+      emit(
+        AddEditProductInitial(
+          product: event.product,
+          headerText: 'Add Product',
         ),
       );
     }
@@ -45,7 +56,7 @@ class AddEditProductBloc
       }
       Product product = event.product!.copyWith(productImgList: productImages);
       Product result = await productRepository.addProduct(product);
-      emit(AddEditProductSuccess(product: result));
+      emit(AddProductSuccess(product: result));
     } catch (e) {
       emit(AddEditProductFailure(errorMessage: e.toString()));
     }
@@ -60,5 +71,34 @@ class AddEditProductBloc
       urls.add(urlImage!);
     }
     return urls;
+  }
+
+  FutureOr<void> _onEditted(
+      ProductEditted event, Emitter<AddEditProductState> emit) async {
+    emit(AddEditProductLoading());
+
+    try {
+      late Product product;
+
+      if (event.imageFiles.isNotEmpty) {
+        List<String> urls = await uploadImages(event.imageFiles);
+        List<ProductImage> productImages = [];
+
+        for (int i = 0; i < urls.length; i++) {
+          ProductImage productImage = ProductImage(imgUrl: urls[i], index: i);
+          productImages.add(productImage);
+        }
+        product = event.product!.copyWith(productImgList: productImages);
+      }
+      Product result = await productRepository.editProduct(product);
+      emit(EditProductSuccess(product: result));
+    } catch (e) {
+      emit(AddEditProductFailure(errorMessage: e.toString()));
+    }
+  }
+
+  FutureOr<void> _onCleared(
+      AddEditProductCleared event, Emitter<AddEditProductState> emit) {
+    emit(const AddEditProductInitial(headerText: ""));
   }
 }

@@ -62,55 +62,52 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: SingleChildScrollView(
-              child: SizedBox(
-                height: size.height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFieldInput(
-                      hintText: 'Name Category',
-                      controller: nameController,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Display Image',
-                      style: AppStyles.medium.copyWith(),
-                    ),
-                    const SizedBox(height: 10),
-                    imageFile == null
-                        ? ItemAddImage(
-                            callback: (files) {
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFieldInput(
+                    hintText: 'Name Category',
+                    controller: nameController,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Display Image',
+                    style: AppStyles.medium.copyWith(),
+                  ),
+                  const SizedBox(height: 10),
+                  imageFile == null
+                      ? ItemAddImage(
+                          callback: (files) {
+                            setState(
+                              () {
+                                imageFile = files[0];
+                              },
+                            );
+                          },
+                          index: 0)
+                      : SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: ItemImage(
+                            fileImage: imageFile!,
+                            callback: (index) {
                               setState(
                                 () {
-                                  imageFile = files[0];
+                                  imageFile = null;
                                 },
                               );
                             },
-                            index: 0)
-                        : SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: ItemImage(
-                              fileImage: imageFile!,
-                              callback: (index) {
-                                setState(
-                                  () {
-                                    imageFile = null;
-                                  },
-                                );
-                              },
-                            ),
                           ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: CustomButton(
-                        content: 'Add Category',
-                        onTap: addCategory,
-                        width: size.width * .4,
-                      ),
-                    )
-                  ],
-                ),
+                        ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: CustomButton(
+                      content: 'Add Category',
+                      onTap: addCategory,
+                      width: size.width * .4,
+                    ),
+                  )
+                ],
               ),
             ),
           ),

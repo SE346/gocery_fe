@@ -52,7 +52,6 @@ class _AppState extends State<App> {
               BlocProvider<AuthenticationBloc>(
                 create: (context) => AuthenticationBloc(
                   AuthRepository(appData),
-                  appData,
                 ),
               ),
               BlocProvider<CategoriesOverviewBloc>(

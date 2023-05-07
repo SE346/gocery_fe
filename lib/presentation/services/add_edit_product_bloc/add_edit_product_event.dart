@@ -15,11 +15,25 @@ class AddEditProductStarted extends AddEditProductEvent {
   });
 }
 
+class AddEditProductCleared extends AddEditProductEvent {
+  const AddEditProductCleared();
+}
+
 class ProductAdded extends AddEditProductEvent {
   final Product? product;
   final List<File> imageFiles;
 
   const ProductAdded({
+    required this.product,
+    required this.imageFiles,
+  });
+}
+
+class ProductEditted extends AddEditProductEvent {
+  final Product? product;
+  final List<File> imageFiles;
+
+  const ProductEditted({
     required this.product,
     required this.imageFiles,
   });
