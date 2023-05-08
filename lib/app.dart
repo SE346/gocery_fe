@@ -4,16 +4,24 @@ import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
-import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
+import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
+    as admin;
+import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
+    as user;
+import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
 import 'package:grocery/presentation/services/add_category_bloc/add_category_bloc.dart';
 import 'package:grocery/presentation/services/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
+import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
+import 'package:grocery/presentation/services/authentication_bloc/authentication_state.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
 import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
 import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
 import 'package:grocery/presentation/services/edit_category_bloc/edit_category_bloc.dart';
+import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/services/products_overview_bloc/products_overview_bloc.dart';
+import 'package:grocery/presentation/services/shop_bloc/shop_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,6 +60,11 @@ class _AppState extends State<App> {
               BlocProvider<AuthenticationBloc>(
                 create: (context) => AuthenticationBloc(
                   AuthRepository(appData),
+                )..add(const AuthenticationStarted()),
+              ),
+              BlocProvider<LoginBloc>(
+                create: (context) => LoginBloc(
+                  AuthRepository(appData),
                 ),
               ),
               BlocProvider<CategoriesOverviewBloc>(
@@ -81,6 +94,11 @@ class _AppState extends State<App> {
                   ProductRepository(appData),
                 ),
               ),
+              BlocProvider<ShopBloc>(
+                create: (context) => ShopBloc(
+                  CategoryRepository(appData),
+                ),
+              ),
             ],
             child: MaterialApp(
               title: 'Gocery',
@@ -88,7 +106,21 @@ class _AppState extends State<App> {
               theme: ThemeData(
                 primaryColor: AppColors.primary,
               ),
-              home: const BottomNavigationBarScreen(),
+              home: BlocConsumer<AuthenticationBloc, AuthenticationState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is AuthenticatonUnAuthorized) {
+                    return const SplashScreen();
+                  } else if (state is AuthenticationAuthorized) {
+                    if (state.role == "Admin") {
+                      return const admin.BottomNavigationBarScreen();
+                    } else {
+                      return const user.BottomNavigationBarScreen();
+                    }
+                  }
+                  return const SizedBox();
+                },
+              ),
             ),
           );
         },

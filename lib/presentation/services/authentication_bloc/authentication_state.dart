@@ -9,19 +9,16 @@ abstract class AuthenticationState extends Equatable {
 
 class AuthenticationInitial extends AuthenticationState {}
 
-// [LOGIN STATE]
-class LoginFailure extends AuthenticationState {
-  final String error;
-  const LoginFailure({required this.error});
+class AuthenticationAuthorized extends AuthenticationState {
+  final String role;
+
+  const AuthenticationAuthorized({required this.role});
+
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [role];
 }
 
-class LoginInitial extends AuthenticationState {}
-
-class LoginSuccess extends AuthenticationState {}
-
-class LoginLoading extends AuthenticationState {}
+class AuthenticatonUnAuthorized extends AuthenticationState {}
 
 // [REGISTRATION STATE]
 class RegistrationFailure extends AuthenticationState {

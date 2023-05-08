@@ -6,9 +6,7 @@ import 'package:grocery/presentation/res/dimensions.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
-import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
-import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
-import 'package:grocery/presentation/services/authentication_bloc/authentication_state.dart';
+import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
@@ -43,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
+    return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginFailure) {
           LoadingScreen().hide();
@@ -129,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String email = emailController.text;
       String password = passwordController.text;
 
-      context.read<AuthenticationBloc>().add(
+      context.read<LoginBloc>().add(
             LoginButtonPressed(email: email, password: password),
           );
     }
