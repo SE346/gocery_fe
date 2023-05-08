@@ -56,9 +56,9 @@ class AppData extends ChangeNotifier {
 
   AppData(this.sharedPreferences) {
     getTypeLanguage();
-    getToken();
+    //getToken();
 
-    initHeaders();
+    //initHeaders();
   }
 
   initHeaders() {

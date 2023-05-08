@@ -8,6 +8,10 @@ abstract class AuthenticationEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class AuthenticationStarted extends AuthenticationEvent {
+  const AuthenticationStarted();
+}
+
 // [REGISTER EVENT]
 class InitRegistration extends AuthenticationEvent {}
 
@@ -20,15 +24,3 @@ class RegistrationButtonPressed extends AuthenticationEvent {
 
 // [LOGIN EVENT]
 class InitLogin extends AuthenticationEvent {}
-
-class LoginButtonPressed extends AuthenticationEvent {
-  final String email;
-  final String password;
-
-  const LoginButtonPressed({
-    required this.email,
-    required this.password,
-  });
-  @override
-  List<Object> get props => [email, password];
-}

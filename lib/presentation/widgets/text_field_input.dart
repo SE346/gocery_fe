@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
@@ -11,16 +10,17 @@ class TextFieldInput extends StatefulWidget {
   final TextInputType type;
   final Widget? prefixIcon;
   final bool? isEnabled;
+  final int? maxLines;
 
-  const TextFieldInput({
-    super.key,
-    required this.hintText,
-    required this.controller,
-    this.isPass = false,
-    this.type = TextInputType.text,
-    this.prefixIcon,
-    this.isEnabled = true,
-  });
+  const TextFieldInput(
+      {super.key,
+      required this.hintText,
+      required this.controller,
+      this.isPass = false,
+      this.type = TextInputType.text,
+      this.prefixIcon,
+      this.isEnabled = true,
+      this.maxLines = 1});
 
   @override
   State<TextFieldInput> createState() => _TextFieldInputState();
@@ -39,7 +39,7 @@ class _TextFieldInputState extends State<TextFieldInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: widget.type,
-      maxLines: null,
+      maxLines: widget.maxLines,
       enabled: widget.isEnabled,
       controller: widget.controller,
       obscureText: isObscure,

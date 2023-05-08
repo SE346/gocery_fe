@@ -53,12 +53,24 @@ class AuthRepository extends IServiceAPI {
         _appData.headers,
       );
 
-      final result = BaseResponse.fromJson(response);
-      print(result);
-      return result;
+      return BaseResponse.fromJson(response);
     } catch (e) {
       print('Error login: $e');
       return null;
     }
+  }
+
+  Future<bool> checkUserLoggined() async {
+    await _appData.getToken();
+    String? token = _appData.accessToken ?? '';
+
+    if (token.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  void saveAccessToken(String accessToken) {
+    _appData.accessToken = accessToken;
   }
 }
