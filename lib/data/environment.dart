@@ -5,6 +5,8 @@ String localURL = 'http://localhost:8080/';
 String addressURL = "https://provinces.open-api.vn/api";
 String accessTokenTest =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im1haWwiOiIyMDUyMjEyMkBnbS51aXQuZWR1LnZuIiwicm9sZSI6IkFkbWluIn0sImlhdCI6MTY4MzQ1MDAyMCwiZXhwIjoxNjgzNTM2NDIwfQ.QJGAiUi5bkhvtHfnO7Jy6EH9wjqIbxfc3dPDuPiRKKM";
+String secretKey =
+    "99d49bd269fa0c87a6ecbe3f7d9f1adc430aeedb9589167d5ac53fd6ac652566";
 
 class Environment {
   //static final String appServices = '${publicURL}api/services/app/';

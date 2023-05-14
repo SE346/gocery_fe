@@ -5,7 +5,10 @@ import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart';
+import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
+    as admin;
+import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
+    as user;
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
@@ -31,12 +34,20 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
   }
 
-  navigateToBottomNavigationScreen() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const BottomNavigationBarScreen(),
-      ),
-    );
+  navigateToBottomNavigationScreen(String role) {
+    if (role == "Admin") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const admin.BottomNavigationBarScreen(),
+        ),
+      );
+    } else {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const user.BottomNavigationBarScreen(),
+        ),
+      );
+    }
   }
 
   @override
@@ -57,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
           LoadingScreen().show(context: context);
         } else if (state is LoginSuccess) {
           LoadingScreen().hide();
-          navigateToBottomNavigationScreen();
+          navigateToBottomNavigationScreen(state.role);
         }
       },
       child: GestureDetector(

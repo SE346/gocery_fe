@@ -9,19 +9,21 @@ import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bo
 import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as user;
 import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
-import 'package:grocery/presentation/services/add_category_bloc/add_category_bloc.dart';
-import 'package:grocery/presentation/services/add_edit_product_bloc/add_edit_product_bloc.dart';
+import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
+import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_state.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
-import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
-import 'package:grocery/presentation/services/detail_category_bloc/detail_category_bloc.dart';
-import 'package:grocery/presentation/services/edit_category_bloc/edit_category_bloc.dart';
+import 'package:grocery/presentation/services/admin/categories_overview_bloc/categories_overview_bloc.dart';
+import 'package:grocery/presentation/services/admin/detail_category_bloc/detail_category_bloc.dart';
+import 'package:grocery/presentation/services/admin/edit_category_bloc/edit_category_bloc.dart';
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
-import 'package:grocery/presentation/services/products_overview_bloc/products_overview_bloc.dart';
-import 'package:grocery/presentation/services/shop_bloc/shop_bloc.dart';
+import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
+import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
+import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -99,6 +101,16 @@ class _AppState extends State<App> {
                   CategoryRepository(appData),
                 ),
               ),
+              BlocProvider<ProfileBloc>(
+                create: (context) => ProfileBloc(
+                  AuthRepository(appData),
+                ),
+              ),
+              BlocProvider<CategoryDetailBloc>(
+                create: (context) => CategoryDetailBloc(
+                  ProductRepository(appData),
+                ),
+              ),
             ],
             child: MaterialApp(
               title: 'Gocery',
@@ -112,7 +124,7 @@ class _AppState extends State<App> {
                   if (state is AuthenticatonUnAuthorized) {
                     return const SplashScreen();
                   } else if (state is AuthenticationAuthorized) {
-                    if (state.role == "Admin") {
+                    if (state.role == "User") {
                       return const admin.BottomNavigationBarScreen();
                     } else {
                       return const user.BottomNavigationBarScreen();

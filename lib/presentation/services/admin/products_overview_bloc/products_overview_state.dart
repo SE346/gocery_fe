@@ -9,6 +9,8 @@ abstract class ProductsOverviewState extends Equatable {
 
 class ProductsOverviewInitial extends ProductsOverviewState {}
 
+class ProductsOverviewLoading extends ProductsOverviewState {}
+
 class ProductsOverviewSuccess extends ProductsOverviewState {
   final List<Product> products;
 

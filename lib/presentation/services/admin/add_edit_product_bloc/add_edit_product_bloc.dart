@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/models/product_image.dart';
 import 'package:grocery/data/repository/product_repository.dart';
-
-import '../../../data/services/cloudinary_service.dart';
+import 'package:grocery/data/services/cloudinary_service.dart';
 
 part 'add_edit_product_event.dart';
 part 'add_edit_product_state.dart';

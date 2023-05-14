@@ -12,7 +12,7 @@ import 'package:grocery/presentation/screens/category/category_detail_screen.dar
 import 'package:grocery/presentation/screens/shop/components/box_search.dart';
 import 'package:grocery/presentation/screens/shop/components/item_category.dart';
 import 'package:grocery/presentation/screens/shop/components/item_promo.dart';
-import 'package:grocery/presentation/services/shop_bloc/shop_bloc.dart';
+import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
 
 class ShopScreen extends StatefulWidget {
   const ShopScreen({super.key});
@@ -43,11 +43,13 @@ class _ShopScreenState extends State<ShopScreen> {
     searchController.dispose();
   }
 
-  navigateToDetailCategory() {
+  navigateToDetailCategory(int idCategory) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const CategoryDetailScreen(),
+        builder: (_) => CategoryDetailScreen(
+          idCategory: idCategory,
+        ),
       ),
     );
   }
@@ -152,7 +154,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 Category category = categories[index];
                 return ItemCategory(
                   category: category,
-                  onTap: navigateToDetailCategory,
+                  onTap: () => navigateToDetailCategory(category.id!),
                 );
               },
             );

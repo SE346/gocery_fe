@@ -1,11 +1,9 @@
 import 'dart:io';
-
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/category.dart';
 import 'package:grocery/data/repository/category_repository.dart';
-
-import '../../../data/services/cloudinary_service.dart';
+import 'package:grocery/data/services/cloudinary_service.dart';
 
 part 'add_category_event.dart';
 part 'add_category_state.dart';

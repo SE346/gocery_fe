@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:grocery/data/environment.dart';
 import 'package:grocery/data/interfaces/i_service_api.dart';
 import 'package:grocery/data/models/user.dart';
@@ -11,6 +12,8 @@ import 'package:grocery/presentation/services/app_data.dart';
 class AuthRepository extends IServiceAPI {
   String urlRegister = 'auth/register';
   String urlLogin = 'auth/login';
+  String urlRefreshToken = 'auth/refresh-token';
+  String urlLogout = "auth/logout";
 
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;
@@ -18,11 +21,25 @@ class AuthRepository extends IServiceAPI {
   AuthRepository(this._appData) {
     urlRegister = localURL + urlRegister;
     urlLogin = localURL + urlLogin;
+    urlRefreshToken = localURL + urlRefreshToken;
+    urlLogout = localURL + urlLogout;
   }
 
   @override
   User convertToObject(value) {
     return User.fromMap(value);
+  }
+
+  Future<void> logout() async {
+    try {
+      await apiServices.delete(
+        urlLogout,
+        {},
+        _appData.headers,
+      );
+    } catch (e) {
+      log('Error logout: $e');
+    }
   }
 
   Future<BaseResponse?> register(User user) async {
@@ -60,6 +77,24 @@ class AuthRepository extends IServiceAPI {
     }
   }
 
+  Future<String?> refreshToken() async {
+    try {
+      final response = await apiServices.post(
+        urlRefreshToken,
+        {},
+        _appData.headers,
+      );
+
+      BaseResponse baseResponse = BaseResponse.fromJson(response);
+      if (baseResponse.statusCode == 200) {
+        return baseResponse.data['accessToken'];
+      }
+    } catch (e) {
+      print('Error refreshToken: $e');
+      return null;
+    }
+  }
+
   Future<bool> checkUserLoggined() async {
     await _appData.getToken();
     String? token = _appData.accessToken ?? '';
@@ -67,7 +102,28 @@ class AuthRepository extends IServiceAPI {
     if (token.isEmpty) {
       return false;
     }
+
+    try {
+      // Verify a token
+      JWT.verify(token, SecretKey(secretKey));
+    } on JWTExpiredError {
+      String? newAccessToken = await refreshToken();
+
+      if (newAccessToken != null) {
+        log("AT: $newAccessToken");
+        saveAccessToken(newAccessToken);
+      }
+    }
+
+    token = _appData.accessToken ?? '';
+
     return true;
+  }
+
+  String getRole() {
+    JWT jwt = JWT.decode(_appData.accessToken!);
+    dynamic payload = jwt.payload;
+    return payload['user']['role'];
   }
 
   void saveAccessToken(String accessToken) {
