@@ -70,11 +70,7 @@ class AppData extends ChangeNotifier {
       };
       notifyListeners();
     } else {
-      _headers = {
-        'Accept': '*/*',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessTokenTest'
-      };
+      _headers = {'Accept': '*/*', 'Content-Type': 'application/json'};
       notifyListeners();
     }
     log("init headers: $_headers");

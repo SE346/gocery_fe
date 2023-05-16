@@ -6,10 +6,7 @@ import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/screens/admin/category/categories_screen.dart';
 import 'package:grocery/presentation/screens/admin/statistic/statistic_screen.dart';
 import 'package:grocery/presentation/screens/admin/transactions/transaction_screen.dart';
-import 'package:grocery/presentation/screens/cart/cart_screen.dart';
-import 'package:grocery/presentation/screens/order/order_screen.dart';
 import 'package:grocery/presentation/screens/profile/profile_screen.dart';
-import 'package:grocery/presentation/screens/shop/shop_screen.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
@@ -24,6 +21,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<NavigationCubit>(context).getNavBarItem(NavBarItem.shop);
   }
 
   @override

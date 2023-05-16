@@ -9,8 +9,7 @@ import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/product/add_edit_product_screen.dart';
 import 'package:grocery/presentation/screens/category/components/item_product.dart';
-import 'package:grocery/presentation/services/products_overview_bloc/products_overview_bloc.dart';
-import 'package:grocery/presentation/widgets/custom_app_bar.dart';
+import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
 
 class ProductsScreen extends StatefulWidget {
   final List<Product> products;

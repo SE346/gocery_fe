@@ -12,12 +12,12 @@ class AuthenticationBloc
     this._authRepository,
   ) : super(AuthenticationInitial()) {
     on<AuthenticationStarted>((event, emit) async {
-      final result = _authRepository.checkUserLoggined();
+      final result = await _authRepository.checkUserLoggined();
 
       if (result == false) {
         emit(AuthenticatonUnAuthorized());
       } else {
-        emit(const AuthenticationAuthorized(role: "User"));
+        emit(AuthenticationAuthorized(role: _authRepository.getRole()));
       }
     });
 

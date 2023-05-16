@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/services/add_category_bloc/add_category_bloc.dart';
+import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';

@@ -19,7 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         if (baseRespnse!.statusCode == 201) {
           _authRepository.saveAccessToken(baseRespnse.data['accessToken']);
-          emit(LoginSuccess());
+          emit(LoginSuccess(role: _authRepository.getRole()));
         } else {
           emit(LoginFailure(error: baseRespnse.message!));
         }

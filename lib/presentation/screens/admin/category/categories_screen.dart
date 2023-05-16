@@ -11,7 +11,7 @@ import 'package:grocery/presentation/screens/admin/category/add_category_screen.
 import 'package:grocery/presentation/screens/admin/category/components/item_add_category.dart';
 import 'package:grocery/presentation/screens/admin/category/detail_category_screen.dart';
 import 'package:grocery/presentation/screens/shop/components/item_category.dart';
-import 'package:grocery/presentation/services/categories_overview_bloc/categories_overview_bloc.dart';
+import 'package:grocery/presentation/services/admin/categories_overview_bloc/categories_overview_bloc.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
