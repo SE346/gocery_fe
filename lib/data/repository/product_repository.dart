@@ -28,11 +28,8 @@ class ProductRepository extends IServiceAPI {
 
     var response;
     try {
-      response = await apiServices.post(
-        urlGetProducts,
-        {
-          "categoryId": idCategory,
-        },
+      response = await apiServices.get(
+        '$urlGetProducts/$idCategory',
         _appData.headers,
       );
 

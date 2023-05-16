@@ -21,6 +21,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<NavigationCubit>(context).getNavBarItem(NavBarItem.shop);
   }
 
   @override

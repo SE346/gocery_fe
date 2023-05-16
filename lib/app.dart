@@ -81,7 +81,9 @@ class _AppState extends State<App> {
               ),
               BlocProvider<DetailCategoryBloc>(
                 create: (context) => DetailCategoryBloc(
-                    CategoryRepository(appData), ProductRepository(appData)),
+                  CategoryRepository(appData),
+                  ProductRepository(appData),
+                ),
               ),
               BlocProvider<EditCategoryBloc>(
                 create: (context) => EditCategoryBloc(
