@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
-import 'package:grocery/data/environment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppData extends ChangeNotifier {
@@ -19,6 +18,20 @@ class AppData extends ChangeNotifier {
     _accessToken = token;
 
     initHeaders();
+    notifyListeners();
+  }
+
+  // Refresh Token
+  String? _refreshToken;
+  String? get refreshToken => _refreshToken;
+  set refreshToken(String? token) {
+    if (token == null) return;
+
+    sharedPreferences.then((shared) {
+      shared.setString('refreshToken', token);
+    });
+    _refreshToken = token;
+
     notifyListeners();
   }
 
@@ -87,6 +100,14 @@ class AppData extends ChangeNotifier {
     final shared = await sharedPreferences;
     _accessToken = shared.getString("accessToken");
     log("init token: $_accessToken");
+    notifyListeners();
+    initHeaders();
+  }
+
+  getRefreshToken() async {
+    final shared = await sharedPreferences;
+    _refreshToken = shared.getString("refreshToken");
+    log("refresh token: $_refreshToken");
     notifyListeners();
     initHeaders();
   }

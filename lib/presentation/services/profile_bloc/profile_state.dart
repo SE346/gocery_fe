@@ -20,4 +20,13 @@ class ProfileFailure extends ProfileState {
   List<Object> get props => [errorMessage];
 }
 
-class ProfileSuccess extends ProfileState {}
+class ProfileSuccess extends ProfileState {
+  final User user;
+
+  const ProfileSuccess({required this.user});
+
+  @override
+  List<Object> get props => [user];
+}
+
+class ProfileLoggoutSuccess extends ProfileState {}

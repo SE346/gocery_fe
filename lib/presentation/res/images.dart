@@ -18,6 +18,7 @@ class AppAssets {
   static const String icFilter = '$iconPath/filter.png';
   static const String icChart = '$iconPath/chart.png';
   static const String icArrowRight = '$iconPath/ic_arrow_right.png';
+  static const String icCamera = '$iconPath/ic_camera.png';
   // list image category
   static const String icVegetables = '$iconPath/vegetables.png';
   static const String icFruits = '$iconPath/fruits.png';

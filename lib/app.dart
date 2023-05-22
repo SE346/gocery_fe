@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
+import 'package:grocery/data/repository/user_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as admin;
 import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as user;
 import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
+import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_address_bloc.dart';
+import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
@@ -106,11 +110,22 @@ class _AppState extends State<App> {
               BlocProvider<ProfileBloc>(
                 create: (context) => ProfileBloc(
                   AuthRepository(appData),
+                  UserRepository(appData),
                 ),
               ),
               BlocProvider<CategoryDetailBloc>(
                 create: (context) => CategoryDetailBloc(
                   ProductRepository(appData),
+                ),
+              ),
+              BlocProvider<AddressBloc>(
+                create: (context) => AddressBloc(
+                  AddressRepository(appData),
+                ),
+              ),
+              BlocProvider<AddEditAddressBloc>(
+                create: (context) => AddEditAddressBloc(
+                  AddressRepository(appData),
                 ),
               ),
             ],
@@ -126,7 +141,7 @@ class _AppState extends State<App> {
                   if (state is AuthenticatonUnAuthorized) {
                     return const SplashScreen();
                   } else if (state is AuthenticationAuthorized) {
-                    if (state.role == "User") {
+                    if (state.role == "Admin") {
                       return const admin.BottomNavigationBarScreen();
                     } else {
                       return const user.BottomNavigationBarScreen();
