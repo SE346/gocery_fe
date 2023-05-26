@@ -14,14 +14,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginLoading());
 
       try {
-        BaseResponse? baseRespnse =
+        BaseResponse? baseResponse =
             await _authRepository.login(event.email, event.password);
 
-        if (baseRespnse!.statusCode == 201) {
-          _authRepository.saveAccessToken(baseRespnse.data['accessToken']);
+        if (baseResponse!.statusCode == 201) {
+          _authRepository.saveAccessToken(baseResponse.data['accessToken']);
+          _authRepository.saveRefreshToken(baseResponse.data['refreshToken']);
           emit(LoginSuccess(role: _authRepository.getRole()));
         } else {
-          emit(LoginFailure(error: baseRespnse.message!));
+          emit(LoginFailure(error: baseResponse.message!));
         }
       } catch (e) {
         emit(LoginFailure(error: e.toString()));

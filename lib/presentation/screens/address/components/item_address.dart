@@ -5,23 +5,23 @@ import 'package:grocery/presentation/res/style.dart';
 
 class ItemAddress extends StatelessWidget {
   final Address address;
-  final Function(String) callback;
-  final bool isPrimary;
+  final Function(int) callback;
+
+
   const ItemAddress({
     super.key,
     required this.address,
     required this.callback,
-    required this.isPrimary,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => callback(address.displayName),
+      onTap: () => callback(address.id!),
       child: Container(
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(10),
-        decoration: isPrimary
+        decoration: address.setAsPrimary
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
@@ -38,17 +38,21 @@ class ItemAddress extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    address.displayName,
+                    address.name,
                     style: AppStyles.medium.copyWith(fontSize: 15),
                   ),
                   Text(
-                    address.address,
+                    address.detail,
+                    style: AppStyles.regular.copyWith(fontSize: 13),
+                  ),
+                  Text(
+                    '${address.wardName}, ${address.districtName}, ${address.provinceName}',
                     style: AppStyles.regular.copyWith(fontSize: 13),
                   ),
                 ],
               ),
             ),
-            isPrimary ? boxPrimary() : const SizedBox(),
+            address.setAsPrimary ? boxPrimary() : const SizedBox(),
           ],
         ),
       ),

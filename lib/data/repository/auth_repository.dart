@@ -81,7 +81,9 @@ class AuthRepository extends IServiceAPI {
     try {
       final response = await apiServices.post(
         urlRefreshToken,
-        {},
+        {
+          "refreshToken": _appData.refreshToken,
+        },
         _appData.headers,
       );
 
@@ -128,5 +130,9 @@ class AuthRepository extends IServiceAPI {
 
   void saveAccessToken(String accessToken) {
     _appData.accessToken = accessToken;
+  }
+
+  void saveRefreshToken(String refreshToken) {
+    _appData.refreshToken = refreshToken;
   }
 }

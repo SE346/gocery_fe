@@ -35,13 +35,13 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
       body: BlocBuilder<NavigationCubit, NavigationState>(
           builder: (context, state) {
         if (state.navBarItem == NavBarItem.shop) {
-          return ShopScreen();
+          return const ShopScreen();
         } else if (state.navBarItem == NavBarItem.cart) {
-          return CartScreen();
+          return const CartScreen();
         } else if (state.navBarItem == NavBarItem.order) {
-          return OrderScreen();
+          return const OrderScreen();
         }
-        return ProfileScreen();
+        return const ProfileScreen();
       }),
       bottomNavigationBar: BlocBuilder<NavigationCubit, NavigationState>(
           builder: (contextx, state) {
