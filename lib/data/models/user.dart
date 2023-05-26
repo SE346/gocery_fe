@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class User {
@@ -52,4 +53,24 @@ class User {
 
   factory User.fromJson(String source) =>
       User.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  User copyWith({
+    String? avatar,
+    String? mail,
+    String? password,
+    String? firstName,
+    String? lastName,
+    DateTime? dateOfBirth,
+    String? phoneNum,
+  }) {
+    return User(
+      avatar: avatar ?? this.avatar,
+      mail: mail ?? this.mail,
+      password: password ?? this.password,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      phoneNum: phoneNum ?? this.phoneNum,
+    );
+  }
 }
