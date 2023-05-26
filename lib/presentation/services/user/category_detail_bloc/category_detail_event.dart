@@ -24,3 +24,16 @@ class CategoryDetailProductsSorted extends CategoryDetailEvent {
   @override
   List<Object> get props => [type];
 }
+
+class CategoryDetailProductsFiltered extends CategoryDetailEvent {
+  final int min;
+  final int max;
+
+  const CategoryDetailProductsFiltered({
+    required this.min,
+    required this.max,
+  });
+
+  @override
+  List<Object> get props => [min, max];
+}
