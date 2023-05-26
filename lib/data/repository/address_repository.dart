@@ -17,6 +17,8 @@ class AddressRepository extends IServiceAPI {
   String urlWard = "$addressURL/d";
   String urlGetAllAdresses = "address/get-all";
   String urlCreateNewAddress = "address/add";
+  String urlUpdateAddress = "address";
+  String urlDeleteAddress = "address";
 
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;
@@ -24,6 +26,8 @@ class AddressRepository extends IServiceAPI {
   AddressRepository(this._appData) {
     urlGetAllAdresses = localURL + urlGetAllAdresses;
     urlCreateNewAddress = localURL + urlCreateNewAddress;
+    urlUpdateAddress = localURL + urlUpdateAddress;
+    urlDeleteAddress = localURL + urlDeleteAddress;
   }
 
   @override
@@ -43,6 +47,35 @@ class AddressRepository extends IServiceAPI {
       return newAddress;
     } catch (e) {
       log('error create new address: $e');
+    }
+
+    return null;
+  }
+
+  Future<void> deleteAddress(int id) async {
+    try {
+      await apiServices.delete(
+        '$urlDeleteAddress/$id',
+        {},
+        _appData.headers,
+      );
+    } catch (e) {
+      log('error delete address: $e');
+    }
+  }
+
+  Future<Address?> updateAddress(Address address) async {
+    try {
+      final response = await apiServices.post(
+        "$urlUpdateAddress/${address.id}",
+        address.toMap(),
+        _appData.headers,
+      );
+      final BaseResponse baseResponse = BaseResponse.fromJson(response);
+      Address newAddress = Address.fromMap(baseResponse.data[0]);
+      return newAddress;
+    } catch (e) {
+      log('error update address: $e');
     }
 
     return null;

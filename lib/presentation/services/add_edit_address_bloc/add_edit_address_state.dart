@@ -44,17 +44,17 @@ class AddressFetchedSuccess extends AddEditAddressState {
   final List<Place> provinces;
   final List<Place> wards;
   final List<Place> districts;
-  final Place? currentProvince;
-  final Place? currentDistrict;
-  final Place? currentWard;
+  final Place currentProvince;
+  final Place currentDistrict;
+  final Place currentWard;
 
   const AddressFetchedSuccess({
     required this.provinces,
     required this.wards,
     required this.districts,
-    this.currentDistrict,
-    this.currentProvince,
-    this.currentWard,
+    required this.currentDistrict,
+    required this.currentProvince,
+    required this.currentWard,
   });
 
   @override
@@ -62,5 +62,8 @@ class AddressFetchedSuccess extends AddEditAddressState {
         provinces,
         wards,
         districts,
+        currentDistrict,
+        currentProvince,
+        currentWard
       ];
 }

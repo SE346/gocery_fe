@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,6 +15,7 @@ import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/box.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
+import 'package:http/http.dart';
 
 class AddEditAddressScreen extends StatefulWidget {
   final Address? currentAddress;
@@ -44,12 +47,15 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
+  String headerText = 'Edit Address';
+
   @override
   void initState() {
     super.initState();
     _bloc.add(AddEditAddressStarted(widget.currentAddress));
 
     if (widget.currentAddress == null) {
+      headerText = 'Add Address';
       _bloc.add(const ProvincesFetched(null));
     }
   }
@@ -96,7 +102,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
         title: BlocBuilder<AddEditAddressBloc, AddEditAddressState>(
           builder: (context, state) {
             return Text(
-              state is AddAddressMode ? 'Add Address' : 'Edit Address',
+              headerText,
               style: AppStyles.bold.copyWith(
                 fontSize: 18,
               ),
@@ -128,7 +134,7 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
             LoadingScreen().show(context: context);
           } else if (state is AddEditAddressSuccess) {
             LoadingScreen().hide();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(state.newAddress);
           }
         },
         builder: (context, state) {
@@ -275,20 +281,11 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
       builder: (context, state) {
         if (state is AddressFetchedSuccess) {
           provinces = state.provinces;
+          valueProvince = state.currentProvince;
 
-          if (state.districts.isEmpty) valueProvince = provinces[0];
-          if (state.currentProvince != null) {
-            valueProvince = state.currentProvince!;
-          }
-
-          return comboBox(provinces, (s) async {
+          return comboBox(provinces, (s) {
+            _bloc.add(ProvincesChanged(place: s));
             _bloc.add(DistrictsFetched(code: s.code));
-
-            valueProvince = s!;
-            districts = [];
-            wards = [];
-            valueDistrict = Place();
-            valueWard = Place();
           }, valueProvince);
         }
         return const SizedBox();
@@ -302,17 +299,11 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
         if (state is AddressFetchedSuccess) {
           districts = state.districts;
 
-          if (districts.isNotEmpty && state.wards.isEmpty) {
-            valueDistrict = districts[0];
-          }
+          valueDistrict = state.currentDistrict;
 
-          if (state.currentDistrict != null) {
-            valueDistrict = state.currentDistrict!;
-          }
-
-          return comboBox(districts, (s) async {
+          return comboBox(districts, (s) {
+            _bloc.add(DistrictsChanged(place: s));
             _bloc.add(WardsFetched(code: s.code));
-            valueDistrict = s!;
           }, valueDistrict);
         }
         return const SizedBox();
@@ -325,20 +316,10 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
       builder: (context, state) {
         if (state is AddressFetchedSuccess) {
           wards = state.wards;
-
-          if (wards.isNotEmpty && !hasWards) {
-            valueWard = wards[0];
-            hasWards = true;
-          }
-
-          if (state.currentWard != null) {
-            valueWard = state.currentWard!;
-          }
+          valueWard = state.currentWard;
 
           return comboBox(wards, (s) {
-            setState(() {
-              valueWard = s!;
-            });
+            _bloc.add(WardsChanged(place: s));
           }, valueWard);
         }
         return const SizedBox();
@@ -359,6 +340,12 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
       detail: controller.text.trim(),
       phoneNum: phoneController.text.trim(),
     );
-    _bloc.add(AddressSaved(address: address));
+
+    if (widget.currentAddress == null) {
+      _bloc.add(AddressSaved(address: address));
+    } else {
+      address = address.copyWith(id: widget.currentAddress!.id);
+      _bloc.add(AddressEditted(address: address));
+    }
   }
 }

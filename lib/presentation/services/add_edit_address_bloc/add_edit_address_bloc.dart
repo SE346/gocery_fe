@@ -15,7 +15,9 @@ class AddEditAddressBloc
   List<Place> provinces = [];
   List<Place> wards = [];
   List<Place> districts = [];
-  Place? currentProvince, currentDistrict, currentWard;
+  Place currentProvince = Place();
+  Place currentDistrict = Place();
+  Place currentWard = Place();
 
   AddEditAddressBloc(this._addressRepository) : super(AddEditAddressInitial()) {
     on<ProvincesFetched>(_onProvincesFetched);
@@ -23,6 +25,10 @@ class AddEditAddressBloc
     on<WardsFetched>(_onWardsFetched);
     on<AddressSaved>(_onSaved);
     on<AddEditAddressStarted>(_onStarted);
+    on<ProvincesChanged>(_onProvincesChanged);
+    on<DistrictsChanged>(_onDistrictsChanged);
+    on<WardsChanged>(_onWardsChanged);
+    on<AddressEditted>(_onEditted);
   }
 
   FutureOr<void> _onProvincesFetched(
@@ -36,6 +42,10 @@ class AddEditAddressBloc
           break;
         }
       }
+    }
+
+    if (currentProvince.name == null) {
+      currentProvince = provinces[0];
     }
 
     emit(AddressFetchedSuccess(
@@ -61,6 +71,10 @@ class AddEditAddressBloc
       }
     }
 
+    if (currentDistrict.name == null) {
+      currentDistrict = districts[0];
+    }
+
     emit(AddressFetchedSuccess(
       provinces: provinces,
       wards: wards,
@@ -82,6 +96,10 @@ class AddEditAddressBloc
           break;
         }
       }
+    }
+
+    if (currentWard.name == null) {
+      currentWard = wards[0];
     }
 
     emit(AddressFetchedSuccess(
@@ -110,23 +128,83 @@ class AddEditAddressBloc
   FutureOr<void> _onStarted(
       AddEditAddressStarted event, Emitter<AddEditAddressState> emit) {
     if (event.currentAddress == null) {
-      currentDistrict = null;
-      currentProvince = null;
-      currentWard = null;
+      currentDistrict = Place();
+      currentProvince = Place();
+      currentWard = Place();
       wards = [];
       provinces = [];
       districts = [];
 
       emit(AddAddressMode());
     } else {
-      currentDistrict = null;
-      currentProvince = null;
-      currentWard = null;
+      currentDistrict = Place();
+      currentProvince = Place();
+      currentWard = Place();
       wards = [];
       provinces = [];
       districts = [];
 
       emit(EditAddressMode(currentAddress: event.currentAddress!));
+    }
+  }
+
+  FutureOr<void> _onProvincesChanged(
+      ProvincesChanged event, Emitter<AddEditAddressState> emit) {
+    currentProvince = event.place;
+    wards = [];
+    currentWard = Place();
+    districts = [];
+    currentDistrict = Place();
+
+    emit(AddressFetchedSuccess(
+      provinces: provinces,
+      wards: [],
+      districts: [],
+      currentProvince: currentProvince,
+      currentWard: Place(),
+      currentDistrict: Place(),
+    ));
+  }
+
+  FutureOr<void> _onDistrictsChanged(
+      DistrictsChanged event, Emitter<AddEditAddressState> emit) {
+    currentDistrict = event.place;
+    wards = [];
+    currentWard = Place();
+
+    emit(AddressFetchedSuccess(
+      provinces: provinces,
+      wards: wards,
+      districts: districts,
+      currentProvince: currentProvince,
+      currentWard: currentWard,
+      currentDistrict: currentDistrict,
+    ));
+  }
+
+  FutureOr<void> _onWardsChanged(
+      WardsChanged event, Emitter<AddEditAddressState> emit) {
+    currentWard = event.place;
+
+    emit(AddressFetchedSuccess(
+      provinces: provinces,
+      wards: wards,
+      districts: districts,
+      currentProvince: currentProvince,
+      currentWard: currentWard,
+      currentDistrict: currentDistrict,
+    ));
+  }
+
+  FutureOr<void> _onEditted(
+      AddressEditted event, Emitter<AddEditAddressState> emit) async {
+    emit(AddEditAddressLoading());
+
+    try {
+      Address? address = await _addressRepository.updateAddress(event.address);
+      emit(AddEditAddressSuccess(newAddress: address!));
+    } catch (e) {
+      emit(AddEditAddressFailure(errorMessage: e.toString()));
     }
   }
 }

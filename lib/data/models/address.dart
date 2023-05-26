@@ -63,4 +63,32 @@ class Address {
 
   factory Address.fromJson(String source) =>
       Address.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Address copyWith({
+    bool? setAsPrimary,
+    int? id,
+    String? name,
+    int? provinceId,
+    String? provinceName,
+    int? districtId,
+    String? districtName,
+    String? wardCode,
+    String? wardName,
+    String? detail,
+    String? phoneNum,
+  }) {
+    return Address(
+      setAsPrimary: setAsPrimary ?? this.setAsPrimary,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      provinceId: provinceId ?? this.provinceId,
+      provinceName: provinceName ?? this.provinceName,
+      districtId: districtId ?? this.districtId,
+      districtName: districtName ?? this.districtName,
+      wardCode: wardCode ?? this.wardCode,
+      wardName: wardName ?? this.wardName,
+      detail: detail ?? this.detail,
+      phoneNum: phoneNum ?? this.phoneNum,
+    );
+  }
 }

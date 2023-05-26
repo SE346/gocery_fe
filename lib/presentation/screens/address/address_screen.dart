@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:grocery/data/models/address.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/address/add_edit_address_screen.dart';
 import 'package:grocery/presentation/screens/address/components/item_address.dart';
 import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
+import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -36,14 +38,16 @@ class _AddressScreenState extends State<AddressScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => const AddEditAddressScreen(
-                    currentAddress: null,
-                  ),
+                  builder: (_) =>
+                      const AddEditAddressScreen(currentAddress: null),
                 ),
               );
+              if (result != null) {
+                _bloc.add(AddressStarted());
+              }
             },
             child: Text(
               'Add',
@@ -68,17 +72,58 @@ class _AddressScreenState extends State<AddressScreen> {
               itemBuilder: (context, index) {
                 Address address = addresses[index];
 
-                return ItemAddress(
-                  address: address,
-                  callback: (id) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => AddEditAddressScreen(
-                          currentAddress: address,
-                        ),
+                return Slidable(
+                  // Specify a key if the Slidable is dismissible.
+                  key: const ValueKey(0),
+
+                  // The start action pane is the one at the left or the top side.
+                  endActionPane: ActionPane(
+                    // A motion is a widget used to control how the pane animates.
+                    motion: const ScrollMotion(),
+
+                    // A pane can dismiss the Slidable.
+                    dismissible: DismissiblePane(onDismissed: () {}),
+
+                    // All actions are defined in the children parameter.
+                    children: [
+                      // A SlidableAction can have an icon and/or a label.
+                      SlidableAction(
+                        onPressed: (id) {
+                          if (address.setAsPrimary == true) {
+                            showSnackBar(
+                              context,
+                              'You can\'t delete this address',
+                              const Icon(Icons.error),
+                            );
+                          } else {
+                            _bloc.add(AddressDeleted(id: address.id!));
+                          }
+                        },
+                        backgroundColor: const Color(0xFFFE4A49),
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete,
+                        label: 'Delete',
                       ),
-                    );
-                  },
+                    ],
+                  ),
+
+                  // The child of the Slidable is what the user sees when the
+                  // component is not dragged.
+                  child: ItemAddress(
+                    address: address,
+                    callback: (id) async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              AddEditAddressScreen(currentAddress: address),
+                        ),
+                      );
+
+                      if (result != null) {
+                        _bloc.add(AddressStarted());
+                      }
+                    },
+                  ),
                 );
               },
             );

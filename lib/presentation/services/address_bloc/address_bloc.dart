@@ -12,13 +12,22 @@ class AddressBloc extends Bloc<AddressEvent, AddressState> {
   List<Address> addresses = [];
 
   AddressBloc(this._addressRepository) : super(AddressInitial()) {
-    on<NewAddressAdded>(_onNewAdded);
+    on<AddressDeleted>(_onDeleted);
     on<AddressStarted>(_onStarted);
   }
 
-  FutureOr<void> _onNewAdded(
-      NewAddressAdded event, Emitter<AddressState> emit) {
-    emit(AddressSuccess(addresses: [...addresses, event.address]));
+  FutureOr<void> _onDeleted(
+      AddressDeleted event, Emitter<AddressState> emit) async {
+    emit(AddressLoading());
+
+    try {
+      await _addressRepository.deleteAddress(event.id);
+      addresses.removeWhere((address) => address.id == event.id);
+
+      emit(AddressSuccess(addresses: [...addresses]));
+    } catch (e) {
+      emit(AddressFailure(errorMessage: e.toString()));
+    }
   }
 
   FutureOr<void> _onStarted(

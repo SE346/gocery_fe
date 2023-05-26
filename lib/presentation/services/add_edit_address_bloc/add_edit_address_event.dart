@@ -45,10 +45,52 @@ class WardsFetched extends AddEditAddressEvent {
   List<Object> get props => [code];
 }
 
+class WardsChanged extends AddEditAddressEvent {
+  final Place place;
+
+  const WardsChanged({
+    required this.place,
+  });
+
+  @override
+  List<Object> get props => [place];
+}
+
+class ProvincesChanged extends AddEditAddressEvent {
+  final Place place;
+
+  const ProvincesChanged({
+    required this.place,
+  });
+
+  @override
+  List<Object> get props => [place];
+}
+
+class DistrictsChanged extends AddEditAddressEvent {
+  final Place place;
+
+  const DistrictsChanged({
+    required this.place,
+  });
+
+  @override
+  List<Object> get props => [place];
+}
+
 class AddressSaved extends AddEditAddressEvent {
   final Address address;
 
   const AddressSaved({required this.address});
+
+  @override
+  List<Object> get props => [address];
+}
+
+class AddressEditted extends AddEditAddressEvent {
+  final Address address;
+
+  const AddressEditted({required this.address});
 
   @override
   List<Object> get props => [address];

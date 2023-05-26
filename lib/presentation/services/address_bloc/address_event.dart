@@ -9,11 +9,11 @@ abstract class AddressEvent extends Equatable {
 
 class AddressStarted extends AddressEvent {}
 
-class NewAddressAdded extends AddressEvent {
-  final Address address;
+class AddressDeleted extends AddressEvent {
+  final int id;
 
-  const NewAddressAdded({required this.address});
+  const AddressDeleted({required this.id});
 
   @override
-  List<Object> get props => [address];
+  List<Object> get props => [id];
 }
