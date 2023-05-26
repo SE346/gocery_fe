@@ -51,7 +51,7 @@ class SortFilter extends StatelessWidget {
     );
   }
 
-  void openSortDialog(BuildContext context) {
+  void openSortDialog(BuildContext context) async {
     showBottomDialog(
       context,
       const BoxSort(),

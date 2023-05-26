@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
+import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class BoxSort extends StatefulWidget {
-  const BoxSort({super.key});
+  const BoxSort({
+    super.key,
+  });
 
   @override
   State<BoxSort> createState() => _BoxSortState();
 }
 
 class _BoxSortState extends State<BoxSort> {
+  CategoryDetailBloc get _bloc => BlocProvider.of<CategoryDetailBloc>(context);
+
   String itemChecked = '';
 
-  final List<String> sorts = ['Popularity', 'Lowest Price', 'Highest Price'];
+  final List<String> sorts = ['Lowest Price', 'Highest Price'];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +63,8 @@ class _BoxSortState extends State<BoxSort> {
             content: 'Submit',
             margin: 0,
             onTap: () {
-              Navigator.pop(context);
+              _bloc.add(CategoryDetailProductsSorted(type: itemChecked));
+              Navigator.pop(context, itemChecked);
             },
           ),
         ],

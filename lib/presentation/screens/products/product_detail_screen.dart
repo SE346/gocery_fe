@@ -1,15 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/data/models/product.dart';
-import 'package:grocery/data/models/user.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/checkout/review_order_screen.dart';
-import 'package:grocery/presentation/screens/review/review_screen.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/edit_product_cart.dart';

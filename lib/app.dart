@@ -147,7 +147,7 @@ class _AppState extends State<App> {
                   if (state is AuthenticatonUnAuthorized) {
                     return const SplashScreen();
                   } else if (state is AuthenticationAuthorized) {
-                    if (state.role == "Admin") {
+                    if (state.role == "User") {
                       return const admin.BottomNavigationBarScreen();
                     } else {
                       return const user.BottomNavigationBarScreen();
