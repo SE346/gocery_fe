@@ -23,6 +23,7 @@ import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navig
 import 'package:grocery/presentation/services/admin/categories_overview_bloc/categories_overview_bloc.dart';
 import 'package:grocery/presentation/services/admin/detail_category_bloc/detail_category_bloc.dart';
 import 'package:grocery/presentation/services/admin/edit_category_bloc/edit_category_bloc.dart';
+import 'package:grocery/presentation/services/edit_profile_bloc/edit_profile_bloc.dart';
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
 import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
@@ -126,6 +127,11 @@ class _AppState extends State<App> {
               BlocProvider<AddEditAddressBloc>(
                 create: (context) => AddEditAddressBloc(
                   AddressRepository(appData),
+                ),
+              ),
+              BlocProvider<EditProfileBloc>(
+                create: (context) => EditProfileBloc(
+                  UserRepository(appData),
                 ),
               ),
             ],

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -10,7 +7,10 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.3,
+        centerTitle: false,
         title: Text(
           'Order Review',
           style: AppStyles.bold.copyWith(

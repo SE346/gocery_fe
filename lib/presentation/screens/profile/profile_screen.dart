@@ -83,9 +83,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: ItemProfile(
                     title: 'Profile Settings',
                     subtitle: 'Change your basic profile',
-                    callback: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => EditProfileScreen(user: User())));
+                    callback: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => EditProfileScreen(
+                            user: user,
+                          ),
+                        ),
+                      );
+                      if (result != null) {
+                        _bloc.add(ProfileFetched());
+                      }
                     },
                   ),
                 ),
