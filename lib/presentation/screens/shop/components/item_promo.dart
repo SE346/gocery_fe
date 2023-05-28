@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:grocery/data/models/promo.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
+import 'package:grocery/presentation/screens/shop/components/swiper.dart';
 
 class ItemPromo extends StatelessWidget {
   final Promo promo;

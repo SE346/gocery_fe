@@ -1,12 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
-import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
+import 'package:grocery/presentation/screens/checkout/first_checkout_screen.dart';
 import 'package:grocery/presentation/screens/checkout/review_order_screen.dart';
+import 'package:grocery/presentation/screens/products/component/box_add_to_cart.dart';
+import 'package:grocery/presentation/screens/products/component/box_cart.dart';
+import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
+import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/edit_product_cart.dart';
@@ -26,8 +31,19 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final CarouselController controller = CarouselController();
   int currentIndex = 0;
+  ProductDetailBloc get _bloc => BlocProvider.of<ProductDetailBloc>(context);
 
   final List<Product> productSuggestions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc.add(ProductDetailStarted(
+      idProduct: widget.product.id!,
+      discountPrice: widget.product.discount,
+      originalPrice: widget.product.price,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,27 +88,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Padding(
             padding: const EdgeInsets.only(left: kPaddingHorizontal),
             child: Text(
-              '${widget.product.unit}/pack',
+              widget.product.unit,
               style: AppStyles.regular.copyWith(
                 color: AppColors.gray,
                 fontSize: 16,
               ),
             ),
           ),
-          const SizedBox(height: 15),
+          // original price
+          if (widget.product.discount != 0)
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+              child: Text(
+                '\$${widget.product.price}',
+                style: AppStyles.regular.copyWith(
+                  fontSize: 15,
+                  decoration: TextDecoration.lineThrough,
+                  color: AppColors.text,
+                ),
+              ),
+            ),
+          const SizedBox(height: 10),
           // price
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
             child: Row(
               children: [
-                Text(
-                  '\$${widget.product.price}',
-                  style: AppStyles.medium.copyWith(
-                    color: AppColors.secondary,
-                  ),
-                ),
+                widget.product.discount == 0
+                    ? Text(
+                        '\$${widget.product.price}',
+                        style: AppStyles.medium.copyWith(
+                          color: AppColors.secondary,
+                        ),
+                      )
+                    : Text(
+                        '\$${widget.product.price * widget.product.discount ~/ 100}',
+                        style: AppStyles.medium.copyWith(
+                          color: AppColors.secondary,
+                        ),
+                      ),
                 const Spacer(),
-                const EditProductCart(),
+                EditProductCart(
+                  idProduct: widget.product.id!,
+                ),
               ],
             ),
           ),
@@ -159,26 +198,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             child: Row(
               children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white.withOpacity(0.38),
-                    border: Border.all(
-                      color: const Color(0xFF000000).withOpacity(0.12),
-                    ),
-                  ),
-                  child: Image.asset(
-                    AppAssets.icCart,
-                  ),
+                GestureDetector(
+                  onTap: () {
+                    showBottomDialog(
+                      context,
+                      BoxAddToCart(
+                        product: widget.product,
+                      ),
+                    );
+                  },
+                  child: const BoxCart(),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
-                  child: CustomButton(
-                    margin: 0,
-                    content: 'Buy \$5.40',
-                    onTap: navigateToReviewOrderScreen,
+                  child: BlocBuilder<ProductDetailBloc, ProductDetailState>(
+                    builder: (context, state) {
+                      if (state is ProductDetailLoaded) {
+                        int totalPrice = state.quantity * state.price;
+                        return CustomButton(
+                          margin: 0,
+                          content: 'Buy \$$totalPrice',
+                          onTap: () => navigateToReviewOrderScreen(totalPrice),
+                        );
+                      }
+                      return const SizedBox();
+                    },
                   ),
                 ),
               ],
@@ -189,10 +233,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  void navigateToReviewOrderScreen() {
+  void navigateToReviewOrderScreen(int totalPrice) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const ReviewOrderScreen(),
+        builder: (_) => FirstCheckOutScreen(
+          orderTotal: totalPrice,
+        ),
       ),
     );
   }
@@ -286,9 +332,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           CarouselSlider(
             items: widget.product.productImgList!
                 .map(
-                  (item) => Image.asset(
+                  (item) => Image.network(
                     item.imgUrl,
-                    fit: BoxFit.fitHeight,
+                    fit: BoxFit.cover,
                     width: double.infinity,
                   ),
                 )

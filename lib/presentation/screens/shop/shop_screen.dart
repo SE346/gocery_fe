@@ -110,6 +110,7 @@ class _ShopScreenState extends State<ShopScreen> {
             ),
             const SizedBox(height: 15),
             // list promos
+
             SizedBox(
               height: size.height * .15,
               child: ListView.builder(
@@ -121,7 +122,7 @@ class _ShopScreenState extends State<ShopScreen> {
                 },
                 itemCount: promos.length,
               ),
-            )
+            ),
           ],
         ),
       )),

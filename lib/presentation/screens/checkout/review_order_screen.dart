@@ -6,7 +6,6 @@ import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/address/address_screen.dart';
-import 'package:grocery/presentation/screens/checkout/components/item_review_order.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 
 class ReviewOrderScreen extends StatelessWidget {
@@ -53,7 +52,7 @@ class ReviewOrderScreen extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 Product product = carts[index];
-                return ItemReviewOrder(product: product);
+                //return ItemReviewOrder(product: product);
               },
               itemCount: carts.length,
             ),
@@ -106,6 +105,5 @@ class ReviewOrderScreen extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

@@ -1,14 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/data/models/product.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grocery/data/models/cart.dart';
+import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/widgets/edit_product_cart.dart';
+import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
+import 'package:grocery/presentation/utils/money_extension.dart';
+import 'package:grocery/presentation/widgets/icon_edit_cart.dart';
 
-class ItemReviewOrder extends StatelessWidget {
-  final Product product;
+class ItemReviewOrder extends StatefulWidget {
+  final Cart cart;
+
   const ItemReviewOrder({
     super.key,
-    required this.product,
+    required this.cart,
   });
+
+  @override
+  State<ItemReviewOrder> createState() => _ItemReviewOrderState();
+}
+
+class _ItemReviewOrderState extends State<ItemReviewOrder> {
+  CartBloc get _bloc => BlocProvider.of<CartBloc>(context);
 
   @override
   Widget build(BuildContext context) {
@@ -16,38 +28,108 @@ class ItemReviewOrder extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10.0),
       child: Row(
         children: [
-          Image.asset(
-            product.productImgList![0].imgUrl,
+          Image.network(
+            widget.cart.product.productImgList![0].imgUrl,
+            fit: BoxFit.cover,
+            width: 100,
+            height: 100,
           ),
           const SizedBox(width: 10),
           Expanded(
+            flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.productName,
-                  style: AppStyles.regular.copyWith(
-                    fontSize: 16,
+                  widget.cart.product.productName,
+                  style: AppStyles.medium.copyWith(
+                    fontSize: 14,
                   ),
                 ),
                 const SizedBox(height: 1),
-                Text(
-                  '\$${product.price} / ${product.unit}',
-                  style: AppStyles.regular.copyWith(
-                    fontSize: 12,
-                  ),
-                ),
+                widget.cart.product.discount == 0
+                    ? Text(
+                        '\$${widget.cart.product.price} / ${widget.cart.product.unit}',
+                        style: AppStyles.regular.copyWith(
+                          fontSize: 12,
+                        ),
+                      )
+                    : Text(
+                        '\$${widget.cart.product.price * widget.cart.product.discount ~/ 100} / ${widget.cart.product.unit}',
+                        style: AppStyles.regular.copyWith(
+                          fontSize: 12,
+                        ),
+                      ),
                 const SizedBox(height: 5),
-                Text(
-                  '\$10',
-                  style: AppStyles.semibold.copyWith(
-                    fontSize: 14,
-                  ),
+                BlocBuilder<CartBloc, CartState>(
+                  builder: (context, state) {
+                    if (state is CartLoaded) {
+                      int price = 0;
+                      price = widget.cart.product.discount == 0
+                          ? widget.cart.quantity * widget.cart.product.price
+                          : widget.cart.quantity *
+                              (widget.cart.product.price *
+                                  widget.cart.product.discount ~/
+                                  100);
+                      return Text(
+                        price.toMoney,
+                        style: AppStyles.semibold.copyWith(
+                          fontSize: 14,
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                 ),
               ],
             ),
           ),
-          const EditProductCart(),
+          BlocBuilder<CartBloc, CartState>(
+            builder: (context, state) {
+              if (state is CartLoaded) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconEditCart(
+                      child: const Positioned(
+                        bottom: 7,
+                        child: Icon(
+                          Icons.minimize,
+                          size: 17,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      callback: () {
+                        _bloc.add(
+                          CartRemoved(
+                            cart: widget.cart,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 10),
+                    Text('${widget.cart.quantity}', style: AppStyles.bold),
+                    const SizedBox(width: 10),
+                    IconEditCart(
+                      child: const Icon(
+                        Icons.add,
+                        size: 17,
+                        color: AppColors.primary,
+                      ),
+                      callback: () {
+                        _bloc.add(
+                          CartAdded(
+                            cart: widget.cart,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox();
+            },
+          ),
         ],
       ),
     );
