@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/res/colors.dart';
-import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/address/address_screen.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_review_order.dart';
@@ -52,8 +49,8 @@ class ReviewOrderScreen extends StatelessWidget {
             child: ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                Product product = carts[index];
-                return ItemReviewOrder(product: product);
+                // Product product = carts[index];
+                // return ItemReviewOrder(product: product);
               },
               itemCount: carts.length,
             ),

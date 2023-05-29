@@ -19,6 +19,8 @@ class AppAssets {
   static const String icChart = '$iconPath/chart.png';
   static const String icArrowRight = '$iconPath/ic_arrow_right.png';
   static const String icCamera = '$iconPath/ic_camera.png';
+  static const String icCash = '$iconPath/cash.png';
+
   // list image category
   static const String icVegetables = '$iconPath/vegetables.png';
   static const String icFruits = '$iconPath/fruits.png';
@@ -33,6 +35,7 @@ class AppAssets {
   static const String onboarding = '$imagePath/onboarding.png';
   static const String splash = '$imagePath/splash.png';
   static const String name = '$imagePath/name.png';
+  static const String fakeMap = '$imagePath/fake-map.png';
 
   // list image promo
   static const String promo1 = '$imagePath/promo1.png';
