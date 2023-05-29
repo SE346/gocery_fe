@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
+import 'package:grocery/data/repository/cart_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
 import 'package:grocery/data/repository/user_repository.dart';
@@ -27,7 +28,9 @@ import 'package:grocery/presentation/services/edit_profile_bloc/edit_profile_blo
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
 import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
+import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
 import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -134,6 +137,16 @@ class _AppState extends State<App> {
                   UserRepository(appData),
                 ),
               ),
+              BlocProvider<ProductDetailBloc>(
+                create: (context) => ProductDetailBloc(
+                  CartRepository(appData),
+                ),
+              ),
+              BlocProvider<CartBloc>(
+                create: (context) => CartBloc(
+                  CartRepository(appData),
+                ),
+              ),
             ],
             child: MaterialApp(
               title: 'Gocery',
@@ -147,7 +160,7 @@ class _AppState extends State<App> {
                   if (state is AuthenticatonUnAuthorized) {
                     return const SplashScreen();
                   } else if (state is AuthenticationAuthorized) {
-                    if (state.role == "User") {
+                    if (state.role == "Admin") {
                       return const admin.BottomNavigationBarScreen();
                     } else {
                       return const user.BottomNavigationBarScreen();
