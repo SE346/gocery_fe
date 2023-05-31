@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/cart.dart';
+import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/repository/cart_repository.dart';
 
 part 'cart_event.dart';
@@ -12,6 +13,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository _cartRepository;
 
   List<Cart> carts = [];
+  int totalMoney = 0;
 
   CartBloc(this._cartRepository) : super(CartInitial()) {
     on<CartStarted>(_onStarted);
@@ -19,13 +21,32 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<CartRemoved>(_onRemoved);
   }
 
+  int countOrginalPrice(Product product) {
+    return product.discount == 0
+        ? product.price
+        : product.price * product.discount ~/ 100;
+  }
+
   FutureOr<void> _onStarted(CartStarted event, Emitter<CartState> emit) async {
     emit(CartLoading());
-
+    totalMoney = 0;
     try {
       List<Cart>? result = await _cartRepository.getAllCarts();
       carts = result ?? [];
-      emit(CartLoaded(carts: [...carts]));
+
+      int total = 0;
+
+      for (var cart in carts) {
+        int originalPrice = countOrginalPrice(cart.product);
+        total += cart.quantity * originalPrice;
+      }
+
+      totalMoney = total;
+
+      emit(CartLoaded(
+        carts: [...carts],
+        totalMoney: totalMoney,
+      ));
     } catch (e) {
       emit(CartFailure(errorMessage: e.toString()));
     }
@@ -38,7 +59,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       int index = carts.indexOf(event.cart);
       carts.removeWhere((cart) => cart.product.id == event.cart.product.id);
       carts.insert(index, cart);
-      emit(CartLoaded(carts: [...carts]));
+      emit(CartLoaded(
+        carts: [...carts],
+        totalMoney: totalMoney,
+      ));
     } catch (e) {
       emit(CartFailure(errorMessage: e.toString()));
     }
@@ -54,7 +78,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         carts.insert(index, cart);
       }
 
-      emit(CartLoaded(carts: [...carts]));
+      emit(CartLoaded(
+        carts: [...carts],
+        totalMoney: totalMoney,
+      ));
     } catch (e) {
       emit(CartFailure(errorMessage: e.toString()));
     }

@@ -4,6 +4,7 @@ import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/cart_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
+import 'package:grocery/data/repository/order_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
 import 'package:grocery/data/repository/user_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
@@ -11,6 +12,7 @@ import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bo
     as admin;
 import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as user;
+import 'package:grocery/presentation/screens/checkout/second_checkout_screen.dart';
 import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
 import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_address_bloc.dart';
 import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
@@ -31,6 +33,7 @@ import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
 import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
 import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -146,6 +149,12 @@ class _AppState extends State<App> {
                 create: (context) => CartBloc(
                   CartRepository(appData),
                 ),
+              ),
+              BlocProvider<SecondCheckoutBloc>(
+                create: (context) => SecondCheckoutBloc(
+                    AddressRepository(appData),
+                    OrderRepository(appData),
+                    CartRepository(appData)),
               ),
             ],
             child: MaterialApp(

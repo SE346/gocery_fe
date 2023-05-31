@@ -10,7 +10,12 @@ import 'package:grocery/presentation/screens/shop/shop_screen.dart';
 import 'package:grocery/presentation/services/bottom_navigation_bloc/cubit/navigation_cubit.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
-  const BottomNavigationBarScreen({Key? key}) : super(key: key);
+  final int index;
+
+  const BottomNavigationBarScreen({
+    Key? key,
+    this.index = 1,
+  }) : super(key: key);
 
   @override
   State<BottomNavigationBarScreen> createState() =>
@@ -22,6 +27,10 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<NavigationCubit>(context).getNavBarItem(NavBarItem.shop);
+
+    if (widget.index != 1) {
+      BlocProvider.of<NavigationCubit>(context).getNavBarItem(NavBarItem.order);
+    }
   }
 
   @override

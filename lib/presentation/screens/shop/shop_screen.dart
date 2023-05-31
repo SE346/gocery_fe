@@ -9,6 +9,7 @@ import 'package:grocery/presentation/res/dimensions.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/category/category_detail_screen.dart';
+import 'package:grocery/presentation/screens/checkout/successful_checkout_screen.dart';
 import 'package:grocery/presentation/screens/shop/components/box_search.dart';
 import 'package:grocery/presentation/screens/shop/components/item_category.dart';
 import 'package:grocery/presentation/screens/shop/components/item_promo.dart';
@@ -78,9 +79,20 @@ class _ShopScreenState extends State<ShopScreen> {
                     ),
                   ),
                   const SizedBox(width: 15),
-                  const Icon(
-                    FontAwesomeIcons.bell,
-                    color: AppColors.primary,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => SuccessfulCheckOutScreen(
+                            name: 'Hung',
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      FontAwesomeIcons.bell,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ],
               ),

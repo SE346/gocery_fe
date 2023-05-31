@@ -36,6 +36,7 @@ class AppAssets {
   static const String splash = '$imagePath/splash.png';
   static const String name = '$imagePath/name.png';
   static const String fakeMap = '$imagePath/fake-map.png';
+  static const String star = '$imagePath/star.png';
 
   // list image promo
   static const String promo1 = '$imagePath/promo1.png';

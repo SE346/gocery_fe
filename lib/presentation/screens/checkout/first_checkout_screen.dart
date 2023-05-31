@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';

@@ -4,6 +4,7 @@ import 'package:grocery/data/models/cart.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_review_order.dart';
+import 'package:grocery/presentation/screens/checkout/first_checkout_screen.dart';
 import 'package:grocery/presentation/screens/checkout/review_order_screen.dart';
 import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
@@ -29,11 +30,12 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0.3,
         centerTitle: false,
         title: Text(
-          'Order Review',
+          'Cart',
           style: AppStyles.bold.copyWith(
             fontSize: 19,
           ),
@@ -82,7 +84,9 @@ class _CartScreenState extends State<CartScreen> {
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (_) => const ReviewOrderScreen(),
+                            builder: (_) => FirstCheckOutScreen(
+                              orderTotal: state.totalMoney,
+                            ),
                           ),
                         );
                       },
