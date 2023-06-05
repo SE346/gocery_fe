@@ -9,8 +9,12 @@ abstract class AddEditCouponEvent extends Equatable {
 
 class ButtonAddCouponPressed extends AddEditCouponEvent {
   final Coupon coupon;
+  final File imageFile;
 
-  const ButtonAddCouponPressed({required this.coupon});
+  const ButtonAddCouponPressed({
+    required this.coupon,
+    required this.imageFile,
+  });
 
   @override
   List<Object> get props => [coupon];

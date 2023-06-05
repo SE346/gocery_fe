@@ -31,39 +31,42 @@ class ItemCoupon extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(coupon.couponType, style: AppStyles.medium),
-              Text(
-                coupon.description,
-                style: AppStyles.regular.copyWith(
-                  fontSize: 14,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(coupon.couponType, style: AppStyles.medium),
+                Text(
+                  coupon.description,
+                  style: AppStyles.regular.copyWith(
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Expired Date: ',
-                    style: AppStyles.regular.copyWith(
-                      fontSize: 14,
+                Row(
+                  children: [
+                    Text(
+                      'Expired Date: ',
+                      style: AppStyles.regular.copyWith(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  Text(coupon.endDate, style: AppStyles.medium),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Quantity: ',
-                    style: AppStyles.regular.copyWith(
-                      fontSize: 14,
+                    Text(coupon.endDate, style: AppStyles.medium),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Quantity: ',
+                      style: AppStyles.regular.copyWith(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  Text(coupon.quantity.toString(), style: AppStyles.medium),
-                ],
-              ),
-            ],
+                    Text(coupon.quantity.toString(), style: AppStyles.medium),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),

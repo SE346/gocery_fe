@@ -12,8 +12,8 @@ class Coupon {
   final int pricePointAccept;
   final int quantity;
   final String description;
-  final String thumbnail;
-  final List<CouponItem> couponItemList;
+  final String? thumbnail;
+  final List<CouponItem>? couponItemList;
   Coupon({
     this.id,
     required this.fromDate,
@@ -23,13 +23,12 @@ class Coupon {
     required this.pricePointAccept,
     required this.quantity,
     required this.description,
-    required this.thumbnail,
-    required this.couponItemList,
+    this.thumbnail,
+    this.couponItemList,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'fromDate': fromDate,
       'endDate': endDate,
       'couponType': couponType,
@@ -37,8 +36,7 @@ class Coupon {
       'pricePointAccept': pricePointAccept,
       'quantity': quantity,
       'description': description,
-      'thumnail': thumbnail,
-      'couponItemList': couponItemList.map((x) => x.toMap()).toList(),
+      'thumbnail': thumbnail,
     };
   }
 
@@ -48,7 +46,7 @@ class Coupon {
       fromDate: map['fromDate'] as String,
       endDate: map['endDate'] as String,
       couponType: map['couponType'] as String,
-      discount: map['discount'] as int,
+      discount: map['discount'] ?? 0,
       pricePointAccept: map['pricePointAccept'],
       quantity: map['quantity'] as int,
       description: map['description'] as String,
@@ -65,4 +63,30 @@ class Coupon {
 
   factory Coupon.fromJson(String source) =>
       Coupon.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Coupon copyWith({
+    int? id,
+    String? fromDate,
+    String? endDate,
+    String? couponType,
+    int? discount,
+    int? pricePointAccept,
+    int? quantity,
+    String? description,
+    String? thumbnail,
+    List<CouponItem>? couponItemList,
+  }) {
+    return Coupon(
+      id: id ?? this.id,
+      fromDate: fromDate ?? this.fromDate,
+      endDate: endDate ?? this.endDate,
+      couponType: couponType ?? this.couponType,
+      discount: discount ?? this.discount,
+      pricePointAccept: pricePointAccept ?? this.pricePointAccept,
+      quantity: quantity ?? this.quantity,
+      description: description ?? this.description,
+      thumbnail: thumbnail ?? this.thumbnail,
+      couponItemList: couponItemList ?? this.couponItemList,
+    );
+  }
 }

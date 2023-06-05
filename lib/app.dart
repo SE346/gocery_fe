@@ -18,6 +18,7 @@ import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
 import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_address_bloc.dart';
 import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
+import 'package:grocery/presentation/services/admin/add_edit_coupon_bloc/add_edit_coupon_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
@@ -173,6 +174,11 @@ class _AppState extends State<App> {
               ),
               BlocProvider<CouponBloc>(
                 create: (context) => CouponBloc(
+                  CouponRepository(appData),
+                ),
+              ),
+              BlocProvider<AddEditCouponBloc>(
+                create: (context) => AddEditCouponBloc(
                   CouponRepository(appData),
                 ),
               ),
