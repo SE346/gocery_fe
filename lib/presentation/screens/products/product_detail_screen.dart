@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:grocery/data/models/cart.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
@@ -213,11 +214,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: BlocBuilder<ProductDetailBloc, ProductDetailState>(
                     builder: (context, state) {
                       if (state is ProductDetailLoaded) {
-                        int totalPrice = state.quantity * state.price;
+                        double totalPrice =
+                            state.quantity.toDouble() * state.price;
                         return CustomButton(
                           margin: 0,
                           content: 'Buy \$$totalPrice',
-                          onTap: () => navigateToReviewOrderScreen(totalPrice),
+                          onTap: () => navigateToReviewOrderScreen(
+                              totalPrice, state.quantity),
                         );
                       }
                       return const SizedBox();
@@ -232,11 +235,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  void navigateToReviewOrderScreen(int totalPrice) {
+  void navigateToReviewOrderScreen(double totalPrice, int quantity) {
+    Cart cart = Cart(product: widget.product, quantity: quantity);
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => FirstCheckOutScreen(
           orderTotal: totalPrice,
+          carts: [cart],
         ),
       ),
     );

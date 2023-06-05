@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/address.dart';
 import 'package:grocery/data/models/cart.dart';
 import 'package:grocery/data/models/order.dart';
+import 'package:grocery/data/models/payment.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
+import 'package:grocery/presentation/screens/address/address_screen.dart';
 import 'package:grocery/presentation/screens/checkout/components/box_address.dart';
+import 'package:grocery/presentation/screens/checkout/components/box_time.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';
 import 'package:grocery/presentation/screens/checkout/successful_checkout_screen.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
@@ -16,10 +19,13 @@ import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class SecondCheckOutScreen extends StatefulWidget {
-  final int orderTotal;
+  final double orderTotal;
+  final List<Cart> carts;
+
   const SecondCheckOutScreen({
     super.key,
     required this.orderTotal,
+    required this.carts,
   });
 
   @override
@@ -28,7 +34,17 @@ class SecondCheckOutScreen extends StatefulWidget {
 
 class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
   SecondCheckoutBloc get _bloc => BlocProvider.of<SecondCheckoutBloc>(context);
-
+  List<Payment> payments = [
+    Payment(
+      img: AppAssets.icCash,
+      name: 'Payment By Cash',
+    ),
+    Payment(
+      img: AppAssets.icCash,
+      name: 'Payment By Zalo Pay',
+    )
+  ];
+  String namePayment = "Payment By Cash";
   @override
   void initState() {
     super.initState();
@@ -37,6 +53,9 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double deliveryFee = 2;
+    double vatFee = 0.1 * widget.orderTotal;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: Text(
@@ -88,9 +107,33 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                 const SizedBox(height: 10),
                 _buildDivider(),
                 const SizedBox(height: 10),
-                BoxAddress(
-                  address: currentAddress,
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const AddressScreen(),
+                      ),
+                    );
+                    if (result != null) {
+                      _bloc.add(NewAddressChosen(newAddress: result));
+                    }
+                  },
+                  child: BoxAddress(address: currentAddress),
                 ),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Pick up time',
+                    style: AppStyles.medium,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const BoxTime(),
+                const SizedBox(height: 10),
+                _buildDivider(),
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -104,7 +147,7 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        widget.orderTotal.toMoney,
+                        widget.orderTotal.toDouble().toMoney,
                         style: AppStyles.regular,
                       ),
                     ],
@@ -123,7 +166,26 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        0.toMoney,
+                        deliveryFee.toDouble().toMoney,
+                        style: AppStyles.regular,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'VAT (10%)',
+                        style: AppStyles.regular,
+                      ),
+                      const Spacer(),
+                      Text(
+                        vatFee.toDouble().toMoney,
                         style: AppStyles.regular,
                       ),
                     ],
@@ -140,7 +202,7 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        widget.orderTotal.toMoney,
+                        (widget.orderTotal + vatFee + deliveryFee).toMoney,
                         style: AppStyles.bold,
                       ),
                     ],
@@ -157,19 +219,26 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: ItemPaymentMethod(
-                    img: AppAssets.icCash,
-                    method: 'Payment By Cash',
-                  ),
-                ),
-                const SizedBox(height: 5),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: ItemPaymentMethod(
-                    img: AppAssets.icCash,
-                    method: 'Payment By Zalo Pay',
+                SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    // spacing: 10,
+                    // direction: Axis.vertical,
+                    children: payments
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                namePayment = e.name;
+                              });
+                            },
+                            child: ItemPaymentMethod(
+                              payment: e,
+                              isPicked: namePayment == e.name,
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
                 const Spacer(),
@@ -182,7 +251,7 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                         addressId: currentAddress.id!,
                         deliveryDate: DateTime.now().toUtc().toIso8601String(),
                         paymentMethod: 'Credit',
-                        productList: state.carts,
+                        productList: widget.carts,
                       );
                       _bloc.add(CheckoutSubmitted(order: order));
                     },

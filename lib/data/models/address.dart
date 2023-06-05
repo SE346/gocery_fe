@@ -46,7 +46,7 @@ class Address {
   factory Address.fromMap(Map<String, dynamic> map) {
     return Address(
       id: map['id'] as int,
-      setAsPrimary: map['active'] as bool,
+      setAsPrimary: map['active'] ?? true,
       name: map['name'] as String,
       provinceId: map['provinceId'] as int,
       provinceName: map['provinceName'] as String,

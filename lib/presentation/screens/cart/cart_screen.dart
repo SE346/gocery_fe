@@ -86,6 +86,7 @@ class _CartScreenState extends State<CartScreen> {
                           MaterialPageRoute(
                             builder: (_) => FirstCheckOutScreen(
                               orderTotal: state.totalMoney,
+                              carts: state.carts,
                             ),
                           ),
                         );

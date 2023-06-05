@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/data/models/transaction.dart';
+import 'package:grocery/data/models/order.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/screens/admin/transactions/components/item_tag.dart';
+import 'package:grocery/presentation/screens/order/components/item_tag_order.dart';
+import 'package:intl/intl.dart';
 
 class ItemTransaction extends StatelessWidget {
-  final Transaction transaction;
+  final Order order;
 
   const ItemTransaction({
     super.key,
-    required this.transaction,
+    required this.order,
   });
 
   @override
@@ -21,10 +22,11 @@ class ItemTransaction extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ItemTag(orderStatus: transaction.orderStatus),
+              ItemTagOrder(status: order.status!),
               const Spacer(),
               Text(
-                transaction.createdAt,
+                DateFormat('dd/MM/yyyy hh:MM')
+                    .format(DateTime.parse(order.createdAt!)),
                 style: AppStyles.regular.copyWith(
                   color: AppColors.gray,
                   fontSize: 15,
@@ -33,26 +35,30 @@ class ItemTransaction extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              itemColumn('Transaction ID', transaction.id),
-              itemColumn('User', transaction.username),
-              itemColumn('Total Payment', transaction.totalPayment),
-            ],
-          )
+          itemRow('Transaction ID', order.id!),
+          itemRow('User', order.address!.name),
+          itemRow('Total Payment', '\$ ${order.total.toString()}'),
         ],
       ),
     );
   }
 
-  Widget itemColumn(String key, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget itemRow(String key, String value) {
+    return Row(
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(key, style: AppStyles.regular),
+        Text(
+          '$key: ',
+          style: AppStyles.regular,
+        ),
         const SizedBox(height: 5),
-        Text(value, style: AppStyles.medium)
+        Flexible(
+          child: Text(
+            value,
+            style: AppStyles.medium,
+            overflow: TextOverflow.ellipsis,
+          ),
+        )
       ],
     );
   }

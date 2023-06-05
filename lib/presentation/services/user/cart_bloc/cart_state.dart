@@ -13,7 +13,7 @@ class CartLoading extends CartState {}
 
 class CartLoaded extends CartState {
   final List<Cart> carts;
-  final int totalMoney;
+  final double totalMoney;
 
   const CartLoaded({
     required this.carts,

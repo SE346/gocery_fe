@@ -13,7 +13,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository _cartRepository;
 
   List<Cart> carts = [];
-  int totalMoney = 0;
+  double totalMoney = 0;
 
   CartBloc(this._cartRepository) : super(CartInitial()) {
     on<CartStarted>(_onStarted);
@@ -21,10 +21,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<CartRemoved>(_onRemoved);
   }
 
-  int countOrginalPrice(Product product) {
+  double countOrginalPrice(Product product) {
     return product.discount == 0
-        ? product.price
-        : product.price * product.discount ~/ 100;
+        ? product.price.toDouble()
+        : product.price * product.discount / 100;
+  }
+
+  double countTotalMoney() {
+    double total = 0;
+
+    for (var cart in carts) {
+      double originalPrice = countOrginalPrice(cart.product);
+      total += cart.quantity * originalPrice;
+    }
+    return total;
   }
 
   FutureOr<void> _onStarted(CartStarted event, Emitter<CartState> emit) async {
@@ -34,14 +44,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       List<Cart>? result = await _cartRepository.getAllCarts();
       carts = result ?? [];
 
-      int total = 0;
-
-      for (var cart in carts) {
-        int originalPrice = countOrginalPrice(cart.product);
-        total += cart.quantity * originalPrice;
-      }
-
-      totalMoney = total;
+      totalMoney = countTotalMoney();
 
       emit(CartLoaded(
         carts: [...carts],
@@ -59,6 +62,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       int index = carts.indexOf(event.cart);
       carts.removeWhere((cart) => cart.product.id == event.cart.product.id);
       carts.insert(index, cart);
+      totalMoney = countTotalMoney();
       emit(CartLoaded(
         carts: [...carts],
         totalMoney: totalMoney,
@@ -77,7 +81,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (cart.quantity != 0) {
         carts.insert(index, cart);
       }
-
+      totalMoney = countTotalMoney();
       emit(CartLoaded(
         carts: [...carts],
         totalMoney: totalMoney,

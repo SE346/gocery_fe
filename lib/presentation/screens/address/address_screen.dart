@@ -109,20 +109,25 @@ class _AddressScreenState extends State<AddressScreen> {
 
                   // The child of the Slidable is what the user sees when the
                   // component is not dragged.
-                  child: ItemAddress(
-                    address: address,
-                    callback: (id) async {
-                      final result = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              AddEditAddressScreen(currentAddress: address),
-                        ),
-                      );
-
-                      if (result != null) {
-                        _bloc.add(AddressStarted());
-                      }
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop(address);
                     },
+                    child: ItemAddress(
+                      address: address,
+                      callback: (id) async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                AddEditAddressScreen(currentAddress: address),
+                          ),
+                        );
+
+                        if (result != null) {
+                          _bloc.add(AddressStarted());
+                        }
+                      },
+                    ),
                   ),
                 );
               },

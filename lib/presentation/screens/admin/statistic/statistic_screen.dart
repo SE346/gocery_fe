@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/app.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/statistic/components/item_stat.dart';
 import 'package:grocery/presentation/screens/admin/statistic/detail_statistic_screen.dart';
 import 'package:grocery/presentation/widgets/box.dart';
-import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class StatisticScreen extends StatelessWidget {

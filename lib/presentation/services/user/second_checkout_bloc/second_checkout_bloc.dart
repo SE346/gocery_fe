@@ -27,6 +27,7 @@ class SecondCheckoutBloc
   ) : super(SecondCheckoutInitial()) {
     on<SecondCheckoutStarted>(_onStarted);
     on<CheckoutSubmitted>(_onSubmitted);
+    on<NewAddressChosen>(_onNewAddressChosen);
   }
 
   FutureOr<void> _onStarted(
@@ -57,5 +58,10 @@ class SecondCheckoutBloc
     } catch (e) {
       emit(SecondCheckoutFailure(errorMessage: e.toString()));
     }
+  }
+
+  FutureOr<void> _onNewAddressChosen(
+      NewAddressChosen event, Emitter<SecondCheckoutState> emit) {
+    emit(SecondCheckoutSuccess(currentAddress: event.newAddress, carts: carts));
   }
 }

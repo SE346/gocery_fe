@@ -17,3 +17,12 @@ class CheckoutSubmitted extends SecondCheckoutEvent {
   @override
   List<Object> get props => [order];
 }
+
+class NewAddressChosen extends SecondCheckoutEvent {
+  final Address newAddress;
+
+  const NewAddressChosen({required this.newAddress});
+
+  @override
+  List<Object> get props => [newAddress];
+}

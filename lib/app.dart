@@ -4,6 +4,7 @@ import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/cart_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
+import 'package:grocery/data/repository/coupon_repository.dart';
 import 'package:grocery/data/repository/order_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
 import 'package:grocery/data/repository/user_repository.dart';
@@ -18,6 +19,7 @@ import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_add
 import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
+import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
@@ -30,8 +32,10 @@ import 'package:grocery/presentation/services/edit_profile_bloc/edit_profile_blo
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
 import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
+import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
 import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/order_bloc/order_bloc.dart';
 import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
@@ -152,9 +156,25 @@ class _AppState extends State<App> {
               ),
               BlocProvider<SecondCheckoutBloc>(
                 create: (context) => SecondCheckoutBloc(
-                    AddressRepository(appData),
-                    OrderRepository(appData),
-                    CartRepository(appData)),
+                  AddressRepository(appData),
+                  OrderRepository(appData),
+                  CartRepository(appData),
+                ),
+              ),
+              BlocProvider<OrderBloc>(
+                create: (context) => OrderBloc(
+                  OrderRepository(appData),
+                ),
+              ),
+              BlocProvider<TransactionBloc>(
+                create: (context) => TransactionBloc(
+                  OrderRepository(appData),
+                ),
+              ),
+              BlocProvider<CouponBloc>(
+                create: (context) => CouponBloc(
+                  CouponRepository(appData),
+                ),
               ),
             ],
             child: MaterialApp(

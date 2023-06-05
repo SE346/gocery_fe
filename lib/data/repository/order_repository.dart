@@ -13,6 +13,7 @@ import 'package:grocery/presentation/services/app_data.dart';
 class OrderRepository extends IServiceAPI {
   String urlCreateOrder = 'order/';
   String urlGetAllOrderBelongToUser = 'order';
+  String urlGetAllOrder = 'order/admin';
   String urlLogin = 'auth/login';
   String urlRefreshToken = 'auth/refresh-token';
   String urlLogout = "auth/logout";
@@ -25,6 +26,7 @@ class OrderRepository extends IServiceAPI {
     urlGetAllOrderBelongToUser = localURL + urlGetAllOrderBelongToUser;
     urlRefreshToken = localURL + urlRefreshToken;
     urlLogout = localURL + urlLogout;
+    urlGetAllOrder = localURL + urlGetAllOrder;
   }
 
   @override
@@ -61,6 +63,27 @@ class OrderRepository extends IServiceAPI {
       }
     } catch (e) {
       log("error get all orders belong to user: $e");
+    }
+
+    return orders;
+  }
+
+  Future<List<Order>> getAllOrders() async {
+    List<Order> orders = [];
+    try {
+      final response = await apiServices.get(
+        urlGetAllOrder,
+        _appData.headers,
+      );
+
+      final BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+      for (var json in baseResponse.data) {
+        Order order = Order.fromMap(json);
+        orders.add(order);
+      }
+    } catch (e) {
+      log("error get all orders: $e");
     }
 
     return orders;

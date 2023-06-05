@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/data/models/transaction.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grocery/data/models/order.dart';
+import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/transactions/components/item_transaction.dart';
-import 'package:grocery/presentation/screens/admin/transactions/transaction_detail_screen.dart';
+import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -12,29 +14,14 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  final List<Transaction> transactions = [
-    Transaction(
-      orderStatus: OrderStatus.finished,
-      id: '#321DERS',
-      totalPayment: '\$12.04',
-      username: 'username',
-      createdAt: '08/04/2023',
-    ),
-    Transaction(
-      orderStatus: OrderStatus.inprogress,
-      id: '#321DERS',
-      totalPayment: '\$12.04',
-      username: 'username',
-      createdAt: '08/04/2023',
-    ),
-    Transaction(
-      orderStatus: OrderStatus.cancelled,
-      id: '#321DERS',
-      createdAt: '08/04/2023',
-      totalPayment: '\$12.04',
-      username: 'username',
-    ),
-  ];
+  TransactionBloc get _bloc => BlocProvider.of<TransactionBloc>(context);
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc.add(TransactionStarted());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,21 +36,33 @@ class _TransactionScreenState extends State<TransactionScreen> {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          Transaction transaction = transactions[index];
-          return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        TransactionDetailScreen(transaction: transaction),
-                  ),
-                );
+      body: BlocBuilder<TransactionBloc, TransactionState>(
+        builder: (context, state) {
+          if (state is TransactionLoading) {
+            return LoadingScreen().showLoadingWidget();
+          } else if (state is TransactionSuccess) {
+            List<Order> orders = state.orders;
+
+            return ListView.builder(
+              itemBuilder: (context, index) {
+                Order order = orders[index];
+                return GestureDetector(
+                    onTap: () {
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (_) => (
+                      //       transaction: order,
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                    child: ItemTransaction(order: order));
               },
-              child: ItemTransaction(transaction: transaction));
+              itemCount: orders.length,
+            );
+          }
+          return const SizedBox();
         },
-        itemCount: transactions.length,
       ),
     );
   }

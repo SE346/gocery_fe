@@ -55,7 +55,7 @@ class ItemProduct extends StatelessWidget {
         const SizedBox(height: 5),
         if (product.discount != 0)
           Text(
-            '\$${product.price * product.discount ~/ 100}',
+            '\$${product.price * (product.discount / 100)}',
             style: AppStyles.medium.copyWith(
               color: AppColors.secondary,
               fontSize: 17,
