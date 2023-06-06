@@ -55,7 +55,7 @@ class _ItemReviewOrderState extends State<ItemReviewOrder> {
                         ),
                       )
                     : Text(
-                        '\$${widget.cart.product.price * widget.cart.product.discount ~/ 100} / ${widget.cart.product.unit}',
+                        '\$${widget.cart.product.price * widget.cart.product.discount / 100} / ${widget.cart.product.unit}',
                         style: AppStyles.regular.copyWith(
                           fontSize: 12,
                         ),
@@ -64,13 +64,13 @@ class _ItemReviewOrderState extends State<ItemReviewOrder> {
                 BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
                     if (state is CartLoaded) {
-                      int price = 0;
+                      double price = 0;
                       price = widget.cart.product.discount == 0
-                          ? widget.cart.quantity * widget.cart.product.price
+                          ? (widget.cart.quantity * widget.cart.product.price)
+                              .toDouble()
                           : widget.cart.quantity *
-                              (widget.cart.product.price *
-                                  widget.cart.product.discount ~/
-                                  100);
+                              widget.cart.product.price *
+                              (widget.cart.product.discount / 100);
                       return Text(
                         price.toMoney,
                         style: AppStyles.semibold.copyWith(

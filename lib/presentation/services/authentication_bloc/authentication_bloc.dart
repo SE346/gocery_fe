@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
-import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_state.dart';
 

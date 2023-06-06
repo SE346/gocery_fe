@@ -78,6 +78,7 @@ class AuthRepository extends IServiceAPI {
   }
 
   Future<String?> refreshToken() async {
+    await _appData.getRefreshToken();
     try {
       final response = await apiServices.post(
         urlRefreshToken,
@@ -93,8 +94,8 @@ class AuthRepository extends IServiceAPI {
       }
     } catch (e) {
       print('Error refreshToken: $e');
-      return null;
     }
+    return null;
   }
 
   Future<bool> checkUserLoggined() async {

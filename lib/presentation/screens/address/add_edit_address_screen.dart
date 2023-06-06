@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,7 +13,6 @@ import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/box.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
-import 'package:http/http.dart';
 
 class AddEditAddressScreen extends StatefulWidget {
   final Address? currentAddress;

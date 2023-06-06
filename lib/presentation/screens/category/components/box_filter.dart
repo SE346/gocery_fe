@@ -88,7 +88,7 @@ class _BoxFilterState extends State<BoxFilter> {
           ),
         ),
         child: Text(
-          money.toMoney,
+          money.toDouble().toMoney,
           textAlign: TextAlign.center,
           style: AppStyles.regular,
         ),

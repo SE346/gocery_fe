@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 
 class BoxCart extends StatelessWidget {

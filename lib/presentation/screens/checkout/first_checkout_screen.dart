@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grocery/presentation/res/colors.dart';
+import 'package:grocery/data/models/cart.dart';
+import 'package:grocery/data/models/payment.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';
@@ -8,15 +9,37 @@ import 'package:grocery/presentation/utils/money_extension.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
-class FirstCheckOutScreen extends StatelessWidget {
-  final int orderTotal;
+class FirstCheckOutScreen extends StatefulWidget {
+  final double orderTotal;
+  final List<Cart> carts;
   const FirstCheckOutScreen({
     super.key,
     required this.orderTotal,
+    required this.carts,
   });
 
   @override
+  State<FirstCheckOutScreen> createState() => _FirstCheckOutScreenState();
+}
+
+class _FirstCheckOutScreenState extends State<FirstCheckOutScreen> {
+  // List<Payment> payments = [
+  //   Payment(
+  //     img: AppAssets.icCash,
+  //     name: 'Payment By Cash',
+  //   ),
+  //   Payment(
+  //     img: AppAssets.icCash,
+  //     name: 'Payment By Zalo Pay',
+  //   )
+  // ];
+  // String namePayment = "Payment By Cash";
+
+  @override
   Widget build(BuildContext context) {
+    double deliveryFee = 2;
+    double vatFee = 0.1 * widget.orderTotal;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: Text(
@@ -42,7 +65,7 @@ class FirstCheckOutScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  orderTotal.toMoney,
+                  widget.orderTotal.toDouble().toMoney,
                   style: AppStyles.regular,
                 ),
               ],
@@ -61,7 +84,26 @@ class FirstCheckOutScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  0.toMoney,
+                  deliveryFee.toDouble().toMoney,
+                  style: AppStyles.regular,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  'VAT (10%)',
+                  style: AppStyles.regular,
+                ),
+                const Spacer(),
+                Text(
+                  vatFee.toMoney,
                   style: AppStyles.regular,
                 ),
               ],
@@ -78,7 +120,7 @@ class FirstCheckOutScreen extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  orderTotal.toMoney,
+                  (widget.orderTotal + vatFee + deliveryFee).toMoney,
                   style: AppStyles.bold,
                 ),
               ],
@@ -91,29 +133,53 @@ class FirstCheckOutScreen extends StatelessWidget {
             color: const Color(0xFFEEEEEE),
           ),
           const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Choose Payment Method',
-              style: AppStyles.medium,
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ItemPaymentMethod(
-              img: AppAssets.icCash,
-              method: 'Payment By Cash',
-            ),
-          ),
-          const SizedBox(height: 5),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: ItemPaymentMethod(
-              img: AppAssets.icCash,
-              method: 'Payment By Zalo Pay',
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+          //   child: Text(
+          //     'Choose Payment Method',
+          //     style: AppStyles.medium,
+          //   ),
+          // ),
+          // const SizedBox(height: 10),
+          // SizedBox(
+          //   width: double.infinity,
+          //   child: Wrap(
+          //     // spacing: 10,
+          //     // direction: Axis.vertical,
+          //     children: payments
+          //         .map(
+          //           (e) => GestureDetector(
+          //             onTap: () {
+          //               setState(() {
+          //                 namePayment = e.name;
+          //               });
+          //             },
+          //             child: ItemPaymentMethod(
+          //               payment: e,
+          //               isPicked: namePayment == e.name,
+          //             ),
+          //           ),
+          //         )
+          //         .toList(),
+          //   ),
+          // ),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 20),
+          //   child: ItemPaymentMethod(
+          //     img: AppAssets.icCash,
+          //     method: 'Payment By Cash',
+          //     isPicked: true,
+          //   ),
+          // ),
+          // const SizedBox(height: 5),
+          // const Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 20),
+          //   child: ItemPaymentMethod(
+          //     img: AppAssets.icCash,
+          //     method: 'Payment By Zalo Pay',
+          //     isPicked: false,
+          //   ),
+          // ),
           const Spacer(),
           SafeArea(
             child: CustomButton(
@@ -122,7 +188,8 @@ class FirstCheckOutScreen extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => SecondCheckOutScreen(
-                      orderTotal: orderTotal,
+                      carts: widget.carts,
+                      orderTotal: widget.orderTotal,
                     ),
                   ),
                 );

@@ -1,35 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:grocery/data/models/payment.dart';
+import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/widgets/box.dart';
 
 class ItemPaymentMethod extends StatelessWidget {
-  final String img;
-  final String method;
+  final Payment payment;
+  final bool isPicked;
 
   const ItemPaymentMethod({
     super.key,
-    required this.img,
-    required this.method,
+    required this.payment,
+    required this.isPicked,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Box(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Row(
+    return Container(
+      margin: const EdgeInsets.only(
+        bottom: 15,
+        left: 20,
+        right: 20,
+      ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 0),
+            blurRadius: 30,
+            color: const Color(0xFF8D979E).withOpacity(0.2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Stack(
         children: [
-          Image.asset(
-            img,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 18,
+              top: 18,
+              left: 20,
+            ),
+            child: Row(
+              children: [
+                Image.asset(
+                  payment.img,
+                  width: 50,
+                  height: 50,
+                ),
+                const SizedBox(width: 20),
+                Text(
+                  payment.name,
+                  style: AppStyles.medium,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(width: 10),
-          Text(
-            method,
-            style: AppStyles.medium,
-          ),
+          isPicked
+              ? Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Image.asset(
+                    AppAssets.icChecked,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              : const SizedBox(),
         ],
       ),
     );
