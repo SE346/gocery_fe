@@ -1,14 +1,14 @@
 class TimeRangeInfo {
   // mô tả của time range
-  String description;
+  String? description;
   // thời điểm bắt đầu
-  DateTime begin;
+  DateTime? begin;
   // thời điểm kết thúc
-  DateTime end;
+  DateTime? end;
 
   TimeRangeInfo({
-    required this.description,
-    required this.begin,
-    required this.end,
+    this.description,
+    this.begin,
+    this.end,
   });
 }

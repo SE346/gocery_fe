@@ -4,7 +4,10 @@ import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/cart_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
+import 'package:grocery/data/repository/coupon_repository.dart';
+import 'package:grocery/data/repository/order_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
+import 'package:grocery/data/repository/statistic_repository.dart';
 import 'package:grocery/data/repository/user_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
@@ -15,7 +18,11 @@ import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
 import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_address_bloc.dart';
 import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
+import 'package:grocery/presentation/services/admin/add_edit_coupon_bloc/add_edit_coupon_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
+import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
+import 'package:grocery/presentation/services/admin/statistic_bloc/statistic_bloc.dart';
+import 'package:grocery/presentation/services/admin/statistic_detail_bloc/statistic_detail_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
@@ -28,9 +35,12 @@ import 'package:grocery/presentation/services/edit_profile_bloc/edit_profile_blo
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
 import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
+import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
 import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/order_bloc/order_bloc.dart';
 import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,6 +155,43 @@ class _AppState extends State<App> {
               BlocProvider<CartBloc>(
                 create: (context) => CartBloc(
                   CartRepository(appData),
+                ),
+              ),
+              BlocProvider<SecondCheckoutBloc>(
+                create: (context) => SecondCheckoutBloc(
+                  AddressRepository(appData),
+                  OrderRepository(appData),
+                  CartRepository(appData),
+                ),
+              ),
+              BlocProvider<OrderBloc>(
+                create: (context) => OrderBloc(
+                  OrderRepository(appData),
+                ),
+              ),
+              BlocProvider<TransactionBloc>(
+                create: (context) => TransactionBloc(
+                  OrderRepository(appData),
+                ),
+              ),
+              BlocProvider<CouponBloc>(
+                create: (context) => CouponBloc(
+                  CouponRepository(appData),
+                ),
+              ),
+              BlocProvider<AddEditCouponBloc>(
+                create: (context) => AddEditCouponBloc(
+                  CouponRepository(appData),
+                ),
+              ),
+              BlocProvider<StatisticBloc>(
+                create: (context) => StatisticBloc(
+                  StatisticRepository(appData),
+                ),
+              ),
+              BlocProvider<StatisticDetailBloc>(
+                create: (context) => StatisticDetailBloc(
+                  StatisticRepository(appData),
                 ),
               ),
             ],
