@@ -7,13 +7,13 @@ import 'package:grocery/data/repository/category_repository.dart';
 import 'package:grocery/data/repository/coupon_repository.dart';
 import 'package:grocery/data/repository/order_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
+import 'package:grocery/data/repository/statistic_repository.dart';
 import 'package:grocery/data/repository/user_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as admin;
 import 'package:grocery/presentation/screens/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as user;
-import 'package:grocery/presentation/screens/checkout/second_checkout_screen.dart';
 import 'package:grocery/presentation/screens/onboarding/splash_screen.dart';
 import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_address_bloc.dart';
 import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
@@ -21,6 +21,8 @@ import 'package:grocery/presentation/services/admin/add_category_bloc/add_catego
 import 'package:grocery/presentation/services/admin/add_edit_coupon_bloc/add_edit_coupon_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
+import 'package:grocery/presentation/services/admin/statistic_bloc/statistic_bloc.dart';
+import 'package:grocery/presentation/services/admin/statistic_detail_bloc/statistic_detail_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_bloc.dart';
 import 'package:grocery/presentation/services/authentication_bloc/authentication_event.dart';
@@ -180,6 +182,16 @@ class _AppState extends State<App> {
               BlocProvider<AddEditCouponBloc>(
                 create: (context) => AddEditCouponBloc(
                   CouponRepository(appData),
+                ),
+              ),
+              BlocProvider<StatisticBloc>(
+                create: (context) => StatisticBloc(
+                  StatisticRepository(appData),
+                ),
+              ),
+              BlocProvider<StatisticDetailBloc>(
+                create: (context) => StatisticDetailBloc(
+                  StatisticRepository(appData),
                 ),
               ),
             ],
