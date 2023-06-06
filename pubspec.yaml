@@ -39,6 +39,7 @@ dependencies:
   dotted_border: ^2.0.0+3
   equatable: ^2.0.5
   file_picker: ^5.2.11
+  fl_chart: ^0.62.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
