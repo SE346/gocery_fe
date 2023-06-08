@@ -12,10 +12,17 @@ class SecondCheckoutStarted extends SecondCheckoutEvent {}
 
 class CheckoutSubmitted extends SecondCheckoutEvent {
   final Order order;
-  const CheckoutSubmitted({required this.order});
+  final bool isFromCart;
+  const CheckoutSubmitted({
+    required this.order,
+    required this.isFromCart,
+  });
 
   @override
-  List<Object> get props => [order];
+  List<Object> get props => [
+        order,
+        isFromCart,
+      ];
 }
 
 class NewAddressChosen extends SecondCheckoutEvent {

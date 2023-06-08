@@ -123,7 +123,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       )
                     : Text(
-                        '\$${widget.product.price * widget.product.discount ~/ 100}',
+                        '\$${widget.product.price * (100 - widget.product.discount) * 0.01}',
                         style: AppStyles.medium.copyWith(
                           color: AppColors.secondary,
                         ),
@@ -242,6 +242,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         builder: (_) => FirstCheckOutScreen(
           orderTotal: totalPrice,
           carts: [cart],
+          isFromCart: false,
         ),
       ),
     );

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/coupon.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
-import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/screens/admin/coupon/add_coupon_screen.dart';
 import 'package:grocery/presentation/screens/admin/coupon/components/item_coupon.dart';
-import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
+import 'package:grocery/presentation/services/user/coupon_bloc/coupon_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
-import 'package:grocery/presentation/widgets/icon_back.dart';
+import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 
 class CouponScreen extends StatefulWidget {
   const CouponScreen({super.key});
@@ -29,34 +27,13 @@ class _CouponScreenState extends State<CouponScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const IconBack(),
-        backgroundColor: Colors.white,
-        elevation: 0.3,
-        centerTitle: true,
+      appBar: CustomAppBar(
         title: Text(
-          'Coupons',
+          'Choose Coupons',
           style: AppStyles.bold.copyWith(
-            fontSize: 18,
+            fontSize: 19,
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const AddCouponScreen(),
-                ),
-              );
-            },
-            child: const Icon(
-              Icons.add,
-              color: AppColors.primary,
-              size: 28,
-            ),
-          ),
-          const SizedBox(width: 5),
-        ],
       ),
       body: BlocConsumer<CouponBloc, CouponState>(
         listener: (context, state) {
@@ -82,7 +59,9 @@ class _CouponScreenState extends State<CouponScreen> {
               itemBuilder: (context, index) {
                 return ItemCoupon(
                   coupon: coupons[index],
-                  callback: (value) {},
+                  callback: (valueCoupon) {
+                    Navigator.of(context).pop(valueCoupon);
+                  },
                 );
               },
               itemCount: coupons.length,

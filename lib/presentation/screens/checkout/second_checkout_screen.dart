@@ -5,6 +5,7 @@ import 'package:grocery/data/models/cart.dart';
 import 'package:grocery/data/models/order.dart';
 import 'package:grocery/data/models/payment.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
+import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/address/address_screen.dart';
@@ -12,20 +13,24 @@ import 'package:grocery/presentation/screens/checkout/components/box_address.dar
 import 'package:grocery/presentation/screens/checkout/components/box_time.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';
 import 'package:grocery/presentation/screens/checkout/successful_checkout_screen.dart';
+import 'package:grocery/presentation/screens/coupon/coupon_screen.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/utils/money_extension.dart';
+import 'package:grocery/presentation/widgets/box.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class SecondCheckOutScreen extends StatefulWidget {
   final double orderTotal;
   final List<Cart> carts;
+  final bool isFromCart;
 
   const SecondCheckOutScreen({
     super.key,
     required this.orderTotal,
     required this.carts,
+    required this.isFromCart,
   });
 
   @override
@@ -50,6 +55,8 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
     super.initState();
     _bloc.add(SecondCheckoutStarted());
   }
+
+  String valueCoupon = '';
 
   @override
   Widget build(BuildContext context) {
@@ -214,6 +221,61 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
+                    'Coupon',
+                    style: AppStyles.semibold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CouponScreen(),
+                      ),
+                    );
+                    if (result != null) {
+                      setState(() {
+                        valueCoupon = result;
+                      });
+                    }
+                  },
+                  child: Box(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          AppAssets.icCoupon,
+                          width: 50,
+                          height: 50,
+                        ),
+                        Text(
+                          'Apply Coupon',
+                          style: AppStyles.medium.copyWith(
+                            fontSize: 15,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          valueCoupon,
+                          style: AppStyles.regular.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
                     'Choose Payment Method',
                     style: AppStyles.medium,
                   ),
@@ -253,7 +315,10 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                         paymentMethod: 'Credit',
                         productList: widget.carts,
                       );
-                      _bloc.add(CheckoutSubmitted(order: order));
+                      _bloc.add(CheckoutSubmitted(
+                        order: order,
+                        isFromCart: widget.isFromCart,
+                      ));
                     },
                   ),
                 ),

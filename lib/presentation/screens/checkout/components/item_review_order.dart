@@ -55,7 +55,7 @@ class _ItemReviewOrderState extends State<ItemReviewOrder> {
                         ),
                       )
                     : Text(
-                        '\$${widget.cart.product.price * widget.cart.product.discount / 100} / ${widget.cart.product.unit}',
+                        '\$${widget.cart.product.price * (100 - widget.cart.product.discount) * 0.01} / ${widget.cart.product.unit}',
                         style: AppStyles.regular.copyWith(
                           fontSize: 12,
                         ),
@@ -70,7 +70,8 @@ class _ItemReviewOrderState extends State<ItemReviewOrder> {
                               .toDouble()
                           : widget.cart.quantity *
                               widget.cart.product.price *
-                              (widget.cart.product.discount / 100);
+                              (100 - widget.cart.product.discount) *
+                              0.01;
                       return Text(
                         price.toMoney,
                         style: AppStyles.semibold.copyWith(

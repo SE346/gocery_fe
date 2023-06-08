@@ -11,7 +11,12 @@ import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 
 class AddressScreen extends StatefulWidget {
-  const AddressScreen({super.key});
+  final bool? isFromOrder;
+
+  const AddressScreen({
+    super.key,
+    this.isFromOrder = true,
+  });
 
   @override
   State<AddressScreen> createState() => _AddressScreenState();
@@ -116,15 +121,19 @@ class _AddressScreenState extends State<AddressScreen> {
                     child: ItemAddress(
                       address: address,
                       callback: (id) async {
-                        final result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                AddEditAddressScreen(currentAddress: address),
-                          ),
-                        );
+                        if (widget.isFromOrder!) {
+                          Navigator.of(context).pop(address);
+                        } else {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  AddEditAddressScreen(currentAddress: address),
+                            ),
+                          );
 
-                        if (result != null) {
-                          _bloc.add(AddressStarted());
+                          if (result != null) {
+                            _bloc.add(AddressStarted());
+                          }
                         }
                       },
                     ),

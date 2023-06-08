@@ -5,7 +5,6 @@ import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_review_order.dart';
 import 'package:grocery/presentation/screens/checkout/first_checkout_screen.dart';
-import 'package:grocery/presentation/screens/checkout/review_order_screen.dart';
 import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
@@ -80,6 +79,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   if (carts.isNotEmpty)
                     CustomButton(
+                      margin: 0,
                       content: 'Checkout',
                       onTap: () {
                         Navigator.of(context).push(
@@ -87,6 +87,7 @@ class _CartScreenState extends State<CartScreen> {
                             builder: (_) => FirstCheckOutScreen(
                               orderTotal: state.totalMoney,
                               carts: state.carts,
+                              isFromCart: true,
                             ),
                           ),
                         );

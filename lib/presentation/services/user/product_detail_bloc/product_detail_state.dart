@@ -22,7 +22,7 @@ class ProductDetailFailure extends ProductDetailState {
 
 class ProductDetailLoaded extends ProductDetailState {
   final int quantity;
-  final int price;
+  final double price;
   final int totalQuantity;
 
   const ProductDetailLoaded({

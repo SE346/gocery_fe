@@ -13,6 +13,7 @@ class Product {
   final int price;
   final int discount;
   final String productDescription;
+  final String? thumbnail;
   Product({
     this.id,
     required this.categoryId,
@@ -22,6 +23,7 @@ class Product {
     required this.price,
     required this.discount,
     required this.productDescription,
+    this.thumbnail,
   });
 
   Product copyWith({
@@ -62,21 +64,22 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['id'] != null ? map['id'] as String : null,
-      categoryId: map['categoryId'] ?? -1,
-      productName: map['productName'] as String,
-      productImgList: map['productImgList'] != null
-          ? List<ProductImage>.from(
-              (map['productImgList']).map(
-                (x) => ProductImage.fromMap(x),
-              ),
-            )
-          : [],
-      unit: map['unit'] as String,
-      price: map['price'] as int,
-      discount: map['discount'] as int,
-      productDescription: map['productDescription'] as String,
-    );
+        id: map['id'] != null ? map['id'] as String : null,
+        categoryId: map['categoryId'] ?? -1,
+        productName: map['productName'] as String,
+        productImgList: map['productImgList'] != null
+            ? List<ProductImage>.from(
+                (map['productImgList']).map(
+                  (x) => ProductImage.fromMap(x),
+                ),
+              )
+            : [],
+        unit: map['unit'] as String,
+        price: map['price'] as int,
+        discount: map['discount'] as int,
+        productDescription: map['productDescription'] as String,
+        thumbnail:
+            map['thumbnail'] != null ? map['thumbnail'] as String : null);
   }
 
   String toJson() => json.encode(toMap());

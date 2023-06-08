@@ -12,10 +12,13 @@ import 'package:grocery/presentation/widgets/custom_button.dart';
 class FirstCheckOutScreen extends StatefulWidget {
   final double orderTotal;
   final List<Cart> carts;
+  final bool isFromCart;
+
   const FirstCheckOutScreen({
     super.key,
     required this.orderTotal,
     required this.carts,
+    required this.isFromCart,
   });
 
   @override
@@ -190,6 +193,7 @@ class _FirstCheckOutScreenState extends State<FirstCheckOutScreen> {
                     builder: (_) => SecondCheckOutScreen(
                       carts: widget.carts,
                       orderTotal: widget.orderTotal,
+                      isFromCart: widget.isFromCart,
                     ),
                   ),
                 );

@@ -176,9 +176,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         File file = File(path!);
         files.add(file);
       }
-      setState(() {
-        fileImage = files[0];
-      });
+      if (mounted) {
+        setState(() {
+          fileImage = files[0];
+        });
+      }
+
       String newUrlImage = await uploadImage(files[0]);
       _bloc.add(AvatarChanged(newAvatarUrl: newUrlImage));
     } else {

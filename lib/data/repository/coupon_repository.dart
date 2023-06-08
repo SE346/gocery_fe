@@ -10,6 +10,7 @@ import 'package:grocery/presentation/services/app_data.dart';
 class CouponRepository extends IServiceAPI {
   String urlGetAllCoupons = 'coupon';
   String urlCreateCoupon = 'coupon';
+  String urlGetAllCouponsBelongToUser = 'coupon';
 
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;

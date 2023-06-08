@@ -53,7 +53,11 @@ class SecondCheckoutBloc
       CheckoutSubmitted event, Emitter<SecondCheckoutState> emit) async {
     emit(SecondCheckoutLoading());
     try {
-      await _orderRepository.createOrder(event.order);
+      if (event.isFromCart) {
+        await _orderRepository.createOrderFromCart(event.order);
+      } else {
+        await _orderRepository.createOrder(event.order);
+      }
       emit(OrderSuccess(name: currentAddress.name));
     } catch (e) {
       emit(SecondCheckoutFailure(errorMessage: e.toString()));

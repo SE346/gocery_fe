@@ -4,6 +4,7 @@ import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/auth_repository.dart';
 import 'package:grocery/data/repository/cart_repository.dart';
 import 'package:grocery/data/repository/category_repository.dart';
+import 'package:grocery/data/repository/comment_repository.dart';
 import 'package:grocery/data/repository/coupon_repository.dart';
 import 'package:grocery/data/repository/order_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
@@ -20,7 +21,11 @@ import 'package:grocery/presentation/services/address_bloc/address_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_category_bloc/add_category_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_coupon_bloc/add_edit_coupon_bloc.dart';
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
-import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
+import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart'
+    as admin;
+import 'package:grocery/presentation/services/user/coupon_bloc/coupon_bloc.dart'
+    as user;
+
 import 'package:grocery/presentation/services/admin/statistic_bloc/statistic_bloc.dart';
 import 'package:grocery/presentation/services/admin/statistic_detail_bloc/statistic_detail_bloc.dart';
 import 'package:grocery/presentation/services/app_data.dart';
@@ -40,6 +45,7 @@ import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
 import 'package:grocery/presentation/services/user/order_bloc/order_bloc.dart';
 import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
+import 'package:grocery/presentation/services/user/review_order_bloc/review_order_bloc.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/services/user/shop_bloc/shop_bloc.dart';
 import 'package:provider/provider.dart';
@@ -174,8 +180,8 @@ class _AppState extends State<App> {
                   OrderRepository(appData),
                 ),
               ),
-              BlocProvider<CouponBloc>(
-                create: (context) => CouponBloc(
+              BlocProvider<admin.CouponBloc>(
+                create: (context) => admin.CouponBloc(
                   CouponRepository(appData),
                 ),
               ),
@@ -192,6 +198,16 @@ class _AppState extends State<App> {
               BlocProvider<StatisticDetailBloc>(
                 create: (context) => StatisticDetailBloc(
                   StatisticRepository(appData),
+                ),
+              ),
+              BlocProvider<user.CouponBloc>(
+                create: (context) => user.CouponBloc(
+                  CouponRepository(appData),
+                ),
+              ),
+              BlocProvider<ReviewOrderBloc>(
+                create: (context) => ReviewOrderBloc(
+                  CommentRepository(appData),
                 ),
               ),
             ],

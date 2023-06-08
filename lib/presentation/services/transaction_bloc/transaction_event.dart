@@ -8,3 +8,21 @@ abstract class TransactionEvent extends Equatable {
 }
 
 class TransactionStarted extends TransactionEvent {}
+
+class TransactionSorted extends TransactionEvent {
+  final String sortValue;
+
+  const TransactionSorted({required this.sortValue});
+
+  @override
+  List<Object> get props => [sortValue];
+}
+
+class TransactionFiltered extends TransactionEvent {
+  final List<String> filterValues;
+
+  const TransactionFiltered({required this.filterValues});
+
+  @override
+  List<Object> get props => [filterValues];
+}

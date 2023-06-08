@@ -12,6 +12,7 @@ import 'package:grocery/presentation/services/app_data.dart';
 
 class OrderRepository extends IServiceAPI {
   String urlCreateOrder = 'order/';
+  String urlCreateOrderFromCart = 'order/cart';
   String urlGetAllOrderBelongToUser = 'order';
   String urlGetAllOrder = 'order/admin';
   String urlLogin = 'auth/login';
@@ -23,6 +24,7 @@ class OrderRepository extends IServiceAPI {
 
   OrderRepository(this._appData) {
     urlCreateOrder = localURL + urlCreateOrder;
+    urlCreateOrderFromCart = localURL + urlCreateOrderFromCart;
     urlGetAllOrderBelongToUser = localURL + urlGetAllOrderBelongToUser;
     urlRefreshToken = localURL + urlRefreshToken;
     urlLogout = localURL + urlLogout;
@@ -44,6 +46,19 @@ class OrderRepository extends IServiceAPI {
       print(response);
     } catch (e) {
       log('Error create order: $e');
+    }
+  }
+
+  Future<void> createOrderFromCart(Order order) async {
+    try {
+      final response = await apiServices.post(
+        urlCreateOrderFromCart,
+        order.toMap(),
+        _appData.headers,
+      );
+      print(response);
+    } catch (e) {
+      log('Error create order from cart: $e');
     }
   }
 

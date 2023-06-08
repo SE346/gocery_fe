@@ -38,27 +38,27 @@ class CategoryDetailBloc
 
     if (event.type == 'Highest Price') {
       products.sort((product1, product2) {
-        int tmp1, tmp2 = 0;
+        double tmp1, tmp2 = 0;
 
         tmp1 = product1.discount == 0
-            ? product1.price
-            : product1.discount ~/ 100 * product1.price;
+            ? product1.price.toDouble()
+            : product1.price * (100 - product1.discount) * 0.01;
         tmp2 = product2.discount == 0
-            ? product2.price
-            : product2.discount ~/ 100 * product2.price;
+            ? product2.price.toDouble()
+            : product2.price * (100 - product2.discount) * 0.01;
 
         return tmp2.compareTo(tmp1);
       });
     } else {
       products.sort((product1, product2) {
-        int tmp1, tmp2 = 0;
+        double tmp1, tmp2 = 0;
 
         tmp1 = product1.discount == 0
-            ? product1.price
-            : product1.discount ~/ 100 * product1.price;
+            ? product1.price.toDouble()
+            : product1.price * (100 - product1.discount) * 0.01;
         tmp2 = product2.discount == 0
-            ? product2.price
-            : product2.discount ~/ 100 * product2.price;
+            ? product2.price.toDouble()
+            : product2.price * (100 - product2.discount) * 0.01;
 
         return tmp1.compareTo(tmp2);
       });
@@ -72,11 +72,11 @@ class CategoryDetailBloc
     List<Product> tmp = [];
 
     for (var product in products) {
-      int price = 0;
+      double price = 0;
 
       price = product.discount == 0
-          ? product.price
-          : product.discount ~/ 100 * product.price;
+          ? product.price.toDouble()
+          : product.price * (100 - product.discount) * 0.01;
       if (price >= event.min && price <= event.max) {
         tmp.add(product);
       }

@@ -13,7 +13,7 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
 
   int quantity = 0;
   int totalQuantity = 0;
-  int price = 0;
+  double price = 0;
 
   ProductDetailBloc(this._cartRepository) : super(ProductDetailInitial()) {
     on<ProductDetailStarted>(_onStarted);
@@ -26,9 +26,9 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
       ProductDetailStarted event, Emitter<ProductDetailState> emit) async {
     emit(ProductDetailLoading());
     if (event.discountPrice == 0) {
-      price = event.originalPrice;
+      price = event.originalPrice.toDouble();
     } else {
-      price = event.originalPrice * event.discountPrice ~/ 100;
+      price = event.originalPrice * (100 - event.discountPrice) * 0.01;
     }
 
     try {

@@ -24,7 +24,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   double countOrginalPrice(Product product) {
     return product.discount == 0
         ? product.price.toDouble()
-        : product.price * product.discount / 100;
+        : product.price * (100 - product.discount) * 0.01;
   }
 
   double countTotalMoney() {

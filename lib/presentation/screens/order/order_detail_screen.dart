@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery/data/models/order.dart';
 import 'package:grocery/presentation/res/colors.dart';
-import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/screens/admin/transactions/components/item_tag.dart';
-import 'package:grocery/presentation/screens/checkout/components/item_review_order.dart';
 import 'package:grocery/presentation/screens/order/components/item_tag_order.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:intl/intl.dart';
@@ -83,7 +80,7 @@ class OrderDetailScreen extends StatelessWidget {
                       ),
                       const Spacer(),
                       Text(
-                          DateFormat('dd/MM/yyyy hh:MM')
+                          DateFormat('dd/MM/yyyy HH:MM')
                               .format(DateTime.parse(order.createdAt!)),
                           style: AppStyles.medium),
                     ],
@@ -108,7 +105,15 @@ class OrderDetailScreen extends StatelessWidget {
                     children: order.products!
                         .map((e) => Row(
                               children: [
-                                Image.asset(AppAssets.brocoli),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    e.thumbnail!,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +181,7 @@ class OrderDetailScreen extends StatelessWidget {
                     children: [
                       Text('Total Payment', style: AppStyles.bold),
                       const Spacer(),
-                      Text('\$5', style: AppStyles.bold),
+                      Text('\$ ${order.total}', style: AppStyles.bold),
                     ],
                   ),
                 ],
