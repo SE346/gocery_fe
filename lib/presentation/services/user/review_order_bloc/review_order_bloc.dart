@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/data/repository/comment_repository.dart';
 import 'package:grocery/data/services/cloudinary_service.dart';
 
@@ -23,12 +24,13 @@ class ReviewOrderBloc extends Bloc<ReviewOrderEvent, ReviewOrderState> {
     try {
       String? urlImage =
           await CloudinaryService().uploadImage(event.image.path, 'comments');
-      await _commentRepository.createComment(
-        event.idProduct,
-        urlImage!,
-        event.review,
-        event.rating,
+      Comment comment = Comment(
+        content: event.review,
+        productId: event.idProduct,
+        image: urlImage!,
+        rating: event.rating,
       );
+      await _commentRepository.createComment(comment);
       emit(ReviewOrderSuccess());
     } catch (e) {
       emit(ReviewOrderFailure(errorMessage: e.toString()));

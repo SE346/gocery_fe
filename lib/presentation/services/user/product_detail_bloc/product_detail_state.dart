@@ -24,13 +24,22 @@ class ProductDetailLoaded extends ProductDetailState {
   final int quantity;
   final double price;
   final int totalQuantity;
+  final double rating;
+  final List<Comment> comments;
 
-  const ProductDetailLoaded({
-    required this.quantity,
-    required this.price,
-    required this.totalQuantity,
-  });
+  const ProductDetailLoaded(
+      {required this.quantity,
+      required this.price,
+      required this.totalQuantity,
+      required this.comments,
+      required this.rating});
 
   @override
-  List<Object> get props => [quantity, price, totalQuantity];
+  List<Object> get props => [
+        quantity,
+        price,
+        totalQuantity,
+        rating,
+        comments,
+      ];
 }

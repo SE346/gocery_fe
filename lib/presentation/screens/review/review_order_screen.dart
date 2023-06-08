@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:grocery/data/models/order.dart';
+import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
@@ -33,6 +34,8 @@ class _ReviewOrderScreenState extends State<ReviewOrderScreen> {
     super.dispose();
     controller.dispose();
   }
+
+  double? rating;
 
   @override
   Widget build(BuildContext context) {
@@ -178,7 +181,18 @@ class _ReviewOrderScreenState extends State<ReviewOrderScreen> {
               const SizedBox(height: 30),
               CustomButton(
                 content: 'Review',
-                onTap: () {},
+                onTap: () {
+                  for (Product product in widget.order.products!) {
+                    _bloc.add(
+                      ReviewSubmitted(
+                        image: imageFile!,
+                        review: controller.text.trim(),
+                        rating: rating!,
+                        idProduct: product.id!,
+                      ),
+                    );
+                  }
+                },
               ),
             ],
           );
@@ -219,7 +233,9 @@ class _ReviewOrderScreenState extends State<ReviewOrderScreen> {
               Icons.star,
               color: AppColors.secondary,
             ),
-            onRatingUpdate: (rating) {},
+            onRatingUpdate: (value) {
+              rating = value;
+            },
           ),
         ],
       ),

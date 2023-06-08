@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:grocery/data/environment.dart';
 import 'package:grocery/data/interfaces/i_service_api.dart';
+import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/data/models/coupon.dart';
 import 'package:grocery/data/network/base_api_service.dart';
 import 'package:grocery/data/network/network_api_service.dart';
@@ -22,16 +23,11 @@ class CommentRepository extends IServiceAPI {
     return Coupon.fromMap(value);
   }
 
-  Future<void> createComment(
-    String idProduct,
-    String url,
-    String comment,
-    double rating,
-  ) async {
+  Future<void> createComment(Comment comment) async {
     try {
       await apiServices.post(
         urlCreateComment,
-        {},
+        comment.toMap(),
         _appData.headers,
       );
     } catch (e) {

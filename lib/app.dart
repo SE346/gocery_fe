@@ -156,6 +156,9 @@ class _AppState extends State<App> {
               BlocProvider<ProductDetailBloc>(
                 create: (context) => ProductDetailBloc(
                   CartRepository(appData),
+                  ProductRepository(
+                    appData,
+                  ),
                 ),
               ),
               BlocProvider<CartBloc>(

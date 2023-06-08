@@ -60,6 +60,14 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
           ),
           controller: searchController,
           hintText: 'Search in this category',
+          callback: (keyword) {
+            _bloc.add(
+              TextSearchChanged(
+                idCategory: widget.idCategory,
+                keyword: keyword,
+              ),
+            );
+          },
         ),
       ),
       body: Padding(

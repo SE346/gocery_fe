@@ -76,6 +76,7 @@ class _ShopScreenState extends State<ShopScreen> {
                     child: BoxSearch(
                       controller: searchController,
                       hintText: 'Search for products',
+                      callback: (keyword) {},
                     ),
                   ),
                   const SizedBox(width: 15),

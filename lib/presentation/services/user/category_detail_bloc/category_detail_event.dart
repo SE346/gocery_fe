@@ -37,3 +37,16 @@ class CategoryDetailProductsFiltered extends CategoryDetailEvent {
   @override
   List<Object> get props => [min, max];
 }
+
+class TextSearchChanged extends CategoryDetailEvent {
+  final int idCategory;
+  final String keyword;
+
+  const TextSearchChanged({
+    required this.idCategory,
+    required this.keyword,
+  });
+
+  @override
+  List<Object> get props => [idCategory, keyword];
+}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:grocery/data/models/comment.dart';
-import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
 
 class ItemReview extends StatelessWidget {
@@ -28,7 +27,7 @@ class ItemReview extends StatelessWidget {
             shape: BoxShape.circle,
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: NetworkImage(comment.user.avatar!),
+              image: NetworkImage('comment.user.avatar!'),
             ),
           ),
         ),
@@ -40,7 +39,7 @@ class ItemReview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                comment.user.firstName!,
+                'comment.user.firstName!',
                 style: AppStyles.semibold.copyWith(fontSize: 16.0),
               ),
               Text(

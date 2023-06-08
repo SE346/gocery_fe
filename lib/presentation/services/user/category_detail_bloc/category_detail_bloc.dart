@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/data/repository/product_repository.dart';
 
@@ -17,6 +18,7 @@ class CategoryDetailBloc
     on<CategoryDetailProductsFetched>(_onProductsFetched);
     on<CategoryDetailProductsSorted>(_onSorted);
     on<CategoryDetailProductsFiltered>(_onFiltered);
+    on<TextSearchChanged>(_onChanged);
   }
 
   void _onProductsFetched(event, emit) async {
@@ -83,5 +85,22 @@ class CategoryDetailBloc
     }
 
     emit(CategoryDetailSuccess(products: [...tmp]));
+  }
+
+  FutureOr<void> _onChanged(
+      TextSearchChanged event, Emitter<CategoryDetailState> emit) async {
+    emit(CategoryDetailLoading());
+
+    try {
+      List<Product>? result =
+          await _productRepository.searchProductsByIDCategory(
+        event.idCategory,
+        event.keyword,
+      );
+      products = result!;
+      emit(CategoryDetailSuccess(products: products));
+    } catch (e) {
+      emit(CategoryDetailFailure(errorMessage: e.toString()));
+    }
   }
 }

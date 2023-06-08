@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:grocery/data/models/cart.dart';
+import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/data/models/product.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/dimensions.dart';
@@ -10,6 +11,7 @@ import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/checkout/first_checkout_screen.dart';
 import 'package:grocery/presentation/screens/products/components/box_add_to_cart.dart';
 import 'package:grocery/presentation/screens/products/components/box_cart.dart';
+import 'package:grocery/presentation/screens/review/review_screen.dart';
 import 'package:grocery/presentation/services/user/product_detail_bloc/product_detail_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
@@ -164,7 +166,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               style: AppStyles.regular,
             ),
           ),
-          reviews(),
+          BlocBuilder<ProductDetailBloc, ProductDetailState>(
+            builder: (context, state) {
+              if (state is ProductDetailLoaded) {
+                return reviews(state.rating, state.comments);
+              }
+              return const SizedBox();
+            },
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: kPaddingHorizontal,
@@ -281,50 +290,62 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget reviews() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: kPaddingHorizontal,
-        vertical: 10,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Review',
-                style: AppStyles.bold.copyWith(
-                  fontSize: 16,
-                ),
-              ),
-              RatingBar.builder(
-                initialRating: 2,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 20,
-                itemPadding: const EdgeInsets.only(right: 5.0),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: AppColors.secondary,
-                ),
-                onRatingUpdate: (rating) {},
-              ),
-            ],
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: navigateToReviewScreen,
-            child: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              color: AppColors.gray,
-              size: 18,
+  Widget reviews(double currentRating, List<Comment> comments) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ReviewScreen(
+              comments: comments,
             ),
-          )
-        ],
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: kPaddingHorizontal,
+          vertical: 10,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Review',
+                  style: AppStyles.bold.copyWith(
+                    fontSize: 16,
+                  ),
+                ),
+                RatingBar.builder(
+                  ignoreGestures: true,
+                  initialRating: currentRating,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 20,
+                  itemPadding: const EdgeInsets.only(right: 5.0),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: AppColors.secondary,
+                  ),
+                  onRatingUpdate: (rating) {},
+                ),
+              ],
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: navigateToReviewScreen,
+              child: const Icon(
+                Icons.arrow_forward_ios_outlined,
+                color: AppColors.gray,
+                size: 18,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
