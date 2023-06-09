@@ -5,7 +5,7 @@ import 'package:grocery/data/models/comment.dart';
 
 class Review {
   final List<Comment> comments;
-  final double rating;
+  final num rating;
 
   const Review({
     required this.comments,
@@ -26,7 +26,7 @@ class Review {
           (x) => Comment.fromMap(x as Map<String, dynamic>),
         ),
       ),
-      rating: map['ratingAverage'] as double,
+      rating: map['ratingAverage'],
     );
   }
 

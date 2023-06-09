@@ -290,7 +290,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget reviews(double currentRating, List<Comment> comments) {
+  Widget reviews(num currentRating, List<Comment> comments) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -320,7 +320,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 RatingBar.builder(
                   ignoreGestures: true,
-                  initialRating: currentRating,
+                  initialRating: currentRating.toDouble(),
                   minRating: 1,
                   direction: Axis.horizontal,
                   allowHalfRating: true,

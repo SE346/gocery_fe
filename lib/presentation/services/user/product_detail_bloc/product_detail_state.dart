@@ -24,7 +24,7 @@ class ProductDetailLoaded extends ProductDetailState {
   final int quantity;
   final double price;
   final int totalQuantity;
-  final double rating;
+  final num rating;
   final List<Comment> comments;
 
   const ProductDetailLoaded(

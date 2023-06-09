@@ -18,7 +18,7 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
   int quantity = 0;
   int totalQuantity = 0;
   double price = 0;
-  double rating = 0;
+  num rating = 0;
   List<Comment> comments = [];
 
   ProductDetailBloc(

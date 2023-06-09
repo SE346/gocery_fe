@@ -3,14 +3,22 @@ import 'dart:convert';
 class Comment {
   final String content;
   final String productId;
-  final String image;
-  final double rating;
+  final String? image;
+  final num rating;
+  final String? firstName;
+  final String? lastName;
+  final String? avatar;
+  final String? createdAt;
 
   Comment({
     required this.content,
     required this.productId,
     required this.image,
     required this.rating,
+    this.firstName,
+    this.lastName,
+    this.avatar,
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,8 +34,12 @@ class Comment {
     return Comment(
       content: map['content'] as String,
       productId: map['productId'] as String,
-      image: map['image'] as String,
-      rating: map['rating'] as double,
+      image: map['image'],
+      rating: map['rating'],
+      firstName: map['user']['firstName'],
+      lastName: map['user']['lastName'],
+      avatar: map['user']['avatar'],
+      createdAt: map['createdAt'],
     );
   }
 

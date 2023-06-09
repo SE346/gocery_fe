@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grocery/data/models/comment.dart';
 import 'package:grocery/presentation/res/style.dart';
+import 'package:intl/intl.dart';
 
 class ItemReview extends StatelessWidget {
   final Comment comment;
@@ -12,11 +13,6 @@ class ItemReview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> images = [
-      'https://images.unsplash.com/photo-1540420773420-3366772f4999?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dmVnZXRhYmxlc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60',
-      'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dmVnZXRhYmxlc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60',
-      'https://images.unsplash.com/photo-1597362925123-77861d3fbac7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8dmVnZXRhYmxlc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60',
-    ];
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,7 +23,7 @@ class ItemReview extends StatelessWidget {
             shape: BoxShape.circle,
             image: DecorationImage(
               fit: BoxFit.cover,
-              image: NetworkImage('comment.user.avatar!'),
+              image: NetworkImage(comment.avatar!),
             ),
           ),
         ),
@@ -39,7 +35,7 @@ class ItemReview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'comment.user.firstName!',
+                '${comment.firstName} ${comment.lastName}',
                 style: AppStyles.semibold.copyWith(fontSize: 16.0),
               ),
               Text(
@@ -47,24 +43,16 @@ class ItemReview extends StatelessWidget {
                 style: AppStyles.regular.copyWith(fontSize: 14.0),
               ),
               const SizedBox(height: 5.0),
-              Row(
-                children: images
-                    .map(
-                      (e) => Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            e,
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
+              if (comment.image != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    comment.image!,
+                    width: 60,
+                    height: 60,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               const SizedBox(height: 10),
             ],
           ),
@@ -72,7 +60,7 @@ class ItemReview extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: Text(
-            '3 months ago',
+            DateFormat('dd/MM/yyyy').format(DateTime.parse(comment.createdAt!)),
             style: AppStyles.regular.copyWith(fontSize: 12.0),
           ),
         )
