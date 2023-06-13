@@ -4,7 +4,8 @@ import 'package:grocery/app.dart';
 import 'package:grocery/presentation/utils/bloc_observer.dart';
 
 void main() {
-  Bloc.observer = AppBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
 
+  Bloc.observer = AppBlocObserver();
   runApp(const App());
 }
