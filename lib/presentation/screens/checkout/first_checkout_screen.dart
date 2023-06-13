@@ -200,6 +200,7 @@ class _FirstCheckOutScreenState extends State<FirstCheckOutScreen> {
               },
             ),
           ),
+          const SizedBox(height: 10),
         ],
       ),
     );
