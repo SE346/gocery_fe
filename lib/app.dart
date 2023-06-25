@@ -10,6 +10,7 @@ import 'package:grocery/data/repository/order_repository.dart';
 import 'package:grocery/data/repository/product_repository.dart';
 import 'package:grocery/data/repository/statistic_repository.dart';
 import 'package:grocery/data/repository/user_repository.dart';
+import 'package:grocery/data/repository/zalo_pay_repository.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/screens/admin/bottom_navigation_bar.dart/bottom_navigation_bar_screen.dart'
     as admin;
@@ -171,6 +172,7 @@ class _AppState extends State<App> {
                   AddressRepository(appData),
                   OrderRepository(appData),
                   CartRepository(appData),
+                  ZaloPayRepository(),
                 ),
               ),
               BlocProvider<OrderBloc>(

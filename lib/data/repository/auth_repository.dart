@@ -109,7 +109,7 @@ class AuthRepository extends IServiceAPI {
     try {
       // Verify a token
       JWT.verify(token, SecretKey(secretKey));
-    } on JWTExpiredError {
+    } on JWTExpiredException {
       String? newAccessToken = await refreshToken();
 
       if (newAccessToken != null) {

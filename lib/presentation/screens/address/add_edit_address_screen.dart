@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:grocery/data/models/address.dart';
 import 'package:grocery/data/models/place.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
@@ -10,7 +7,6 @@ import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/services/add_edit_address_bloc/add_edit_address_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
-import 'package:grocery/presentation/widgets/box.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
 
@@ -65,32 +61,23 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
     phoneController.dispose();
   }
 
-  void getCurrentPoint() async {
-    LocationPermission permission;
-    permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    await getCurrentLocation(position);
-  }
-
-  Future<void> getCurrentLocation(Position position) async {
-    late List<Placemark> placemarks;
-    try {
-      placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-    } catch (e) {
-      print('error: ${e.toString()}');
-    }
-    print('placemarks:${placemarks}');
-    if (placemarks.isNotEmpty) {
-      Placemark placemark = placemarks[0];
-      String? street = placemark.street;
-      String? cityName = placemark.name;
-      String result = '${street!} ${cityName!}';
-      Navigator.pop(context, result);
-    }
-  }
+  // Future<void> getCurrentLocation(Position position) async {
+  //   late List<Placemark> placemarks;
+  //   try {
+  //     placemarks =
+  //         await placemarkFromCoordinates(position.latitude, position.longitude);
+  //   } catch (e) {
+  //     print('error: ${e.toString()}');
+  //   }
+  //   print('placemarks:${placemarks}');
+  //   if (placemarks.isNotEmpty) {
+  //     Placemark placemark = placemarks[0];
+  //     String? street = placemark.street;
+  //     String? cityName = placemark.name;
+  //     String result = '${street!} ${cityName!}';
+  //     Navigator.pop(context, result);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -166,27 +153,27 @@ class _AddEditAddressScreenState extends State<AddEditAddressScreen> {
                 const SizedBox(height: 10),
                 TextFieldInput(hintText: 'Phone', controller: phoneController),
                 const SizedBox(height: 15),
-                GestureDetector(
-                  onTap: getCurrentPoint,
-                  child: Box(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          FontAwesomeIcons.locationCrosshairs,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(width: 20),
-                        Text(
-                          'Sử dụng vị trí hiện tại của tôi',
-                          style: AppStyles.regular,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
+                // GestureDetector(
+                //   onTap: getCurrentPoint,
+                //   child: Box(
+                //     padding: const EdgeInsets.symmetric(vertical: 15),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         const Icon(
+                //           FontAwesomeIcons.locationCrosshairs,
+                //           color: AppColors.primary,
+                //         ),
+                //         const SizedBox(width: 20),
+                //         Text(
+                //           'Sử dụng vị trí hiện tại của tôi',
+                //           style: AppStyles.regular,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(height: 15),
                 Text(
                   'City',
                   style: AppStyles.medium,
