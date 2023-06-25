@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/address.dart';
 import 'package:grocery/data/models/cart.dart';
@@ -7,6 +8,7 @@ import 'package:grocery/data/models/order.dart';
 import 'package:grocery/data/repository/address_repository.dart';
 import 'package:grocery/data/repository/cart_repository.dart';
 import 'package:grocery/data/repository/order_repository.dart';
+import 'package:grocery/data/repository/zalo_pay_repository.dart';
 
 part 'second_checkout_event.dart';
 part 'second_checkout_state.dart';
@@ -16,6 +18,7 @@ class SecondCheckoutBloc
   final AddressRepository _addressRepository;
   final OrderRepository _orderRepository;
   final CartRepository _cartRepository;
+  final ZaloPayRepository _zaloPayRepository;
 
   late Address currentAddress;
   List<Cart> carts = [];
@@ -24,6 +27,7 @@ class SecondCheckoutBloc
     this._addressRepository,
     this._orderRepository,
     this._cartRepository,
+    this._zaloPayRepository,
   ) : super(SecondCheckoutInitial()) {
     on<SecondCheckoutStarted>(_onStarted);
     on<CheckoutSubmitted>(_onSubmitted);
@@ -53,6 +57,15 @@ class SecondCheckoutBloc
       CheckoutSubmitted event, Emitter<SecondCheckoutState> emit) async {
     emit(SecondCheckoutLoading());
     try {
+      if (event.order.paymentMethod == 'Zalopay') {
+        final result = await _zaloPayRepository.createOrder(event.order.total!);
+        if (result != null) {
+          print(result.returnmessage);
+
+          await const MethodChannel('flutter.native/channelPayOrder')
+              .invokeMethod('payOrder', {"zptoken": result.zptranstoken});
+        }
+      }
       if (event.isFromCart) {
         await _orderRepository.createOrderFromCart(event.order);
       } else {
