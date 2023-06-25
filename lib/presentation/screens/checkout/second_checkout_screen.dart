@@ -107,241 +107,236 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
           if (state is SecondCheckoutSuccess) {
             Address currentAddress = state.currentAddress;
 
-            return SingleChildScrollView(
-              child: SizedBox(
-                height: size.height,
-                width: size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Destination',
-                        style: AppStyles.medium,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildDivider(),
-                    const SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () async {
-                        final result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const AddressScreen(),
-                          ),
-                        );
-                        if (result != null) {
-                          _bloc.add(NewAddressChosen(newAddress: result));
-                        }
-                      },
-                      child: BoxAddress(address: currentAddress),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildDivider(),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Pick up time',
-                        style: AppStyles.medium,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const BoxTime(),
-                    const SizedBox(height: 10),
-                    _buildDivider(),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Order Total',
-                            style: AppStyles.regular,
-                          ),
-                          const Spacer(),
-                          Text(
-                            widget.orderTotal.toDouble().toMoney,
-                            style: AppStyles.regular,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Deliver Fee',
-                            style: AppStyles.regular,
-                          ),
-                          const Spacer(),
-                          Text(
-                            deliveryFee.toDouble().toMoney,
-                            style: AppStyles.regular,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            'VAT (10%)',
-                            style: AppStyles.regular,
-                          ),
-                          const Spacer(),
-                          Text(
-                            vatFee.toDouble().toMoney,
-                            style: AppStyles.regular,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Total Payment',
-                            style: AppStyles.bold,
-                          ),
-                          const Spacer(),
-                          Text(
-                            (widget.orderTotal + vatFee + deliveryFee).toMoney,
-                            style: AppStyles.bold,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildDivider(),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Coupon',
-                        style: AppStyles.semibold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    GestureDetector(
-                      onTap: () async {
-                        final result = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const CouponScreen(),
-                          ),
-                        );
-                        if (result != null) {
-                          setState(() {
-                            valueCoupon = result;
-                          });
-                        }
-                      },
-                      child: Box(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              AppAssets.icCoupon,
-                              width: 50,
-                              height: 50,
-                            ),
-                            Text(
-                              'Apply Coupon',
-                              style: AppStyles.medium.copyWith(
-                                fontSize: 15,
-                              ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              valueCoupon,
-                              style: AppStyles.regular.copyWith(
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            const Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              color: AppColors.primary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildDivider(),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        'Choose Payment Method',
-                        style: AppStyles.medium,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Wrap(
-                        // spacing: 10,
-                        // direction: Axis.vertical,
-                        children: payments
-                            .map(
-                              (e) => GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    namePayment = e.name;
-                                  });
-                                },
-                                child: ItemPaymentMethod(
-                                  payment: e,
-                                  isPicked: namePayment == e.name,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: CustomButton(
-                        content: 'Checkout',
-                        onTap: () {
-                          Order order = Order(
-                            phoneNum: currentAddress.phoneNum,
-                            addressId: currentAddress.id!,
-                            deliveryDate:
-                                DateTime.now().toUtc().toIso8601String(),
-                            paymentMethod: namePayment == 'Payment By Zalo Pay'
-                                ? 'Zalopay'
-                                : 'Credit',
-                            productList: widget.carts,
-                            total: widget.orderTotal + deliveryFee + vatFee,
-                          );
-                          _bloc.add(
-                            CheckoutSubmitted(
-                              order: order,
-                              isFromCart: widget.isFromCart,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+            return ListView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
               ),
+              children: [
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Destination',
+                    style: AppStyles.medium,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const AddressScreen(),
+                      ),
+                    );
+                    if (result != null) {
+                      _bloc.add(NewAddressChosen(newAddress: result));
+                    }
+                  },
+                  child: BoxAddress(address: currentAddress),
+                ),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Pick up time',
+                    style: AppStyles.medium,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const BoxTime(),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Order Total',
+                        style: AppStyles.regular,
+                      ),
+                      const Spacer(),
+                      Text(
+                        widget.orderTotal.toDouble().toMoney,
+                        style: AppStyles.regular,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Deliver Fee',
+                        style: AppStyles.regular,
+                      ),
+                      const Spacer(),
+                      Text(
+                        deliveryFee.toDouble().toMoney,
+                        style: AppStyles.regular,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        'VAT (10%)',
+                        style: AppStyles.regular,
+                      ),
+                      const Spacer(),
+                      Text(
+                        vatFee.toDouble().toMoney,
+                        style: AppStyles.regular,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Total Payment',
+                        style: AppStyles.bold,
+                      ),
+                      const Spacer(),
+                      Text(
+                        (widget.orderTotal + vatFee + deliveryFee).toMoney,
+                        style: AppStyles.bold,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Coupon',
+                    style: AppStyles.semibold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CouponScreen(),
+                      ),
+                    );
+                    if (result != null) {
+                      setState(() {
+                        valueCoupon = result;
+                      });
+                    }
+                  },
+                  child: Box(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          AppAssets.icCoupon,
+                          width: 50,
+                          height: 50,
+                        ),
+                        Text(
+                          'Apply Coupon',
+                          style: AppStyles.medium.copyWith(
+                            fontSize: 15,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          valueCoupon,
+                          style: AppStyles.regular.copyWith(
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _buildDivider(),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Choose Payment Method',
+                    style: AppStyles.medium,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    // spacing: 10,
+                    // direction: Axis.vertical,
+                    children: payments
+                        .map(
+                          (e) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                namePayment = e.name;
+                              });
+                            },
+                            child: ItemPaymentMethod(
+                              payment: e,
+                              isPicked: namePayment == e.name,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: CustomButton(
+                    content: 'Checkout',
+                    onTap: () {
+                      Order order = Order(
+                        phoneNum: currentAddress.phoneNum,
+                        addressId: currentAddress.id!,
+                        deliveryDate: DateTime.now().toUtc().toIso8601String(),
+                        paymentMethod: namePayment == 'Payment By Zalo Pay'
+                            ? 'Zalopay'
+                            : 'Credit',
+                        productList: widget.carts,
+                        total: widget.orderTotal + deliveryFee + vatFee,
+                      );
+                      _bloc.add(
+                        CheckoutSubmitted(
+                          order: order,
+                          isFromCart: widget.isFromCart,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           }
 

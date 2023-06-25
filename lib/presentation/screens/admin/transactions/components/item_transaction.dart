@@ -25,7 +25,7 @@ class ItemTransaction extends StatelessWidget {
               ItemTagOrder(status: order.status!),
               const Spacer(),
               Text(
-                DateFormat('dd/MM/yyyy hh:MM')
+                DateFormat('dd/MM/yyyy HH:MM')
                     .format(DateTime.parse(order.createdAt!)),
                 style: AppStyles.regular.copyWith(
                   color: AppColors.gray,

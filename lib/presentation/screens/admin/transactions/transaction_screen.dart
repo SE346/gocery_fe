@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/order.dart';
@@ -7,8 +5,8 @@ import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/transactions/components/item_transaction.dart';
 import 'package:grocery/presentation/screens/admin/transactions/components/sort_filter_transactions.dart';
-import 'package:grocery/presentation/screens/category/components/sort_filter.dart';
-import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
+import 'package:grocery/presentation/screens/admin/transactions/transaction_detail_screen.dart';
+import 'package:grocery/presentation/services/admin/transaction_bloc/transaction_bloc.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -53,13 +51,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
                     Order order = orders[index];
                     return GestureDetector(
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (_) => (
-                        //       transaction: order,
-                        //     ),
-                        //   ),
-                        // );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => TransactionDetailScreen(
+                              order: order,
+                            ),
+                          ),
+                        );
                       },
                       child: ItemTransaction(
                         order: order,

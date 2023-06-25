@@ -7,6 +7,7 @@ import 'package:grocery/data/models/user.dart';
 import 'package:grocery/data/network/base_api_service.dart';
 import 'package:grocery/data/network/network_api_service.dart';
 import 'package:grocery/data/response/base_response.dart';
+import 'package:grocery/data/services/firebase_service.dart';
 import 'package:grocery/presentation/services/app_data.dart';
 
 class AuthRepository extends IServiceAPI {
@@ -16,6 +17,7 @@ class AuthRepository extends IServiceAPI {
   String urlLogout = "auth/logout";
 
   final BaseApiServices apiServices = NetworkApiService();
+  final FirebaseService firebaseService = FirebaseService();
   final AppData _appData;
 
   AuthRepository(this._appData) {
@@ -69,6 +71,7 @@ class AuthRepository extends IServiceAPI {
         },
         _appData.headers,
       );
+      await firebaseService.saveToken(email);
 
       return BaseResponse.fromJson(response);
     } catch (e) {

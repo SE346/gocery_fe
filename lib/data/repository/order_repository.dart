@@ -18,6 +18,7 @@ class OrderRepository extends IServiceAPI {
   String urlLogin = 'auth/login';
   String urlRefreshToken = 'auth/refresh-token';
   String urlLogout = "auth/logout";
+  String urlUpdateStatus = "order/";
 
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;
@@ -29,6 +30,7 @@ class OrderRepository extends IServiceAPI {
     urlRefreshToken = localURL + urlRefreshToken;
     urlLogout = localURL + urlLogout;
     urlGetAllOrder = localURL + urlGetAllOrder;
+    urlUpdateStatus = localURL + urlUpdateStatus;
   }
 
   @override
@@ -46,6 +48,21 @@ class OrderRepository extends IServiceAPI {
       print(response);
     } catch (e) {
       log('Error create order: $e');
+    }
+  }
+
+  Future<void> updateStatus(String orderId, String status) async {
+    try {
+      final response = await apiServices.put(
+        '$urlUpdateStatus$orderId}',
+        {
+          "newStatus": status,
+        },
+        _appData.headers,
+      );
+      print(response);
+    } catch (e) {
+      log('Error update status: $e');
     }
   }
 
@@ -87,7 +104,7 @@ class OrderRepository extends IServiceAPI {
     List<Order> orders = [];
     try {
       final response = await apiServices.get(
-        urlGetAllOrder,
+        '$urlGetAllOrder?filter=All&limit=1000&page=1&sort=farest',
         _appData.headers,
       );
 

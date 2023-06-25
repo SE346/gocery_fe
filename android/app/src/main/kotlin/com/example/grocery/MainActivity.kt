@@ -1,4 +1,4 @@
-package com.example.grocery
+package com.gocery
 
 import android.content.Intent
 import android.os.Bundle
