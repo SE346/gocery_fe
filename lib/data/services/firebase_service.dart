@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -43,7 +44,7 @@ class FirebaseService {
   }
 
   Future init({bool initScheduled = false}) async {
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const android = AndroidInitializationSettings('@drawable/ic_notify');
     const ios = DarwinInitializationSettings();
 
     const settings = InitializationSettings(
@@ -68,6 +69,7 @@ class FirebaseService {
       sound: true,
     );
 
+    // ios
     await _firebaseMessaging.setForegroundNotificationPresentationOptions(
       alert: true, // Required to display a heads up notification
       badge: true,
@@ -76,43 +78,50 @@ class FirebaseService {
 
     await init();
 
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-      'channed id',
-      'channel name',
-      channelDescription: 'channel description',
-      importance: Importance.max,
-      priority: Priority.high,
-      icon: '@mipmap/ic_launcher',
-    );
-    var iOSPlatformChannelSpecifics = const DarwinNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-
-    notifications
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()!
-        .requestPermission();
+    // check permission noti with android, ios doesn't need
+    if (Platform.isAndroid) {
+      notifications
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()!
+          .requestPermission();
+    }
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
       // TODO: handle the received notifications
       // For handling the received notifications
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-        String title = message.data['title'];
-        String content = message.data['content'];
-
-        await notifications.show(
-          message.data.hashCode,
-          title,
-          content,
-          platformChannelSpecifics,
-        );
+        log(message.data['title']);
+        await showNotification(message);
       });
     } else {
       print('User declined or has not accepted permission');
     }
+  }
+
+  Future _notificationDetails() async {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'channed id',
+        'channel name',
+        channelDescription: 'channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
+  }
+
+  Future<void> showNotification(RemoteMessage message) async {
+    String title = message.data['title'];
+    String content = message.data['content'];
+
+    await notifications.show(
+      message.data.hashCode,
+      title,
+      content,
+      await _notificationDetails(),
+    );
   }
 
   Future<void> sendNotification(NotificationRequest notificationRequest) async {
