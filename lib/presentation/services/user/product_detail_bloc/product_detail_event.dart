@@ -24,6 +24,18 @@ class ProductDetailStarted extends ProductDetailEvent {
   List<Object> get props => [idProduct];
 }
 
+class ProductDetailChecked extends ProductDetailEvent {
+  final String idProduct;
+  final int quantity;
+  const ProductDetailChecked({
+    required this.idProduct,
+    required this.quantity,
+  });
+
+  @override
+  List<Object> get props => [];
+}
+
 class ProductDetailAdded extends ProductDetailEvent {
   final String idProduct;
 

@@ -66,127 +66,147 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           SizedBox(width: 20),
         ],
       ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
-        ),
-        children: [
-          // list images
-          listImages(),
-          // name
-          Padding(
-            padding: const EdgeInsets.only(
-              left: kPaddingHorizontal,
-              top: 15,
-            ),
-            child: Text(
-              widget.product.productName,
-              style: AppStyles.bold.copyWith(
-                fontSize: 18,
+      body: BlocListener<ProductDetailBloc, ProductDetailState>(
+        listener: (context, state) {
+          if (state is ProductDetailLoaded) {
+            double totalPrice = state.quantity.toDouble() * state.price;
+
+            if (state.isCheckInventory != 2) {
+              if (state.isCheckInventory == 1) {
+                navigateToReviewOrderScreen(totalPrice, state.quantity);
+              } else {
+                showSnackBar(
+                  context,
+                  'The product is not available',
+                  const Icon(Icons.error),
+                );
+              }
+            }
+          }
+        },
+        child: ListView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          children: [
+            // list images
+            listImages(),
+            // name
+            Padding(
+              padding: const EdgeInsets.only(
+                left: kPaddingHorizontal,
+                top: 15,
+              ),
+              child: Text(
+                widget.product.productName,
+                style: AppStyles.bold.copyWith(
+                  fontSize: 18,
+                ),
               ),
             ),
-          ),
-          // unit
-          Padding(
-            padding: const EdgeInsets.only(left: kPaddingHorizontal),
-            child: Text(
-              widget.product.unit,
-              style: AppStyles.regular.copyWith(
-                color: AppColors.gray,
-                fontSize: 16,
+            // unit
+            Padding(
+              padding: const EdgeInsets.only(left: kPaddingHorizontal),
+              child: Text(
+                widget.product.unit,
+                style: AppStyles.regular.copyWith(
+                  color: AppColors.gray,
+                  fontSize: 16,
+                ),
               ),
             ),
-          ),
-          // original price
-          if (widget.product.discount != 0)
+            // original price
+            if (widget.product.discount != 0)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+                child: Text(
+                  '\$${widget.product.price}',
+                  style: AppStyles.regular.copyWith(
+                    fontSize: 15,
+                    decoration: TextDecoration.lineThrough,
+                    color: AppColors.text,
+                  ),
+                ),
+              ),
+            const SizedBox(height: 10),
+            // price
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
+              child: Row(
+                children: [
+                  widget.product.discount == 0
+                      ? Text(
+                          '\$${widget.product.price}',
+                          style: AppStyles.medium.copyWith(
+                            color: AppColors.secondary,
+                          ),
+                        )
+                      : Text(
+                          '\$${widget.product.price * (100 - widget.product.discount) * 0.01}',
+                          style: AppStyles.medium.copyWith(
+                            color: AppColors.secondary,
+                          ),
+                        ),
+                  const Spacer(),
+                  EditProductCart(
+                    idProduct: widget.product.id!,
+                  ),
+                ],
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: kPaddingHorizontal,
+                vertical: 5,
+              ),
+              child: Divider(
+                color: AppColors.gray,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kPaddingHorizontal,
+              ),
               child: Text(
-                '\$${widget.product.price}',
-                style: AppStyles.regular.copyWith(
-                  fontSize: 15,
-                  decoration: TextDecoration.lineThrough,
-                  color: AppColors.text,
+                'Product Description',
+                style: AppStyles.bold.copyWith(
+                  fontSize: 16,
                 ),
               ),
             ),
-          const SizedBox(height: 10),
-          // price
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kPaddingHorizontal),
-            child: Row(
-              children: [
-                widget.product.discount == 0
-                    ? Text(
-                        '\$${widget.product.price}',
-                        style: AppStyles.medium.copyWith(
-                          color: AppColors.secondary,
-                        ),
-                      )
-                    : Text(
-                        '\$${widget.product.price * (100 - widget.product.discount) * 0.01}',
-                        style: AppStyles.medium.copyWith(
-                          color: AppColors.secondary,
-                        ),
-                      ),
-                const Spacer(),
-                EditProductCart(
-                  idProduct: widget.product.id!,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kPaddingHorizontal,
+              ),
+              child: Text(
+                widget.product.productDescription,
+                style: AppStyles.regular,
+              ),
+            ),
+            BlocBuilder<ProductDetailBloc, ProductDetailState>(
+              builder: (context, state) {
+                if (state is ProductDetailLoaded) {
+                  return reviews(state.rating, state.comments);
+                }
+                return const SizedBox();
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kPaddingHorizontal,
+              ),
+              child: Text(
+                'Maybe you like',
+                style: AppStyles.bold.copyWith(
+                  fontSize: 16,
                 ),
-              ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: kPaddingHorizontal,
-              vertical: 5,
-            ),
-            child: Divider(
-              color: AppColors.gray,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kPaddingHorizontal,
-            ),
-            child: Text(
-              'Product Description',
-              style: AppStyles.bold.copyWith(
-                fontSize: 16,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kPaddingHorizontal,
-            ),
-            child: Text(
-              widget.product.productDescription,
-              style: AppStyles.regular,
-            ),
-          ),
-          BlocBuilder<ProductDetailBloc, ProductDetailState>(
-            builder: (context, state) {
-              if (state is ProductDetailLoaded) {
-                return reviews(state.rating, state.comments);
-              }
-              return const SizedBox();
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kPaddingHorizontal,
-            ),
-            child: Text(
-              'Maybe you like',
-              style: AppStyles.bold.copyWith(
-                fontSize: 16,
-              ),
-            ),
-          ),
-          listRecommendation(size),
-        ],
+            listRecommendation(size),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
@@ -225,11 +245,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       if (state is ProductDetailLoaded) {
                         double totalPrice =
                             state.quantity.toDouble() * state.price;
+
                         return CustomButton(
                           margin: 0,
                           content: 'Buy \$$totalPrice',
-                          onTap: () => navigateToReviewOrderScreen(
-                              totalPrice, state.quantity),
+                          onTap: () {
+                            _bloc.add(
+                              ProductDetailChecked(
+                                idProduct: widget.product.id!,
+                                quantity: state.quantity,
+                              ),
+                            );
+                          },
                         );
                       }
                       return const SizedBox();

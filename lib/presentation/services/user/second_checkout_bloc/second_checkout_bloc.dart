@@ -66,10 +66,24 @@ class SecondCheckoutBloc
         if (result != null) {
           print(result.returnmessage);
 
-          await const MethodChannel('flutter.native/channelPayOrder')
-              .invokeMethod('payOrder', {"zptoken": result.zptranstoken});
+          final String? resultZaloPay =
+              await const MethodChannel('flutter.native/channelPayOrder')
+                  .invokeMethod('payOrder', {"zptoken": result.zptranstoken});
+          if (resultZaloPay == 'Payment Success') {
+            log('done zalo pay');
+            if (event.isFromCart) {
+              await _orderRepository.createOrderFromCart(event.order);
+            } else {
+              await _orderRepository.createOrder(event.order);
+            }
+
+            await sendNotification();
+
+            emit(OrderSuccess(name: currentAddress.name));
+          }
         }
       }
+
       if (event.isFromCart) {
         await _orderRepository.createOrderFromCart(event.order);
       } else {

@@ -15,8 +15,17 @@ class BoxFilter extends StatefulWidget {
 }
 
 class _BoxFilterState extends State<BoxFilter> {
-  RangeValues priceRange = const RangeValues(0, 110000000);
+  RangeValues priceRange = const RangeValues(0, 100);
+  late RangeValues selectedPriceRange;
+
   CategoryDetailBloc get _bloc => BlocProvider.of<CategoryDetailBloc>(context);
+
+  @override
+  void initState() {
+    super.initState();
+    selectedPriceRange =
+        RangeValues(_bloc.min.toDouble(), _bloc.max.toDouble());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +46,9 @@ class _BoxFilterState extends State<BoxFilter> {
           const SizedBox(height: 10),
           Row(
             children: [
-              boxMoney(priceRange.start.round()),
+              boxMoney(selectedPriceRange.start.round()),
               const SizedBox(width: 10),
-              boxMoney(priceRange.end.round()),
+              boxMoney(selectedPriceRange.end.round()),
             ],
           ),
           SizedBox(
@@ -47,13 +56,13 @@ class _BoxFilterState extends State<BoxFilter> {
             width: double.infinity,
             child: RangeSlider(
               min: 0,
-              max: 110000000,
-              values: priceRange,
+              max: 100,
+              values: selectedPriceRange,
               activeColor: AppColors.primary,
               onChanged: (RangeValues values) {
                 if (mounted) {
                   setState(() {
-                    priceRange = values;
+                    selectedPriceRange = values;
                   });
                 }
               },
@@ -63,8 +72,8 @@ class _BoxFilterState extends State<BoxFilter> {
             content: 'Submit',
             margin: 0,
             onTap: () {
-              int min = priceRange.start.round();
-              int max = priceRange.end.round();
+              int min = selectedPriceRange.start.round();
+              int max = selectedPriceRange.end.round();
               _bloc.add(CategoryDetailProductsFiltered(min: min, max: max));
               Navigator.pop(context, [
                 min,

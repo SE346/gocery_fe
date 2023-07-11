@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   backgroundImage: NetworkImage(
                     user.avatar!,
                   ),
-                  radius: 45,
+                  radius: 50,
                 ),
                 const SizedBox(height: 20),
                 Text(

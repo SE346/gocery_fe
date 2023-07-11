@@ -20,19 +20,36 @@ class ProductDetailFailure extends ProductDetailState {
   List<Object> get props => [errorMessage];
 }
 
+class ProductDetailCheckedSuccess extends ProductDetailState {
+  final double totalPrice;
+  final int quantity;
+
+  const ProductDetailCheckedSuccess({
+    required this.totalPrice,
+    required this.quantity,
+  });
+}
+
+class ProductDetailCheckedFailure extends ProductDetailState {
+  const ProductDetailCheckedFailure();
+}
+
 class ProductDetailLoaded extends ProductDetailState {
   final int quantity;
   final double price;
   final int totalQuantity;
   final num rating;
   final List<Comment> comments;
+  final int? isCheckInventory;
 
-  const ProductDetailLoaded(
-      {required this.quantity,
-      required this.price,
-      required this.totalQuantity,
-      required this.comments,
-      required this.rating});
+  const ProductDetailLoaded({
+    required this.quantity,
+    required this.price,
+    required this.totalQuantity,
+    required this.comments,
+    required this.rating,
+    this.isCheckInventory = 2,
+  });
 
   @override
   List<Object> get props => [
@@ -41,5 +58,6 @@ class ProductDetailLoaded extends ProductDetailState {
         totalQuantity,
         rating,
         comments,
+        isCheckInventory!,
       ];
 }

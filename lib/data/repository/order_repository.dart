@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:grocery/data/environment.dart';
 import 'package:grocery/data/interfaces/i_service_api.dart';
+import 'package:grocery/data/models/inventory.dart';
 import 'package:grocery/data/models/order.dart';
 import 'package:grocery/data/models/user.dart';
 import 'package:grocery/data/network/base_api_service.dart';
@@ -19,6 +20,7 @@ class OrderRepository extends IServiceAPI {
   String urlRefreshToken = 'auth/refresh-token';
   String urlLogout = "auth/logout";
   String urlUpdateStatus = "order/";
+  String urlInventoryCheck = 'order/pre-order';
 
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;
@@ -31,11 +33,32 @@ class OrderRepository extends IServiceAPI {
     urlLogout = localURL + urlLogout;
     urlGetAllOrder = localURL + urlGetAllOrder;
     urlUpdateStatus = localURL + urlUpdateStatus;
+    urlInventoryCheck = localURL + urlInventoryCheck;
   }
 
   @override
   Order convertToObject(value) {
     return Order.fromMap(value);
+  }
+
+  Future<bool> checkInventory(Inventory inventory) async {
+    try {
+      final response = await apiServices.post(
+        urlInventoryCheck,
+        inventory.toMap(),
+        _appData.headers,
+      );
+
+      BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+      if (baseResponse.message == 'Product not available') {
+        return false;
+      }
+    } catch (e) {
+      log('error check inventory: $e');
+      return false;
+    }
+    return true;
   }
 
   Future<void> createOrder(Order order) async {
@@ -51,10 +74,11 @@ class OrderRepository extends IServiceAPI {
     }
   }
 
+//"message" -> "invalid input syntax for type uuid: "7a78e280-f93b-48e4-b2df-480f6c826445}""
   Future<void> updateStatus(String orderId, String status) async {
     try {
       final response = await apiServices.put(
-        '$urlUpdateStatus$orderId}',
+        '$urlUpdateStatus$orderId',
         {
           "newStatus": status,
         },

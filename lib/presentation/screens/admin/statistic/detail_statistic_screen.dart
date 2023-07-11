@@ -204,6 +204,13 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Detail',
+                    style: AppStyles.bold.copyWith(
+                      fontSize: 18,
+                    ),
+                  ),
                   statistic.total == 0
                       ? const SizedBox()
                       : CustomPieChart(

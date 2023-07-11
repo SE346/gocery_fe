@@ -25,9 +25,6 @@ class _CustomPieChartState extends State<CustomPieChart> {
       aspectRatio: 1.3,
       child: Row(
         children: <Widget>[
-          const SizedBox(
-            height: 18,
-          ),
           Expanded(
             child: AspectRatio(
               aspectRatio: 1,

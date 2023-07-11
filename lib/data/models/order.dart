@@ -17,6 +17,7 @@ class Order {
   final String paymentMethod;
   final List<Cart> productList;
   final List<Product>? products;
+  final List<Map<String, dynamic>>? orderDetailList;
   String? createdAt;
 
   Order({
@@ -32,6 +33,7 @@ class Order {
     required this.deliveryDate,
     required this.paymentMethod,
     required this.productList,
+    this.orderDetailList,
   });
 
   Map<String, dynamic> toMap() {
@@ -62,6 +64,17 @@ class Order {
       address: Address.fromMap(map['address']),
       shippingFee: map['shippingFee'] as int,
       productList: [],
+      orderDetailList: List<Map<String, dynamic>>.from(
+        (map['orderDetailList']).map(
+          (x) {
+            return {
+              'product': Product.fromMap((x['product'])),
+              'quantity': x['quantity'],
+              'price': x['price'],
+            };
+          },
+        ),
+      ),
       products: List<Product>.from(
         (map['orderDetailList']).map(
           (x) {

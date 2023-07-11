@@ -13,6 +13,7 @@ import 'package:grocery/presentation/screens/checkout/components/box_address.dar
 import 'package:grocery/presentation/screens/checkout/components/box_time.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';
 import 'package:grocery/presentation/screens/checkout/successful_checkout_screen.dart';
+import 'package:grocery/presentation/screens/checkout/webview_vn_pay_screen.dart';
 import 'package:grocery/presentation/screens/coupon/coupon_screen.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
@@ -45,8 +46,12 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
       name: 'Payment By Cash',
     ),
     Payment(
-      img: AppAssets.icCash,
+      img: AppAssets.icZaloPay,
       name: 'Payment By Zalo Pay',
+    ),
+    Payment(
+      img: AppAssets.icVnPay,
+      name: 'Payment By VN Pay',
     )
   ];
   String namePayment = "Payment By Cash";
@@ -317,6 +322,17 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                   child: CustomButton(
                     content: 'Checkout',
                     onTap: () {
+                      // double total = widget.orderTotal + deliveryFee + vatFee;
+
+                      // if (namePayment == 'Payment By VN Pay') {
+                      //   Navigator.of(context).pushReplacement(
+                      //     MaterialPageRoute(
+                      //       builder: (_) => WebViewVNPayScreen(
+                      //         totalValue: 300000,
+                      //       ),
+                      //     ),
+                      //   );
+                      // }
                       Order order = Order(
                         phoneNum: currentAddress.phoneNum,
                         addressId: currentAddress.id!,

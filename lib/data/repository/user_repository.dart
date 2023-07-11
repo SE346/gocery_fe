@@ -48,11 +48,12 @@ class UserRepository extends IServiceAPI {
 
   Future<void> updateAvatar(String avatarUrl) async {
     try {
-      await apiServices.post(
+      final response = await apiServices.post(
         urlUpdateAvatar,
         {"avatar": avatarUrl},
         _appData.headers,
       );
+      print(response);
     } catch (e) {
       log("error update avatar info: $e");
     }
