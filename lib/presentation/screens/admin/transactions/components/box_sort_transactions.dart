@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
-import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
+import 'package:grocery/presentation/services/admin/transaction_bloc/transaction_bloc.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class BoxSortTransactions extends StatefulWidget {
@@ -25,6 +24,7 @@ class _BoxSortTransactionsState extends State<BoxSortTransactions> {
   @override
   void initState() {
     super.initState();
+    itemChecked = _bloc.sort;
   }
 
   @override

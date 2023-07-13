@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
-import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
+import 'package:grocery/presentation/services/admin/transaction_bloc/transaction_bloc.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 
 class BoxFilterTransactions extends StatefulWidget {
@@ -13,10 +13,15 @@ class BoxFilterTransactions extends StatefulWidget {
 }
 
 class _BoxFilterTransactionsState extends State<BoxFilterTransactions> {
-  RangeValues priceRange = const RangeValues(0, 110000000);
   TransactionBloc get _bloc => BlocProvider.of<TransactionBloc>(context);
-  final List<String> statuses = ['Finished', 'In Progress', 'Cancelled'];
+  final List<String> statuses = ['Finished', 'In Progress', 'Cancelled', 'All'];
   List<String> values = [];
+
+  @override
+  void initState() {
+    super.initState();
+    values = _bloc.filterStatuses;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +42,14 @@ class _BoxFilterTransactionsState extends State<BoxFilterTransactions> {
                 var filterItem = statuses[index];
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      values.add(filterItem);
-                    });
+                    if (values.contains(filterItem)) {
+                      values.removeWhere((e) => e == filterItem);
+                      setState(() {});
+                    } else {
+                      setState(() {
+                        values.add(filterItem);
+                      });
+                    }
                   },
                   child: itemFilter(
                     filterItem,

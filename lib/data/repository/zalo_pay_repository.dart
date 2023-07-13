@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:grocery/data/models/create_order_response.dart';
 import 'package:grocery/data/utils/endpoints.dart';
 import 'package:grocery/data/utils/utils.dart';
@@ -25,7 +27,8 @@ class ZaloPayRepository {
     body["app_id"] = ZaloPayConfig.appId;
     body["app_user"] = ZaloPayConfig.appUser;
     body["app_time"] = DateTime.now().millisecondsSinceEpoch.toString();
-    body["amount"] = price.toStringAsFixed(0);
+    body["amount"] = (price.round() * 23000).toString();
+    //body["amount"] = "15000";
     body["app_trans_id"] = getAppTransId();
     body["embed_data"] = "{}";
     body["item"] = "[]";
@@ -41,8 +44,9 @@ class ZaloPayRepository {
       body["embed_data"],
       body["item"]
     ]);
+    //2554|230627_101122000002|zalopaydemo|15.28|1687878682173|{}|[]
     body["mac"] = getMacCreateOrder(dataGetMac);
-    print("mac: ${body["mac"]}");
+    log("mac: ${body["mac"]}");
 
     http.Response response = await http.post(
       Uri.parse(Endpoints.createOrderUrl),

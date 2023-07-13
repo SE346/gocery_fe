@@ -117,13 +117,23 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
   }
 
   void addCategory() async {
-    if (_addCategoryFormKey.currentState!.validate()) {
+    if (_addCategoryFormKey.currentState!.validate() && imageFile != null) {
       context.read<AddCategoryBloc>().add(
             CategoryAdded(
               nameCategory: nameController.text,
               imageFile: imageFile!,
             ),
           );
+    } else {
+      showSnackBar(
+        context,
+        'Please choose image',
+        const Icon(
+          Icons.error_outline,
+          color: Colors.white,
+        ),
+        messageColor: Colors.red,
+      );
     }
   }
 }

@@ -14,6 +14,8 @@ class Product {
   final int discount;
   final String productDescription;
   final String? thumbnail;
+  final int? quantity;
+
   Product({
     this.id,
     required this.categoryId,
@@ -24,6 +26,7 @@ class Product {
     required this.discount,
     required this.productDescription,
     this.thumbnail,
+    this.quantity,
   });
 
   Product copyWith({
@@ -36,6 +39,7 @@ class Product {
     int? discount,
     String? productDescription,
     List<Comment>? comments,
+    int? quantity,
   }) {
     return Product(
       id: id ?? this.id,
@@ -45,6 +49,7 @@ class Product {
       unit: unit ?? this.unit,
       price: price ?? this.price,
       discount: discount ?? this.discount,
+      quantity: quantity ?? this.quantity,
       productDescription: productDescription ?? this.productDescription,
     );
   }
@@ -64,6 +69,7 @@ class Product {
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
+        quantity: map['quantity'] ?? -1,
         id: map['id'] != null ? map['id'] as String : null,
         categoryId: map['categoryId'] ?? -1,
         productName: map['productName'] as String,

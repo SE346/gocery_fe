@@ -15,13 +15,14 @@ showBottomDialog(BuildContext context, Widget child) {
   );
 }
 
-showSnackBar(BuildContext context, String content, Icon icon) {
+showSnackBar(BuildContext context, String content, Icon icon,
+    {Color messageColor = AppColors.primary}) {
   final size = MediaQuery.of(context).size;
 
   Flushbar(
     maxWidth: size.width * .8,
     borderRadius: BorderRadius.circular(10),
-    backgroundColor: AppColors.primary,
+    backgroundColor: messageColor,
     flushbarPosition: FlushbarPosition.BOTTOM,
     messageColor: Colors.white,
     messageSize: 16,

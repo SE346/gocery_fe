@@ -33,3 +33,12 @@ class NewAddressChosen extends SecondCheckoutEvent {
   @override
   List<Object> get props => [newAddress];
 }
+
+class CouponChecked extends SecondCheckoutEvent {
+  final String couponCode;
+  final List<Map<String, dynamic>> productList;
+  const CouponChecked({
+    required this.couponCode,
+    required this.productList,
+  });
+}

@@ -24,6 +24,8 @@ import 'package:grocery/presentation/services/admin/add_edit_coupon_bloc/add_edi
 import 'package:grocery/presentation/services/admin/add_edit_product_bloc/add_edit_product_bloc.dart';
 import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart'
     as admin;
+import 'package:grocery/presentation/services/admin/transaction_bloc/transaction_bloc.dart';
+import 'package:grocery/presentation/services/admin/transaction_detail_bloc/transaction_detail_bloc.dart';
 import 'package:grocery/presentation/services/user/coupon_bloc/coupon_bloc.dart'
     as user;
 
@@ -41,7 +43,6 @@ import 'package:grocery/presentation/services/edit_profile_bloc/edit_profile_blo
 import 'package:grocery/presentation/services/login_bloc/login_bloc.dart';
 import 'package:grocery/presentation/services/admin/products_overview_bloc/products_overview_bloc.dart';
 import 'package:grocery/presentation/services/profile_bloc/profile_bloc.dart';
-import 'package:grocery/presentation/services/transaction_bloc/transaction_bloc.dart';
 import 'package:grocery/presentation/services/user/cart_bloc/cart_bloc.dart';
 import 'package:grocery/presentation/services/user/category_detail_bloc/category_detail_bloc.dart';
 import 'package:grocery/presentation/services/user/order_bloc/order_bloc.dart';
@@ -157,9 +158,8 @@ class _AppState extends State<App> {
               BlocProvider<ProductDetailBloc>(
                 create: (context) => ProductDetailBloc(
                   CartRepository(appData),
-                  ProductRepository(
-                    appData,
-                  ),
+                  ProductRepository(appData),
+                  OrderRepository(appData),
                 ),
               ),
               BlocProvider<CartBloc>(
@@ -213,6 +213,11 @@ class _AppState extends State<App> {
               BlocProvider<ReviewOrderBloc>(
                 create: (context) => ReviewOrderBloc(
                   CommentRepository(appData),
+                ),
+              ),
+              BlocProvider<TransactionDetailBloc>(
+                create: (context) => TransactionDetailBloc(
+                  OrderRepository(appData),
                 ),
               ),
             ],

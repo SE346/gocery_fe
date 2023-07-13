@@ -111,30 +111,30 @@ class _ShopScreenState extends State<ShopScreen> {
             const SizedBox(height: 10),
             //list categories
             _categories(size),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kPaddingHorizontal,
-              ),
-              child: Text(
-                'Promos for you',
-                style: AppStyles.bold.copyWith(fontSize: 18),
-              ),
-            ),
-            const SizedBox(height: 15),
-            // list promos
-            SizedBox(
-              height: size.height * .15,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  Promo promo = promos[index];
-                  return ItemPromo(promo: promo);
-                },
-                itemCount: promos.length,
-              ),
-            )
+            // const SizedBox(height: 10),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: kPaddingHorizontal,
+            //   ),
+            //   child: Text(
+            //     'Promos for you',
+            //     style: AppStyles.bold.copyWith(fontSize: 18),
+            //   ),
+            // ),
+            // const SizedBox(height: 15),
+            // // list promos
+            // SizedBox(
+            //   height: size.height * .15,
+            //   child: ListView.builder(
+            //     shrinkWrap: true,
+            //     scrollDirection: Axis.horizontal,
+            //     itemBuilder: (context, index) {
+            //       Promo promo = promos[index];
+            //       return ItemPromo(promo: promo);
+            //     },
+            //     itemCount: promos.length,
+            //   ),
+            // )
           ],
         ),
       )),

@@ -102,13 +102,13 @@ class OrderDetailScreen extends StatelessWidget {
                   Wrap(
                     direction: Axis.vertical,
                     spacing: 5,
-                    children: order.products!
+                    children: order.orderDetailList!
                         .map((e) => Row(
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
-                                    e.thumbnail!,
+                                    e['product'].thumbnail!,
                                     width: 100,
                                     height: 100,
                                     fit: BoxFit.cover,
@@ -119,21 +119,29 @@ class OrderDetailScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      e.productName,
-                                      style: AppStyles.medium,
+                                      e['product'].productName,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppStyles.medium
+                                          .copyWith(fontSize: 14),
                                     ),
                                     Row(
                                       children: [
                                         Text('Quantity: ',
                                             style: AppStyles.regular),
-                                        Text('2', style: AppStyles.medium),
+                                        Text(e['quantity'].toString(),
+                                            style: AppStyles.medium.copyWith(
+                                              fontSize: 14,
+                                            )),
                                       ],
                                     ),
                                     Row(
                                       children: [
                                         Text('Price: ',
                                             style: AppStyles.regular),
-                                        Text('2', style: AppStyles.medium),
+                                        Text('\$ ${e['price'].toString()}',
+                                            style: AppStyles.medium.copyWith(
+                                              fontSize: 14,
+                                            )),
                                       ],
                                     )
                                   ],
@@ -142,14 +150,13 @@ class OrderDetailScreen extends StatelessWidget {
                             ))
                         .toList(),
                   ),
-                  // ItemReviewOrder(product: product),
-                  // ItemReviewOrder(product: product),
                   const Divider(color: AppColors.text),
                   Row(
                     children: [
                       Text('Quantity', style: AppStyles.medium),
                       const Spacer(),
-                      Text('2', style: AppStyles.medium),
+                      Text(order.totalQuantity.toString(),
+                          style: AppStyles.medium),
                     ],
                   ),
                   Row(
@@ -157,7 +164,7 @@ class OrderDetailScreen extends StatelessWidget {
                       Text('Sub Total', style: AppStyles.medium),
                       const Spacer(),
                       Text(
-                        '\$ ${order.total.toString()}',
+                        '\$ ${(order.total! - 2).toString()}',
                         style: AppStyles.medium,
                       ),
                     ],
