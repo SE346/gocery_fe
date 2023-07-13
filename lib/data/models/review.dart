@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:grocery/data/models/comment.dart';
@@ -21,12 +20,14 @@ class Review {
 
   factory Review.fromMap(Map<String, dynamic> map) {
     return Review(
-      comments: List<Comment>.from(
-        (map['commentList']).map<Comment>(
-          (x) => Comment.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      rating: map['ratingAverage'],
+      comments: map['commentList'].length == 0
+          ? []
+          : List<Comment>.from(
+              (map['commentList']).map<Comment>(
+                (x) => Comment.fromMap(x as Map<String, dynamic>),
+              ),
+            ),
+      rating: map['ratingAverage'] ?? 0,
     );
   }
 

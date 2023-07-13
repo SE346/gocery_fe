@@ -5,7 +5,7 @@ import 'package:grocery/presentation/widgets/box.dart';
 
 class ItemCoupon extends StatelessWidget {
   final Coupon coupon;
-  final Function(String) callback;
+  final Function(Coupon) callback;
 
   const ItemCoupon({
     super.key,
@@ -19,7 +19,7 @@ class ItemCoupon extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        callback(coupon.couponType);
+        callback(coupon);
       },
       child: Box(
         margin: const EdgeInsets.all(10),
@@ -32,8 +32,9 @@ class ItemCoupon extends StatelessWidget {
                 bottomLeft: Radius.circular(10),
               ),
               child: Image.network(
-                'https://images.unsplash.com/photo-1682685795557-976f03aca7b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60',
-                fit: BoxFit.fitHeight,
+                coupon.thumbnail!,
+                fit: BoxFit.cover,
+                height: 100,
                 width: size.width * 0.3,
               ),
             ),

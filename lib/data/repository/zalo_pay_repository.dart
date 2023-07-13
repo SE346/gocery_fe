@@ -27,8 +27,8 @@ class ZaloPayRepository {
     body["app_id"] = ZaloPayConfig.appId;
     body["app_user"] = ZaloPayConfig.appUser;
     body["app_time"] = DateTime.now().millisecondsSinceEpoch.toString();
-    //body["amount"] = price.toStringAsFixed(2);
-    body["amount"] = "15000";
+    body["amount"] = (price.round() * 23000).toString();
+    //body["amount"] = "15000";
     body["app_trans_id"] = getAppTransId();
     body["embed_data"] = "{}";
     body["item"] = "[]";

@@ -26,3 +26,14 @@ class TransactionFiltered extends TransactionEvent {
   @override
   List<Object> get props => [filterValues];
 }
+
+class TransactionEditted extends TransactionEvent {
+  final Transaction newTransaction;
+
+  const TransactionEditted({
+    required this.newTransaction,
+  });
+
+  @override
+  List<Object> get props => [newTransaction];
+}

@@ -108,6 +108,7 @@ class ProductRepository extends IServiceAPI {
         product.toMap(),
         _appData.headers,
       );
+      print(response);
     } catch (e) {
       log("error add Product: $e");
     }

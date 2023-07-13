@@ -5,7 +5,6 @@ import 'package:grocery/data/models/cart.dart';
 import 'package:grocery/data/models/order.dart';
 import 'package:grocery/data/models/payment.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
-import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/images.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/address/address_screen.dart';
@@ -13,14 +12,12 @@ import 'package:grocery/presentation/screens/checkout/components/box_address.dar
 import 'package:grocery/presentation/screens/checkout/components/box_time.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';
 import 'package:grocery/presentation/screens/checkout/successful_checkout_screen.dart';
-import 'package:grocery/presentation/screens/checkout/webview_vn_pay_screen.dart';
-import 'package:grocery/presentation/screens/coupon/coupon_screen.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/utils/money_extension.dart';
-import 'package:grocery/presentation/widgets/box.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
+import 'package:grocery/presentation/widgets/text_field_input.dart';
 
 class SecondCheckOutScreen extends StatefulWidget {
   final double orderTotal;
@@ -59,16 +56,21 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
   String payResult = "";
   String payAmount = "10000";
   bool showResult = false;
+  TextEditingController couponController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-
     _bloc.add(SecondCheckoutStarted());
   }
 
-  String valueCoupon = '';
+  @override
+  void dispose() {
+    super.dispose();
+    couponController.dispose();
+  }
 
+  String valueCoupon = '';
   @override
   Widget build(BuildContext context) {
     double deliveryFee = 2;
@@ -97,6 +99,19 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
             );
           } else if (state is SecondCheckoutSuccess) {
             LoadingScreen().hide();
+            if (state.typeCoupon == 'Freeship') {
+              deliveryFee = 0;
+            }
+            if (state.typeCoupon.isNotEmpty) {
+              showSnackBar(
+                context,
+                'Apply coupon successfully',
+                const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                ),
+              );
+            }
           } else if (state is OrderSuccess) {
             LoadingScreen().hide();
             Navigator.of(context).push(
@@ -188,7 +203,11 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                       const Spacer(),
                       Text(
                         deliveryFee.toDouble().toMoney,
-                        style: AppStyles.regular,
+                        style: AppStyles.regular.copyWith(
+                          decoration: state.typeCoupon == 'Freeship'
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
                       ),
                     ],
                   ),
@@ -233,55 +252,36 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                 _buildDivider(),
                 const SizedBox(height: 10),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Coupon',
-                    style: AppStyles.semibold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () async {
-                    final result = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const CouponScreen(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextFieldInput(
+                          hintText: 'Coupon Code',
+                          controller: couponController,
+                        ),
                       ),
-                    );
-                    if (result != null) {
-                      setState(() {
-                        valueCoupon = result;
-                      });
-                    }
-                  },
-                  child: Box(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          AppAssets.icCoupon,
-                          width: 50,
-                          height: 50,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomButton(
+                          margin: 0,
+                          width: 0,
+                          content: 'Apply',
+                          onTap: () {
+                            _bloc.add(CouponChecked(
+                              couponCode: couponController.text.trim(),
+                              productList: widget.carts
+                                  .map((x) => {
+                                        'id': x.product.id,
+                                        'quantity': x.quantity,
+                                      })
+                                  .toList(),
+                            ));
+                          },
                         ),
-                        Text(
-                          'Apply Coupon',
-                          style: AppStyles.medium.copyWith(
-                            fontSize: 15,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          valueCoupon,
-                          style: AppStyles.regular.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -333,6 +333,7 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                       //     ),
                       //   );
                       // }
+
                       Order order = Order(
                         phoneNum: currentAddress.phoneNum,
                         addressId: currentAddress.id!,

@@ -44,7 +44,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
             LoadingScreen().show(context: context);
           } else if (state is TransactionDetailSuccess) {
             LoadingScreen().hide();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
           } else if (state is TransactionDetailFailure) {
             LoadingScreen().hide();
           }
@@ -128,13 +128,13 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                     Wrap(
                       direction: Axis.vertical,
                       spacing: 5,
-                      children: widget.order.products!
+                      children: widget.order.orderDetailList!
                           .map((e) => Row(
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
-                                      e.thumbnail!,
+                                      e['product'].thumbnail!,
                                       width: 100,
                                       height: 100,
                                       fit: BoxFit.cover,
@@ -146,21 +146,29 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        e.productName,
-                                        style: AppStyles.medium,
+                                        e['product'].productName,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppStyles.medium
+                                            .copyWith(fontSize: 14),
                                       ),
                                       Row(
                                         children: [
                                           Text('Quantity: ',
                                               style: AppStyles.regular),
-                                          Text('2', style: AppStyles.medium),
+                                          Text(e['quantity'].toString(),
+                                              style: AppStyles.medium.copyWith(
+                                                fontSize: 14,
+                                              )),
                                         ],
                                       ),
                                       Row(
                                         children: [
                                           Text('Price: ',
                                               style: AppStyles.regular),
-                                          Text('2', style: AppStyles.medium),
+                                          Text('\$ ${e['price'].toString()}',
+                                              style: AppStyles.medium.copyWith(
+                                                fontSize: 14,
+                                              )),
                                         ],
                                       )
                                     ],
@@ -169,8 +177,6 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                               ))
                           .toList(),
                     ),
-                    // ItemReviewOrder(product: product),
-                    // ItemReviewOrder(product: product),
                     const Divider(color: AppColors.text),
                     Row(
                       children: [
@@ -223,7 +229,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                             TransactionDetailStatusChanged(
                               orderId: widget.order.id!,
                               newStatus: 'Finished',
-                              email: 'maiphamquochung@gmail.com',
+                              email: widget.order.email!,
                             ),
                           );
                         },
@@ -238,7 +244,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
                             TransactionDetailStatusChanged(
                               orderId: widget.order.id!,
                               newStatus: 'Cancelled',
-                              email: 'maiphamquochung@gmail.com',
+                              email: widget.order.email!,
                             ),
                           );
                         },

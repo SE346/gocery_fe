@@ -52,6 +52,8 @@ class MainActivity: FlutterActivity() {
                                 result.success("Payment Success")
                             }
                         })
+                    
+                    result.success("Payment Success")
                 } else {
                     Log.d("[METHOD CALLER] ", "Method Not Implemented")
                     result.success("Payment failed")

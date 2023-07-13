@@ -26,6 +26,8 @@ class SecondCheckoutBloc
 
   late Address currentAddress;
   List<Cart> carts = [];
+  String typeCoupon = '';
+  int valueCoupon = 0;
 
   SecondCheckoutBloc(
     this._addressRepository,
@@ -36,6 +38,7 @@ class SecondCheckoutBloc
     on<SecondCheckoutStarted>(_onStarted);
     on<CheckoutSubmitted>(_onSubmitted);
     on<NewAddressChosen>(_onNewAddressChosen);
+    on<CouponChecked>(_onCouponChecked);
   }
 
   FutureOr<void> _onStarted(
@@ -51,7 +54,12 @@ class SecondCheckoutBloc
       }
       List<Cart>? result = await _cartRepository.getAllCarts();
       carts = result ?? [];
-      emit(SecondCheckoutSuccess(currentAddress: currentAddress, carts: carts));
+      emit(SecondCheckoutSuccess(
+        currentAddress: currentAddress,
+        carts: carts,
+        typeCoupon: typeCoupon,
+        valueCoupon: valueCoupon,
+      ));
     } catch (e) {
       emit(SecondCheckoutFailure(errorMessage: e.toString()));
     }
@@ -69,30 +77,29 @@ class SecondCheckoutBloc
           final String? resultZaloPay =
               await const MethodChannel('flutter.native/channelPayOrder')
                   .invokeMethod('payOrder', {"zptoken": result.zptranstoken});
-          if (resultZaloPay == 'Payment Success') {
-            log('done zalo pay');
-            if (event.isFromCart) {
-              await _orderRepository.createOrderFromCart(event.order);
-            } else {
-              await _orderRepository.createOrder(event.order);
-            }
 
-            await sendNotification();
+          await Future.delayed(const Duration(seconds: 10));
 
-            emit(OrderSuccess(name: currentAddress.name));
+          if (event.isFromCart) {
+            await _orderRepository.createOrderFromCart(event.order);
+          } else {
+            await _orderRepository.createOrder(event.order);
           }
+
+          emit(OrderSuccess(name: currentAddress.name));
+          await sendNotification();
         }
-      }
-
-      if (event.isFromCart) {
-        await _orderRepository.createOrderFromCart(event.order);
       } else {
-        await _orderRepository.createOrder(event.order);
+        if (event.isFromCart) {
+          await _orderRepository.createOrderFromCart(event.order);
+        } else {
+          await _orderRepository.createOrder(event.order);
+        }
+
+        await sendNotification();
+
+        emit(OrderSuccess(name: currentAddress.name));
       }
-
-      await sendNotification();
-
-      emit(OrderSuccess(name: currentAddress.name));
     } catch (e) {
       emit(SecondCheckoutFailure(errorMessage: e.toString()));
     }
@@ -100,7 +107,12 @@ class SecondCheckoutBloc
 
   FutureOr<void> _onNewAddressChosen(
       NewAddressChosen event, Emitter<SecondCheckoutState> emit) {
-    emit(SecondCheckoutSuccess(currentAddress: event.newAddress, carts: carts));
+    emit(SecondCheckoutSuccess(
+      currentAddress: event.newAddress,
+      carts: carts,
+      typeCoupon: typeCoupon,
+      valueCoupon: valueCoupon,
+    ));
   }
 
   Future<void> sendNotification() async {
@@ -122,5 +134,23 @@ class SecondCheckoutBloc
     );
 
     await firebaseService.sendNotification(notificationRequest);
+  }
+
+  FutureOr<void> _onCouponChecked(
+      CouponChecked event, Emitter<SecondCheckoutState> emit) async {
+    emit(SecondCheckoutLoading());
+
+    try {
+      Map<String, dynamic>? result = await _orderRepository.checkCoupon(
+          event.couponCode, event.productList);
+      emit(SecondCheckoutSuccess(
+        currentAddress: currentAddress,
+        carts: carts,
+        typeCoupon: result!['type'],
+        valueCoupon: result['value'],
+      ));
+    } catch (e) {
+      emit(SecondCheckoutFailure(errorMessage: e.toString()));
+    }
   }
 }

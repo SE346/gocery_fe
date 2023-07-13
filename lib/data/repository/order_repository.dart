@@ -21,6 +21,7 @@ class OrderRepository extends IServiceAPI {
   String urlLogout = "auth/logout";
   String urlUpdateStatus = "order/";
   String urlInventoryCheck = 'order/pre-order';
+  String urlCheckCoupon = 'order/pre-order-cp';
 
   final BaseApiServices apiServices = NetworkApiService();
   final AppData _appData;
@@ -34,11 +35,40 @@ class OrderRepository extends IServiceAPI {
     urlGetAllOrder = localURL + urlGetAllOrder;
     urlUpdateStatus = localURL + urlUpdateStatus;
     urlInventoryCheck = localURL + urlInventoryCheck;
+    urlCheckCoupon = localURL + urlCheckCoupon;
   }
 
   @override
   Order convertToObject(value) {
     return Order.fromMap(value);
+  }
+
+  Future<Map<String, dynamic>?> checkCoupon(
+      String coupon, List<Map<String, dynamic>> productList) async {
+    try {
+      final response = await apiServices.post(
+        urlCheckCoupon,
+        {
+          'code': coupon,
+          'productList': productList,
+        },
+        _appData.headers,
+      );
+
+      BaseResponse baseResponse = BaseResponse.fromJson(response);
+
+      if (baseResponse.message == 'Coupon invalid') {
+        return null;
+      }
+
+      Map<String, dynamic> result = {};
+      result['type'] = baseResponse.data['type'];
+      result['value'] = baseResponse.data['value'];
+      return result;
+    } catch (e) {
+      log('error check coupon: $e');
+      return null;
+    }
   }
 
   Future<bool> checkInventory(Inventory inventory) async {
@@ -124,11 +154,16 @@ class OrderRepository extends IServiceAPI {
     return orders;
   }
 
-  Future<List<Order>> getAllOrders() async {
+  Future<List<Order>> getAllOrders(List<String> filters, String sort) async {
+    String query = "";
+    for (var filter in filters) {
+      query += 'filter=$filter&';
+    }
+
     List<Order> orders = [];
     try {
       final response = await apiServices.get(
-        '$urlGetAllOrder?filter=All&limit=1000&page=1&sort=farest',
+        '$urlGetAllOrder?${query}limit=1000&page=1&sort=$sort',
         _appData.headers,
       );
 
@@ -143,100 +178,5 @@ class OrderRepository extends IServiceAPI {
     }
 
     return orders;
-  }
-
-  Future<BaseResponse?> register(User user) async {
-    try {
-      final response = await apiServices.post(
-        urlCreateOrder,
-        user.toMap(),
-        _appData.headers,
-      );
-
-      final result = BaseResponse.fromJson(response);
-      print(result);
-      return result;
-    } catch (e) {
-      print('Error register: $e');
-      return null;
-    }
-  }
-
-  Future<BaseResponse?> login(String email, String password) async {
-    try {
-      final response = await apiServices.post(
-        urlLogin,
-        {
-          "email": email,
-          "password": password,
-        },
-        _appData.headers,
-      );
-
-      return BaseResponse.fromJson(response);
-    } catch (e) {
-      print('Error login: $e');
-      return null;
-    }
-  }
-
-  Future<String?> refreshToken() async {
-    await _appData.getRefreshToken();
-    try {
-      final response = await apiServices.post(
-        urlRefreshToken,
-        {
-          "refreshToken": _appData.refreshToken,
-        },
-        _appData.headers,
-      );
-
-      BaseResponse baseResponse = BaseResponse.fromJson(response);
-      if (baseResponse.statusCode == 200) {
-        return baseResponse.data['accessToken'];
-      }
-    } catch (e) {
-      print('Error refreshToken: $e');
-    }
-    return null;
-  }
-
-  Future<bool> checkUserLoggined() async {
-    await _appData.getToken();
-    String? token = _appData.accessToken ?? '';
-
-    if (token.isEmpty) {
-      return false;
-    }
-
-    try {
-      // Verify a token
-      JWT.verify(token, SecretKey(secretKey));
-    } on JWTExpiredException {
-      String? newAccessToken = await refreshToken();
-
-      if (newAccessToken != null) {
-        log("AT: $newAccessToken");
-        saveAccessToken(newAccessToken);
-      }
-    }
-
-    token = _appData.accessToken ?? '';
-
-    return true;
-  }
-
-  String getRole() {
-    JWT jwt = JWT.decode(_appData.accessToken!);
-    dynamic payload = jwt.payload;
-    return payload['user']['role'];
-  }
-
-  void saveAccessToken(String accessToken) {
-    _appData.accessToken = accessToken;
-  }
-
-  void saveRefreshToken(String refreshToken) {
-    _appData.refreshToken = refreshToken;
   }
 }

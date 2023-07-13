@@ -6,6 +6,7 @@ import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
 import 'package:grocery/presentation/screens/admin/coupon/add_coupon_screen.dart';
 import 'package:grocery/presentation/screens/admin/coupon/components/item_coupon.dart';
+import 'package:grocery/presentation/screens/admin/coupon/detail_coupon_screen.dart';
 import 'package:grocery/presentation/services/admin/coupon_bloc/coupon_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/widgets/icon_back.dart';
@@ -82,7 +83,15 @@ class _CouponScreenState extends State<CouponScreen> {
               itemBuilder: (context, index) {
                 return ItemCoupon(
                   coupon: coupons[index],
-                  callback: (value) {},
+                  callback: (coupon) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DetailCouponScreen(
+                          coupon: coupon,
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
               itemCount: coupons.length,

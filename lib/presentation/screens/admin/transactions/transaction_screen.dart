@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grocery/data/models/order.dart';
@@ -44,20 +46,24 @@ class _TransactionScreenState extends State<TransactionScreen> {
             return LoadingScreen().showLoadingWidget();
           } else if (state is TransactionSuccess) {
             List<Order> orders = state.orders;
+
             return Stack(
               children: [
                 ListView.builder(
                   itemBuilder: (context, index) {
                     Order order = orders[index];
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
+                      onTap: () async {
+                        final result = await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (_) => TransactionDetailScreen(
                               order: order,
                             ),
                           ),
                         );
+                        if (result == true) {
+                          _bloc.add(TransactionStarted());
+                        }
                       },
                       child: ItemTransaction(
                         order: order,

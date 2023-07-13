@@ -122,7 +122,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                     child: CustomButton(
                       content: 'Update Category',
                       onTap: updateCategory,
-                      width: size.width * .4,
+                      width: size.width * .5,
                     ),
                   )
                 ],

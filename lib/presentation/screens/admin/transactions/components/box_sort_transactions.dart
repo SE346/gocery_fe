@@ -24,6 +24,7 @@ class _BoxSortTransactionsState extends State<BoxSortTransactions> {
   @override
   void initState() {
     super.initState();
+    itemChecked = _bloc.sort;
   }
 
   @override

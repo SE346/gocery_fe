@@ -138,7 +138,7 @@ class OrderDetailScreen extends StatelessWidget {
                                       children: [
                                         Text('Price: ',
                                             style: AppStyles.regular),
-                                        Text(e['price'].toString(),
+                                        Text('\$ ${e['price'].toString()}',
                                             style: AppStyles.medium.copyWith(
                                               fontSize: 14,
                                             )),
@@ -155,7 +155,8 @@ class OrderDetailScreen extends StatelessWidget {
                     children: [
                       Text('Quantity', style: AppStyles.medium),
                       const Spacer(),
-                      Text('2', style: AppStyles.medium),
+                      Text(order.totalQuantity.toString(),
+                          style: AppStyles.medium),
                     ],
                   ),
                   Row(
@@ -163,7 +164,7 @@ class OrderDetailScreen extends StatelessWidget {
                       Text('Sub Total', style: AppStyles.medium),
                       const Spacer(),
                       Text(
-                        '\$ ${order.total.toString()}',
+                        '\$ ${(order.total! - 2).toString()}',
                         style: AppStyles.medium,
                       ),
                     ],

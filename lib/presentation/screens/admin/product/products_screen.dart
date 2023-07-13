@@ -142,8 +142,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
 
     if (result != null) {
-      newProductAdded = result;
-      _bloc.add(NewProductAdded(product: result));
+      newProductAdded = result[0];
+      _bloc.add(NewProductAdded(product: result[0]));
     }
   }
 }

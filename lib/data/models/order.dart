@@ -19,6 +19,8 @@ class Order {
   final List<Product>? products;
   final List<Map<String, dynamic>>? orderDetailList;
   String? createdAt;
+  String? email;
+  int? totalQuantity;
 
   Order({
     this.id,
@@ -34,6 +36,8 @@ class Order {
     required this.paymentMethod,
     required this.productList,
     this.orderDetailList,
+    this.email,
+    this.totalQuantity,
   });
 
   Map<String, dynamic> toMap() {
@@ -63,6 +67,8 @@ class Order {
       createdAt: map['orderDate'] as String,
       address: Address.fromMap(map['address']),
       shippingFee: map['shippingFee'] as int,
+      email: map['user'] != null ? map['user']['mail'] : '',
+      totalQuantity: map['totalQuantity'] ?? 0,
       productList: [],
       orderDetailList: List<Map<String, dynamic>>.from(
         (map['orderDetailList']).map(
