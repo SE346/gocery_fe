@@ -8,3 +8,10 @@ abstract class CouponEvent extends Equatable {
 }
 
 class CouponStarted extends CouponEvent {}
+
+class CouponAdded extends CouponEvent {
+  final Coupon coupon;
+  const CouponAdded({required this.coupon});
+  @override
+  List<Object> get props => [coupon];
+}

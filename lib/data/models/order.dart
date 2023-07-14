@@ -21,6 +21,7 @@ class Order {
   String? createdAt;
   String? email;
   int? totalQuantity;
+  String? code;
 
   Order({
     this.id,
@@ -38,6 +39,7 @@ class Order {
     this.orderDetailList,
     this.email,
     this.totalQuantity,
+    this.code,
   });
 
   Map<String, dynamic> toMap() {
@@ -52,6 +54,7 @@ class Order {
                 'quantity': x.quantity,
               })
           .toList(),
+      'code': code,
     };
   }
 

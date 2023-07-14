@@ -16,21 +16,19 @@ class SecondCheckoutSuccess extends SecondCheckoutState {
   final List<Cart> carts;
   final String typeCoupon;
   final int valueCoupon;
+  final int pricePointAccept;
 
   const SecondCheckoutSuccess({
     required this.currentAddress,
     required this.carts,
     required this.typeCoupon,
     required this.valueCoupon,
+    required this.pricePointAccept,
   });
 
   @override
-  List<Object> get props => [
-        currentAddress,
-        carts,
-        typeCoupon,
-        valueCoupon,
-      ];
+  List<Object> get props =>
+      [currentAddress, carts, typeCoupon, valueCoupon, pricePointAccept];
 }
 
 class OrderSuccess extends SecondCheckoutState {

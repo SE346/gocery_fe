@@ -28,6 +28,7 @@ class SecondCheckoutBloc
   List<Cart> carts = [];
   String typeCoupon = '';
   int valueCoupon = 0;
+  int pricePointAccept = 0;
 
   SecondCheckoutBloc(
     this._addressRepository,
@@ -44,6 +45,10 @@ class SecondCheckoutBloc
   FutureOr<void> _onStarted(
       SecondCheckoutStarted event, Emitter<SecondCheckoutState> emit) async {
     emit(SecondCheckoutLoading());
+    typeCoupon = '';
+    valueCoupon = 0;
+    pricePointAccept = 0;
+
     try {
       List<Address> addresses = await _addressRepository.getAddresses();
       for (var address in addresses) {
@@ -59,6 +64,7 @@ class SecondCheckoutBloc
         carts: carts,
         typeCoupon: typeCoupon,
         valueCoupon: valueCoupon,
+        pricePointAccept: pricePointAccept,
       ));
     } catch (e) {
       emit(SecondCheckoutFailure(errorMessage: e.toString()));
@@ -112,6 +118,7 @@ class SecondCheckoutBloc
       carts: carts,
       typeCoupon: typeCoupon,
       valueCoupon: valueCoupon,
+      pricePointAccept: pricePointAccept,
     ));
   }
 
@@ -143,12 +150,40 @@ class SecondCheckoutBloc
     try {
       Map<String, dynamic>? result = await _orderRepository.checkCoupon(
           event.couponCode, event.productList);
-      emit(SecondCheckoutSuccess(
-        currentAddress: currentAddress,
-        carts: carts,
-        typeCoupon: result!['type'],
-        valueCoupon: result['value'],
-      ));
+
+      if (result != null) {
+        typeCoupon = result['type'];
+        valueCoupon = result['value'];
+        pricePointAccept = result['pricePointAccept'];
+
+        if (pricePointAccept <= event.total) {
+          emit(
+            SecondCheckoutSuccess(
+              currentAddress: currentAddress,
+              carts: carts,
+              typeCoupon: typeCoupon,
+              valueCoupon: valueCoupon,
+              pricePointAccept: pricePointAccept,
+            ),
+          );
+        } else {
+          emit(SecondCheckoutSuccess(
+            currentAddress: currentAddress,
+            carts: carts,
+            typeCoupon: 'failed',
+            valueCoupon: 0,
+            pricePointAccept: 0,
+          ));
+        }
+      } else {
+        emit(SecondCheckoutSuccess(
+          currentAddress: currentAddress,
+          carts: carts,
+          typeCoupon: 'failed',
+          valueCoupon: 0,
+          pricePointAccept: 0,
+        ));
+      }
     } catch (e) {
       emit(SecondCheckoutFailure(errorMessage: e.toString()));
     }

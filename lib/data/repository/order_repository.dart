@@ -1,11 +1,9 @@
 import 'dart:developer';
 
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:grocery/data/environment.dart';
 import 'package:grocery/data/interfaces/i_service_api.dart';
 import 'package:grocery/data/models/inventory.dart';
 import 'package:grocery/data/models/order.dart';
-import 'package:grocery/data/models/user.dart';
 import 'package:grocery/data/network/base_api_service.dart';
 import 'package:grocery/data/network/network_api_service.dart';
 import 'package:grocery/data/response/base_response.dart';
@@ -57,13 +55,16 @@ class OrderRepository extends IServiceAPI {
 
       BaseResponse baseResponse = BaseResponse.fromJson(response);
 
-      if (baseResponse.message == 'Coupon invalid') {
+      if (baseResponse.message == 'Coupon invalid' ||
+          baseResponse.message == 'Coupon inactive' ||
+          baseResponse.message == 'Coupon expired') {
         return null;
       }
 
       Map<String, dynamic> result = {};
       result['type'] = baseResponse.data['type'];
       result['value'] = baseResponse.data['value'];
+      result['pricePointAccept'] = baseResponse.data['pricePointAccept'];
       return result;
     } catch (e) {
       log('error check coupon: $e');

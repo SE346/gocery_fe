@@ -20,4 +20,11 @@ class AddEditCouponFailure extends AddEditCouponState {
   List<Object> get props => [errorMessage];
 }
 
-class AddEditCouponSuccess extends AddEditCouponState {}
+class AddEditCouponSuccess extends AddEditCouponState {
+  final Coupon coupon;
+
+  const AddEditCouponSuccess({required this.coupon});
+
+  @override
+  List<Object> get props => [coupon];
+}

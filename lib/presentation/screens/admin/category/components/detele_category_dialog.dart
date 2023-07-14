@@ -43,7 +43,7 @@ class DeleteCategoryDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              'Hành động này không thể quay lại',
+              'This action can\'t be back',
               style: AppStyles.medium.copyWith(
                 color: const Color(0xFFFF5252),
                 fontSize: 15,

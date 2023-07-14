@@ -43,12 +43,13 @@ class _CouponScreenState extends State<CouponScreen> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
+            onTap: () async {
+              Coupon newCoupon = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => const AddCouponScreen(),
                 ),
               );
+              _bloc.add(CouponAdded(coupon: newCoupon));
             },
             child: const Icon(
               Icons.add,

@@ -12,12 +12,14 @@ import 'package:grocery/presentation/screens/checkout/components/box_address.dar
 import 'package:grocery/presentation/screens/checkout/components/box_time.dart';
 import 'package:grocery/presentation/screens/checkout/components/item_payment_method.dart';
 import 'package:grocery/presentation/screens/checkout/successful_checkout_screen.dart';
+import 'package:grocery/presentation/screens/checkout/webview_vn_pay_screen.dart';
 import 'package:grocery/presentation/services/user/second_checkout_bloc/second_checkout_bloc.dart';
 import 'package:grocery/presentation/utils/functions.dart';
 import 'package:grocery/presentation/utils/money_extension.dart';
 import 'package:grocery/presentation/widgets/custom_app_bar.dart';
 import 'package:grocery/presentation/widgets/custom_button.dart';
 import 'package:grocery/presentation/widgets/text_field_input.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class SecondCheckOutScreen extends StatefulWidget {
   final double orderTotal;
@@ -99,16 +101,41 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
             );
           } else if (state is SecondCheckoutSuccess) {
             LoadingScreen().hide();
-            if (state.typeCoupon == 'Freeship') {
-              deliveryFee = 0;
-            }
-            if (state.typeCoupon.isNotEmpty) {
+
+            double total = widget.orderTotal + deliveryFee + vatFee;
+
+            if (state.typeCoupon == 'failed') {
+              deliveryFee = 2;
+              showSnackBar(
+                context,
+                'Apply coupon failed',
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                ),
+              );
+            } else if (state.typeCoupon.isNotEmpty &&
+                state.pricePointAccept <= total) {
               showSnackBar(
                 context,
                 'Apply coupon successfully',
                 const Icon(
                   Icons.check,
                   color: Colors.white,
+                ),
+              );
+              if (state.typeCoupon == 'Freeship') {
+                deliveryFee = 0;
+              }
+            }
+            if (state.typeCoupon.isNotEmpty && state.pricePointAccept > total) {
+              deliveryFee = 2;
+              showSnackBar(
+                context,
+                'Apply coupon failed',
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
                 ),
               );
             }
@@ -269,6 +296,9 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                           width: 0,
                           content: 'Apply',
                           onTap: () {
+                            double total =
+                                widget.orderTotal + deliveryFee + vatFee;
+
                             _bloc.add(CouponChecked(
                               couponCode: couponController.text.trim(),
                               productList: widget.carts
@@ -277,6 +307,7 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                                         'quantity': x.quantity,
                                       })
                                   .toList(),
+                              total: total,
                             ));
                           },
                         ),
@@ -322,34 +353,36 @@ class _SecondCheckOutScreenState extends State<SecondCheckOutScreen> {
                   child: CustomButton(
                     content: 'Checkout',
                     onTap: () {
-                      // double total = widget.orderTotal + deliveryFee + vatFee;
+                      double total = widget.orderTotal + deliveryFee + vatFee;
 
-                      // if (namePayment == 'Payment By VN Pay') {
-                      //   Navigator.of(context).pushReplacement(
-                      //     MaterialPageRoute(
-                      //       builder: (_) => WebViewVNPayScreen(
-                      //         totalValue: 300000,
-                      //       ),
-                      //     ),
-                      //   );
-                      // }
-
-                      Order order = Order(
-                        phoneNum: currentAddress.phoneNum,
-                        addressId: currentAddress.id!,
-                        deliveryDate: DateTime.now().toUtc().toIso8601String(),
-                        paymentMethod: namePayment == 'Payment By Zalo Pay'
-                            ? 'Zalopay'
-                            : 'Credit',
-                        productList: widget.carts,
-                        total: widget.orderTotal + deliveryFee + vatFee,
-                      );
-                      _bloc.add(
-                        CheckoutSubmitted(
-                          order: order,
-                          isFromCart: widget.isFromCart,
-                        ),
-                      );
+                      if (namePayment == 'Payment By VN Pay') {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (_) => const WebViewVNPayScreen(
+                              totalValue: 300000,
+                            ),
+                          ),
+                        );
+                      } else {
+                        Order order = Order(
+                          phoneNum: currentAddress.phoneNum,
+                          addressId: currentAddress.id!,
+                          deliveryDate:
+                              DateTime.now().toUtc().toIso8601String(),
+                          paymentMethod: namePayment == 'Payment By Zalo Pay'
+                              ? 'Zalopay'
+                              : 'Credit',
+                          productList: widget.carts,
+                          total: total,
+                          code: couponController.text.trim(),
+                        );
+                        _bloc.add(
+                          CheckoutSubmitted(
+                            order: order,
+                            isFromCart: widget.isFromCart,
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),

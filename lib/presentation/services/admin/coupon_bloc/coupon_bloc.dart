@@ -15,6 +15,7 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
 
   CouponBloc(this._couponRepository) : super(CouponInitial()) {
     on<CouponStarted>(_onStarted);
+    on<CouponAdded>(_onAdded);
   }
 
   FutureOr<void> _onStarted(
@@ -28,5 +29,10 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
     } catch (e) {
       emit(CouponFailure(errorMessage: e.toString()));
     }
+  }
+
+  FutureOr<void> _onAdded(CouponAdded event, Emitter<CouponState> emit) async {
+    coupons.add(event.coupon);
+    emit(CouponSuccess(coupons: [...coupons]));
   }
 }

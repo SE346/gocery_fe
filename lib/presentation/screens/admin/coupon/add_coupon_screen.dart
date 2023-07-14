@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery/data/models/coupon.dart';
-import 'package:grocery/data/services/cloudinary_service.dart';
 import 'package:grocery/presentation/helper/loading/loading_screen.dart';
 import 'package:grocery/presentation/res/colors.dart';
 import 'package:grocery/presentation/res/style.dart';
@@ -83,9 +82,9 @@ class _AddCouponScreenState extends State<AddCouponScreen> {
               state.errorMessage,
               const Icon(Icons.error_outline),
             );
-          } else {
+          } else if (state is AddEditCouponSuccess) {
             LoadingScreen().hide();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(state.coupon);
             showSnackBar(
               context,
               'Add coupon successfully',

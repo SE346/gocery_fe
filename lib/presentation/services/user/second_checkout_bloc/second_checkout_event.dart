@@ -37,8 +37,10 @@ class NewAddressChosen extends SecondCheckoutEvent {
 class CouponChecked extends SecondCheckoutEvent {
   final String couponCode;
   final List<Map<String, dynamic>> productList;
+  final double total;
   const CouponChecked({
     required this.couponCode,
     required this.productList,
+    required this.total,
   });
 }

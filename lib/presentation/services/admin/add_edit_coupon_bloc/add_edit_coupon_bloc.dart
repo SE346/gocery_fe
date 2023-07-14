@@ -24,8 +24,8 @@ class AddEditCouponBloc extends Bloc<AddEditCouponEvent, AddEditCouponState> {
       String? urlImage = await CloudinaryService()
           .uploadImage(event.imageFile.path, 'coupons');
       Coupon coupon = event.coupon.copyWith(thumbnail: urlImage!);
-      await _couponRepository.addCoupon(coupon);
-      emit(AddEditCouponSuccess());
+      Coupon? newCoupon = await _couponRepository.addCoupon(coupon);
+      emit(AddEditCouponSuccess(coupon: newCoupon!));
     } catch (e) {
       emit(AddEditCouponFailure(errorMessage: e.toString()));
     }

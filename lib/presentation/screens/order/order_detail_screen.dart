@@ -164,18 +164,11 @@ class OrderDetailScreen extends StatelessWidget {
                       Text('Sub Total', style: AppStyles.medium),
                       const Spacer(),
                       Text(
-                        '\$ ${(order.total! - 2).toString()}',
+                        '\$ ${(order.total! - order.shippingFee!).toStringAsFixed(2)}',
                         style: AppStyles.medium,
                       ),
                     ],
                   ),
-                  // Row(
-                  //   children: [
-                  //     Text('Discount', style: AppStyles.medium),
-                  //     const Spacer(),
-                  //     Text('\$5', style: AppStyles.medium),
-                  //   ],
-                  // ),
                   Row(
                     children: [
                       Text('Delivery Fee', style: AppStyles.medium),

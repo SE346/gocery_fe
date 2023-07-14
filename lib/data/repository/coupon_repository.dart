@@ -47,14 +47,16 @@ class CouponRepository extends IServiceAPI {
     return coupons;
   }
 
-  Future<void> addCoupon(Coupon coupon) async {
+  Future<Coupon?> addCoupon(Coupon coupon) async {
     try {
       final response = await apiServices.post(
         urlCreateCoupon,
         coupon.toMap(),
         _appData.headers,
       );
-      print(response);
+      BaseResponse baseResponse = BaseResponse.fromJson(response);
+      Coupon newCoupon = Coupon.fromMap(baseResponse.data);
+      return newCoupon;
     } catch (e) {
       log('Error add coupon: $e');
     }
